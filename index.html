@@ -4,31 +4,35 @@
   <meta charset="UTF-8" />
   <title>KSim Home – Kelly HUD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1f3f4a" />
+  <meta name="theme-color" content="#17313a" />
   <link rel="manifest" href="manifest.json" />
   <style>
     :root {
-      --bg: #f4eee7;
-      --bg-soft: #f9f4ee;
+      /* Color palette: Sims teal + Animal Crossing soft greens & woods */
+      --bg: #f6f3ea;
+      --bg-soft: #fbf7ef;
       --bg-card: #ffffff;
-      --border-soft: #e1d2c4;
-      --accent: #00b2c8; /* Sims-ish teal */
-      --accent-soft: #93dde6;
-      --accent-dark: #007e8f;
-      --text-main: #2a221a;
-      --text-soft: #756458;
+      --bg-wood: #e2c7a3;
+      --border-soft: #e0d3c2;
+      --accent: #00b2c8;
+      --accent-soft: #7edbe4;
+      --accent-deep: #007289;
+      --leaf: #5da66a;
+      --leaf-soft: #b7dfb8;
+      --text-main: #2b231c;
+      --text-soft: #7a685a;
       --danger: #c4475e;
-      --good: #3fa76a;
+      --good: #4aa866;
       --neutral: #f6c15b;
       --low: #e45b5b;
-      --hud-bg: #1f3f4a;
-      --hud-soft: #284a57;
+      --hud-bg: #15252c;
+      --hud-soft: #1e333c;
       --hud-outline: #c2f5ff;
       --radius-lg: 18px;
       --radius-md: 12px;
       --radius-sm: 8px;
-      --shadow-soft: 0 10px 25px rgba(0,0,0,0.10);
-      --shadow-hud: 0 14px 40px rgba(0,0,0,0.35);
+      --shadow-soft: 0 10px 25px rgba(0,0,0,0.08);
+      --shadow-hud: 0 18px 45px rgba(0,0,0,0.42);
       --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -37,12 +41,13 @@
     body {
       margin: 0;
       font-family: var(--font-main);
-      background: radial-gradient(circle at top, #fffaf3 0, #f0e6d6 45%, #e3d3c2 100%);
+      background:
+        radial-gradient(circle at top, #ffffff 0, #f3efe4 45%, #e3d5c0 100%);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 98px; /* space for HUD */
+      padding-bottom: 118px; /* for HUD */
     }
 
     body.simple-mode [data-simple-hide="true"] {
@@ -52,56 +57,60 @@
     .app-shell {
       max-width: 520px;
       margin: 0 auto;
-      padding: 8px 10px 16px;
+      padding: 10px 12px 20px;
     }
 
-    /* Top Bar */
+    /* Top navbar – soft Sims/AC style */
     .top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 8px 10px;
-      margin-bottom: 6px;
+      padding: 8px 12px;
       border-radius: 999px;
-      background: linear-gradient(135deg, rgba(0,178,200,0.15), rgba(179,117,72,0.08));
-      border: 1px solid rgba(0,0,0,0.04);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+      background:
+        linear-gradient(135deg, rgba(0,178,200,0.12), rgba(93,166,106,0.15));
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
       backdrop-filter: blur(8px);
+      margin-bottom: 10px;
     }
 
-    .top-bar-title {
+    .top-left {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .top-bar-logo {
-      width: 28px;
-      height: 28px;
-      border-radius: 10px;
-      background: radial-gradient(circle at 30% 20%, #fff, #1f3f4a);
+    .top-logo {
+      width: 30px;
+      height: 30px;
+      border-radius: 40% 60% 42% 58%;
+      background:
+        radial-gradient(circle at 30% 20%, #ffffff, #17313a);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #f7fbff;
       font-weight: 700;
       font-size: 18px;
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,0.9),
+        0 6px 12px rgba(0,0,0,0.2);
     }
 
-    .top-bar-text-main {
-      font-weight: 600;
-      letter-spacing: 0.02em;
+    .top-text-main {
+      font-weight: 700;
+      letter-spacing: 0.04em;
       font-size: 15px;
     }
 
-    .top-bar-text-sub {
+    .top-text-sub {
       font-size: 11px;
       color: var(--text-soft);
     }
 
-    .top-bar-meta {
+    .top-right {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -112,7 +121,7 @@
       padding: 4px 10px;
       font-size: 11px;
       background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.07);
       color: var(--text-soft);
       display: inline-flex;
       align-items: center;
@@ -121,10 +130,12 @@
     }
 
     .chip-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 999px;
-      background: var(--accent);
+      background:
+        radial-gradient(circle at 30% 30%, #ffffff, var(--accent));
+      box-shadow: 0 0 6px rgba(0,178,200,0.9);
     }
 
     .btn-pill {
@@ -134,7 +145,7 @@
       padding: 5px 12px;
       font-size: 11px;
       font-weight: 500;
-      background: rgba(10,10,10,0.04);
+      background: rgba(23,49,58,0.06);
       color: var(--text-main);
       display: inline-flex;
       align-items: center;
@@ -144,30 +155,30 @@
     }
 
     .btn-pill span.icon {
-      font-size: 13px;
+      font-size: 14px;
     }
 
     .btn-pill:active {
       transform: scale(0.97);
     }
 
-    /* Tabs */
+    /* Tabs – chunked sections for ease of access */
     .tab-bar {
       display: flex;
-      margin: 8px 0 10px;
+      margin: 8px 0 12px;
       background: rgba(255,255,255,0.9);
-      border-radius: 999px;
+      border-radius: 16px;
       padding: 3px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.04);
-      border: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.9);
     }
 
     .tab-button {
       flex: 1;
-      border-radius: 999px;
+      border-radius: 14px;
       border: none;
       background: transparent;
-      padding: 7px 6px;
+      padding: 8px 6px;
       font-size: 11px;
       font-weight: 500;
       color: var(--text-soft);
@@ -180,20 +191,15 @@
     }
 
     .tab-button-icon {
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .tab-button.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      background: linear-gradient(135deg, var(--accent), var(--leaf));
       color: #ffffff;
       box-shadow: 0 4px 10px rgba(0,0,0,0.18);
     }
 
-    .tab-button.active .tab-button-icon {
-      transform: translateY(-0.5px);
-    }
-
-    /* Layout cards */
     .tab-panel {
       display: none;
     }
@@ -201,12 +207,13 @@
       display: block;
     }
 
+    /* Cards */
     .card {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
       padding: 12px 12px 10px;
       margin-bottom: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      box-shadow: var(--shadow-soft);
       border: 1px solid var(--border-soft);
     }
 
@@ -215,7 +222,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .card-title {
@@ -227,13 +234,22 @@
     }
 
     .card-title-icon {
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .card-subtitle {
       font-size: 11px;
       color: var(--text-soft);
       margin-bottom: 6px;
+    }
+
+    .badge-soft {
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(0,0,0,0.02);
+      padding: 2px 7px;
+      font-size: 10px;
+      color: var(--text-soft);
     }
 
     /* Daily quests */
@@ -250,7 +266,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 8px;
+      padding: 7px 8px;
       border-radius: var(--radius-md);
       background: var(--bg-soft);
       border: 1px solid rgba(0,0,0,0.03);
@@ -276,34 +292,29 @@
       color: var(--text-soft);
     }
 
-    .badge-soft {
-      border-radius: 999px;
-      border: 1px solid rgba(0,0,0,0.06);
-      background: rgba(0,0,0,0.02);
-      padding: 2px 7px;
-      font-size: 10px;
-      color: var(--text-soft);
-    }
-
     .btn-soft {
       appearance: none;
-      border-radius: var(--radius-md);
+      border-radius: 999px;
       border: none;
-      background: linear-gradient(135deg, #f8d0d0, #e194a2);
+      background: linear-gradient(135deg, #f6d1dc, #e199ac);
       color: #3b1221;
-      padding: 7px 10px;
+      padding: 7px 12px;
       font-size: 11px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 7px;
       cursor: pointer;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+    }
+
+    .btn-soft span.icon {
+      font-size: 14px;
     }
 
     .btn-soft.bad-day-active {
-      background: linear-gradient(135deg, #d5e6ff, #99c1ff);
-      color: #153057;
+      background: linear-gradient(135deg, #c4e2ff, #9fbfff);
+      color: #10243f;
     }
 
     .muted-text {
@@ -312,7 +323,7 @@
       margin-top: 4px;
     }
 
-    /* Feelings */
+    /* Feelings strip */
     .feelings-strip {
       display: flex;
       flex-wrap: wrap;
@@ -323,9 +334,9 @@
     .feeling-btn {
       flex: 1 0 calc(33.33% - 4px);
       border: none;
-      border-radius: var(--radius-md);
+      border-radius: 999px;
       font-size: 11px;
-      padding: 6px 6px;
+      padding: 6px 8px;
       cursor: pointer;
       background: #f3eee8;
       color: var(--text-main);
@@ -334,15 +345,16 @@
       justify-content: center;
       gap: 4px;
       min-width: 0;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.05);
     }
 
     .feeling-btn span.icon {
       font-size: 13px;
     }
 
-    .feeling-btn[data-tone="good"] { background: #e5f5ea; }
+    .feeling-btn[data-tone="good"] { background: #e4f5eb; }
     .feeling-btn[data-tone="neutral"] { background: #fef3dc; }
-    .feeling-btn[data-tone="low"] { background: #fbe6e6; }
+    .feeling-btn[data-tone="low"] { background: #fde7e7; }
 
     .feeling-message {
       margin-top: 6px;
@@ -362,9 +374,9 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 8px;
+      padding: 7px 8px;
       border-radius: var(--radius-md);
-      background: #f5f1ea;
+      background: #f6f0e7;
     }
 
     .timer-label-main {
@@ -382,8 +394,8 @@
       font-weight: 500;
       padding: 2px 7px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.04);
-      min-width: 66px;
+      background: rgba(0,0,0,0.05);
+      min-width: 68px;
       text-align: center;
     }
 
@@ -439,6 +451,16 @@
       margin-top: 2px;
     }
 
+    .bells-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bells-pill span.icon {
+      font-size: 14px;
+    }
+
     .level-bar-wrap {
       margin-top: 8px;
     }
@@ -466,7 +488,7 @@
     .level-fill {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, var(--accent-soft), var(--accent-dark));
+      background: linear-gradient(90deg, var(--leaf-soft), var(--leaf));
       transition: width 0.25s ease;
     }
 
@@ -478,7 +500,7 @@
 
     .need-row {
       display: grid;
-      grid-template-columns: minmax(0, 1.3fr) 2fr auto;
+      grid-template-columns: minmax(0, 1.4fr) 2fr auto;
       gap: 8px;
       align-items: center;
     }
@@ -536,7 +558,7 @@
       text-align: right;
     }
 
-    /* Journals & Calendar */
+    /* Journals & calendar */
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -559,7 +581,7 @@
       padding: 4px 0;
       border-radius: 999px;
       text-align: center;
-      background: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.8);
       border: 1px solid rgba(0,0,0,0.04);
       position: relative;
     }
@@ -609,30 +631,75 @@
       font-family: inherit;
     }
 
-    /* HUD */
+    /* HUD & moodlets – Sims bottom-left style */
     .hud-shell {
       position: fixed;
       left: 0;
       right: 0;
       bottom: 0;
       padding: 10px 8px 8px;
-      pointer-events: none;
       z-index: 40;
+      pointer-events: none;
+    }
+
+    .hud-inner-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      pointer-events: auto;
+    }
+
+    .hud-moodlets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 4px;
+      justify-content: flex-start;
+      padding-left: 6px;
+    }
+
+    .moodlet-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 10px;
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(0,0,0,0.12);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+
+    .moodlet-chip[data-tone="good"] {
+      background: #ecf9f0;
+      border-color: #8fd0a0;
+    }
+    .moodlet-chip[data-tone="neutral"] {
+      background: #fff6e6;
+      border-color: #f0cd8c;
+    }
+    .moodlet-chip[data-tone="low"] {
+      background: #fde6e7;
+      border-color: #f1979d;
+    }
+
+    .moodlet-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #ffffff;
     }
 
     .hud-inner {
-      max-width: 520px;
-      margin: 0 auto;
-      background: radial-gradient(circle at top, #3f6f7f 0, #13242b 60%, #091015 100%);
-      border-radius: 22px 22px 8px 8px;
-      border: 1px solid #283c46;
+      background:
+        radial-gradient(circle at top, #325c6a 0, #17313a 55%, #0a1417 100%);
+      border-radius: 20px 20px 10px 10px;
+      border: 1px solid #2d414b;
       box-shadow: var(--shadow-hud);
       padding: 8px 10px 6px;
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto 1.3fr auto;
       gap: 8px;
       align-items: center;
-      pointer-events: auto;
       position: relative;
     }
 
@@ -640,30 +707,33 @@
       content: "";
       position: absolute;
       inset: 1px 1px auto;
-      border-radius: 20px 20px 6px 6px;
+      border-radius: 18px 18px 8px 8px;
       border-top: 1px solid rgba(255,255,255,0.12);
       pointer-events: none;
     }
 
-    .hud-portrait {
+    .hud-left {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .portrait-frame {
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       border-radius: 14px;
-      background: radial-gradient(circle at 30% 20%, #fff, #4e2c1e);
+      background:
+        radial-gradient(circle at 25% 20%, #fdf7ef, #4b2d1d);
       border: 2px solid var(--hud-outline);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fdf9f2;
-      font-size: 22px;
+      font-size: 23px;
       font-weight: 700;
-      box-shadow: 0 0 0 2px rgba(0,0,0,0.5);
+      box-shadow:
+        0 0 0 2px rgba(0,0,0,0.6),
+        0 0 12px rgba(165,232,255,0.8);
     }
 
     .portrait-meta {
@@ -679,10 +749,10 @@
 
     .portrait-meta-sub {
       font-size: 10px;
-      color: #b9d1db;
+      color: #bdd5df;
     }
 
-    .hud-mood {
+    .hud-center {
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -691,7 +761,7 @@
     .plumbob-wrap {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
 
     .plumbob {
@@ -706,11 +776,11 @@
       inset: 0;
       background: linear-gradient(180deg, #4df18d, #178348);
       clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
-      box-shadow: 0 0 10px rgba(154,255,180,0.85);
+      box-shadow: 0 0 10px rgba(154,255,180,0.9);
     }
 
     .plumbob.low {
-      filter: hue-rotate(-35deg) brightness(0.9);
+      filter: hue-rotate(-35deg) brightness(0.85);
     }
     .plumbob.neutral {
       filter: hue-rotate(40deg);
@@ -734,7 +804,7 @@
       width: 100%;
       height: 8px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.55);
       overflow: hidden;
       position: relative;
     }
@@ -754,7 +824,7 @@
       box-shadow: inset 0 0 4px rgba(0,0,0,0.7);
     }
 
-    .hud-dots {
+    .hud-right {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -794,9 +864,6 @@
       body {
         padding-top: 10px;
       }
-      .top-bar {
-        margin-top: 6px;
-      }
     }
   </style>
 </head>
@@ -804,20 +871,20 @@
   <div class="app-shell">
     <!-- TOP BAR -->
     <header class="top-bar">
-      <div class="top-bar-title">
-        <div class="top-bar-logo">K</div>
+      <div class="top-left">
+        <div class="top-logo">K</div>
         <div>
-          <div class="top-bar-text-main">KSim Home</div>
-          <div class="top-bar-text-sub">Kelly’s cozy day HUD</div>
+          <div class="top-text-main">KSim Home</div>
+          <div class="top-text-sub">Kelly’s cozy day, gamed gently</div>
         </div>
       </div>
-      <div class="top-bar-meta">
+      <div class="top-right">
         <div class="chip" id="dayChip">
           <span class="chip-dot"></span>
           <span>Today</span>
         </div>
         <button class="btn-pill" id="simpleToggle" type="button">
-          <span class="icon">🌿</span>
+          <span class="icon">🍃</span>
           <span>Simple view</span>
         </button>
       </div>
@@ -830,11 +897,11 @@
         <span>Dashboard</span>
       </button>
       <button class="tab-button" data-tab-target="needs" type="button">
-        <span class="tab-button-icon">📊</span>
+        <span class="tab-button-icon">💚</span>
         <span>Needs &amp; Stats</span>
       </button>
       <button class="tab-button" data-tab-target="journals" type="button">
-        <span class="tab-button-icon">📖</span>
+        <span class="tab-button-icon">📓</span>
         <span>Journals</span>
       </button>
     </nav>
@@ -842,27 +909,25 @@
     <main>
       <!-- DASHBOARD TAB -->
       <section class="tab-panel active" data-tab="dashboard">
-        <!-- Daily quests -->
-        <section class="card" id="questsCard">
+        <!-- Quests -->
+        <section class="card">
           <div class="card-header">
             <div class="card-title">
               <span class="card-title-icon">✨</span>
-              <span>Daily house quests</span>
+              <span>Today’s tiny quests</span>
             </div>
             <span class="badge-soft" id="questsSummary">0 / 2 done</span>
           </div>
           <p class="card-subtitle">
-            Only two tiny quests. If today is heavy, you still win just for showing up.
+            Just two little things. If life explodes and you only tap “Rough day”, it still counts as a win.
           </p>
-          <ul class="quest-list" id="questList">
-            <!-- Filled by JS -->
-          </ul>
+          <ul class="quest-list" id="questList"></ul>
           <button class="btn-soft" id="badDayButton" type="button">
+            <span class="icon">💗</span>
             <span>Had a rough day?</span>
-            <span>💗</span>
           </button>
           <div class="muted-text" id="badDayMessage">
-            Tap if the day just… wasn’t it. It still counts as a win on the calendar.
+            For the days that were just too much. You surviving them is a win.
           </div>
         </section>
 
@@ -871,11 +936,11 @@
           <div class="card-header">
             <div class="card-title">
               <span class="card-title-icon">🧠</span>
-              <span>How are you feeling?</span>
+              <span>How does Kelly feel?</span>
             </div>
           </div>
           <p class="card-subtitle">
-            Tap what fits closest. No fixing required — this just helps your “Sim self” be seen.
+            Your feelings are information, not a report card. Tap whatever is closest.
           </p>
           <div class="feelings-strip">
             <!-- low -->
@@ -912,7 +977,7 @@
             </button>
           </div>
           <div class="feeling-message" id="feelingMessage">
-            Your feelings are information, not a to-do list. Whatever you tapped is valid.
+            Whatever you tapped is allowed to exist without being fixed right away.
           </div>
         </section>
 
@@ -921,14 +986,13 @@
           <div class="card-header">
             <div class="card-title">
               <span class="card-title-icon">⏱️</span>
-              <span>Gentle check-in timers</span>
+              <span>Soft check-in timers</span>
             </div>
           </div>
           <p class="card-subtitle">
-            These are soft nudges. If they expire and you do nothing, you’re still a good mom.
+            These are gentle nudges, not alarms. It’s okay if you ignore them.
           </p>
           <div class="timer-list">
-            <!-- Each row uses data-timer-id -->
             <div class="timer-row" data-timer-id="hydration">
               <div>
                 <div class="timer-label-main">Hydration</div>
@@ -954,7 +1018,7 @@
             <div class="timer-row" data-timer-id="snack">
               <div>
                 <div class="timer-label-main">Snack</div>
-                <div class="timer-label-sub">Quick energy boost</div>
+                <div class="timer-label-sub">Tiny fuel boost</div>
               </div>
               <div class="timer-status" data-timer-status>Off</div>
               <div class="timer-cta">
@@ -1009,7 +1073,7 @@
             </div>
           </div>
           <p class="card-subtitle">
-            These grow quietly in the background as you do tiny things, not giant ones.
+            These level up slowly, like a favorite save file. Tiny actions still count.
           </p>
           <div class="stats-row">
             <div class="stat-pill">
@@ -1042,14 +1106,13 @@
           <div class="card-header">
             <div class="card-title">
               <span class="card-title-icon">💚</span>
-              <span>Needs check-in</span>
+              <span>Needs board</span>
             </div>
           </div>
           <p class="card-subtitle">
-            Nudge these up or down based on how real-life Kelly feels — not how she “should.”
+            Treat these like Animal Crossing hearts & bells — a soft guide, not a demand.
           </p>
           <div class="needs-list">
-            <!-- Each row: data-need-id -->
             <div class="need-row" data-need-id="hunger">
               <div class="need-label">Hunger</div>
               <div class="need-bar-shell">
@@ -1131,10 +1194,11 @@
             <span class="calendar-month-label" id="calendarMonthLabel"></span>
           </div>
           <p class="card-subtitle">
-            A day is a “win” if you did any quest <em>or</em> tapped “Had a rough day?”.
+            Any quest done or “Rough day” tapped makes this day a win on your map.
           </p>
           <div class="calendar-header">
-            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            <div>Sun</div><div>Mon</div><div>Tue</div>
+            <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
           </div>
           <div class="calendar-grid" id="calendarGrid"></div>
         </section>
@@ -1142,7 +1206,7 @@
         <section class="card">
           <div class="card-header">
             <div class="card-title">
-              <span class="card-title-icon">📓</span>
+              <span class="card-title-icon">📖</span>
               <span>Journals</span>
             </div>
           </div>
@@ -1165,38 +1229,43 @@
     </main>
   </div>
 
-  <!-- HUD -->
+  <!-- HUD + moodlets -->
   <div class="hud-shell">
-    <div class="hud-inner">
-      <div class="hud-portrait">
-        <div class="portrait-frame">K</div>
-        <div class="portrait-meta">
-          <div class="portrait-meta-name">Kelly</div>
-          <div class="portrait-meta-sub" id="hudSubtext">Solopa Hearthling</div>
-        </div>
+    <div class="hud-inner-wrap">
+      <div class="hud-moodlets" id="moodletBar">
+        <!-- moodlet chips injected here -->
       </div>
-      <div class="hud-mood">
-        <div class="plumbob-wrap">
-          <div class="plumbob" id="plumbob">
-            <div class="plumbob-shape"></div>
-          </div>
-          <div>
-            <div class="mood-label-main" id="moodLabelMain">Gently okay</div>
-            <div class="mood-label-sub" id="moodLabelSub">You’re doing more than enough.</div>
+      <div class="hud-inner">
+        <div class="hud-left">
+          <div class="portrait-frame">K</div>
+          <div class="portrait-meta">
+            <div class="portrait-meta-name">Kelly</div>
+            <div class="portrait-meta-sub" id="hudSubtext">Solopa Hearthling</div>
           </div>
         </div>
-        <div class="mood-gauge-shell">
-          <div class="mood-gauge-fill" id="moodGaugeFill"></div>
+        <div class="hud-center">
+          <div class="plumbob-wrap">
+            <div class="plumbob" id="plumbob">
+              <div class="plumbob-shape"></div>
+            </div>
+            <div>
+              <div class="mood-label-main" id="moodLabelMain">Gently okay</div>
+              <div class="mood-label-sub" id="moodLabelSub">You’re doing more than enough.</div>
+            </div>
+          </div>
+          <div class="mood-gauge-shell">
+            <div class="mood-gauge-fill" id="moodGaugeFill"></div>
+          </div>
         </div>
-      </div>
-      <div class="hud-dots">
-        <div class="dot-row">
-          <span class="dot-label">Needs</span>
-          <span class="dot" id="dot1"></span>
-          <span class="dot" id="dot2"></span>
-          <span class="dot" id="dot3"></span>
+        <div class="hud-right">
+          <div class="dot-row">
+            <span class="dot-label">Needs</span>
+            <span class="dot" id="dot1"></span>
+            <span class="dot" id="dot2"></span>
+            <span class="dot" id="dot3"></span>
+          </div>
+          <div class="hud-hint">Nothing here can fail. It just notices.</div>
         </div>
-        <div class="hud-hint">Tap anything gently. Nothing here can fail.</div>
       </div>
     </div>
   </div>
@@ -1209,7 +1278,7 @@
 
   <script>
     (function () {
-      const STORAGE_KEY = "ksimHomeState_v1";
+      const STORAGE_KEY = "ksimHomeState_v2";
 
       const defaultTimersConfig = {
         hydration: { minutes: 60 },
@@ -1251,30 +1320,31 @@
       }
 
       function getMonthKey(dateStr) {
-        return dateStr.slice(0, 7); // YYYY-MM
+        return dateStr.slice(0, 7);
       }
 
       function getYearKey(dateStr) {
         return dateStr.slice(0, 4);
       }
 
-      function loadState() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-          return createFreshState();
+      function initTimersState() {
+        const base = {};
+        for (const id in defaultTimersConfig) {
+          base[id] = {
+            durationMinutes: defaultTimersConfig[id].minutes,
+            remainingMs: 0,
+            isRunning: false,
+            lastStart: null,
+            completedCount: 0
+          };
         }
-        try {
-          const parsed = JSON.parse(raw);
-          return migrateState(parsed);
-        } catch {
-          return createFreshState();
-        }
+        return base;
       }
 
       function createFreshState() {
         const today = todayDateString();
         return {
-          version: 1,
+          version: 2,
           todayDate: today,
           today: {
             tasks: [],
@@ -1298,41 +1368,49 @@
           },
           mood: {
             score: 60,
+            tier: "neutral",
             labelMain: "Gently okay",
             labelSub: "You’re doing more than enough.",
-            tone: "neutral"
+            lastTier: "neutral",
+            lastFeelingTone: "neutral"
           },
           timers: initTimersState(),
           journals: {
-            day: {},   // key: YYYY-MM-DD
-            month: {}, // key: YYYY-MM
-            year: {}   // key: YYYY
-          }
+            day: {},
+            month: {},
+            year: {}
+          },
+          moodlets: [], // {id, label, tone}
         };
       }
 
-      function migrateState(state) {
-        // Basic migration scaffolding if we change versions later.
-        if (!state.version) state.version = 1;
-        if (!state.timers) state.timers = initTimersState();
-        if (!state.journals) {
-          state.journals = { day: {}, month: {}, year: {} };
+      function loadState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return createFreshState();
+        try {
+          const parsed = JSON.parse(raw);
+          return migrateState(parsed);
+        } catch {
+          return createFreshState();
         }
-        return state;
       }
 
-      function initTimersState() {
-        const base = {};
-        for (const id in defaultTimersConfig) {
-          base[id] = {
-            durationMinutes: defaultTimersConfig[id].minutes,
-            remainingMs: 0,
-            isRunning: false,
-            lastStart: null,
-            completedCount: 0
+      function migrateState(state) {
+        if (!state.version) state.version = 2;
+        if (!state.timers) state.timers = initTimersState();
+        if (!state.journals) state.journals = { day: {}, month: {}, year: {} };
+        if (!state.mood) {
+          state.mood = {
+            score: 60,
+            tier: "neutral",
+            labelMain: "Gently okay",
+            labelSub: "You’re doing more than enough.",
+            lastTier: "neutral",
+            lastFeelingTone: "neutral"
           };
         }
-        return base;
+        if (!Array.isArray(state.moodlets)) state.moodlets = [];
+        return state;
       }
 
       function saveState() {
@@ -1344,8 +1422,6 @@
         if (state.todayDate === todayStr && state.today.tasks && state.today.tasks.length) {
           return;
         }
-
-        // If date changed, keep stats and winsByDate; refresh today's entry.
         state.todayDate = todayStr;
         state.today = {
           tasks: pickTodayTasks(todayStr),
@@ -1355,7 +1431,6 @@
       }
 
       function pickTodayTasks(dateStr) {
-        // Deterministic pseudo selection based on date
         const d = new Date(dateStr + "T00:00:00");
         const seed = d.getDate() + (d.getMonth() + 1) * 13;
         const index1 = seed % tasksPool.length;
@@ -1377,7 +1452,7 @@
         playSound("ui-click");
       }
 
-      // --- State + DOM references ---
+      // --- State & DOM refs ---
       let state = loadState();
       ensureToday();
 
@@ -1390,7 +1465,6 @@
       const questsSummary = document.getElementById("questsSummary");
       const badDayButton = document.getElementById("badDayButton");
       const badDayMessage = document.getElementById("badDayMessage");
-
       const feelingMessage = document.getElementById("feelingMessage");
 
       const statQuests = document.getElementById("statQuests");
@@ -1415,28 +1489,27 @@
       const dot1 = document.getElementById("dot1");
       const dot2 = document.getElementById("dot2");
       const dot3 = document.getElementById("dot3");
+      const moodletBar = document.getElementById("moodletBar");
 
       let timersInterval = null;
 
-      // --- Initial render ---
+      // --- Initial render sequence ---
       renderDayChip();
       renderQuests();
       renderBadDay();
+      recomputeMoodFromNeeds(); // ensures mood matches needs on first load
       renderStats();
       renderNeeds();
-      renderMood();
+      renderMood(false);
       renderCalendar();
       renderJournals();
+      renderMoodlets();
       startTimersTick();
 
-      // --- Event wiring ---
-
-      // Generic UI click sound for buttons
+      // --- Global click sound ---
       document.addEventListener("click", (e) => {
         const btn = e.target.closest("button");
-        if (btn) {
-          uiClick();
-        }
+        if (btn) uiClick();
       });
 
       // Tabs
@@ -1448,12 +1521,12 @@
         });
       });
 
-      // Simple view toggle
+      // Simple view
       simpleToggle.addEventListener("click", () => {
         document.body.classList.toggle("simple-mode");
       });
 
-      // Quests checkbox handling
+      // Quests
       questList.addEventListener("change", (e) => {
         if (e.target.matches('input[type="checkbox"][data-quest-id]')) {
           const questId = parseInt(e.target.getAttribute("data-quest-id"), 10);
@@ -1492,7 +1565,6 @@
         const category = btn.getAttribute("data-category");
         const tone = btn.getAttribute("data-tone");
         const feelingKey = btn.getAttribute("data-feeling");
-
         handleFeeling(feelingKey, category, tone);
       });
 
@@ -1503,14 +1575,11 @@
         const row = btn.closest(".timer-row");
         const timerId = row.getAttribute("data-timer-id");
         const action = btn.getAttribute("data-timer-action");
-        if (action === "start") {
-          startTimer(timerId);
-        } else if (action === "stop") {
-          stopTimer(timerId);
-        }
+        if (action === "start") startTimer(timerId);
+        if (action === "stop") stopTimer(timerId);
       });
 
-      // Needs +/- buttons
+      // Needs
       document.querySelectorAll(".need-row").forEach(row => {
         row.addEventListener("click", (e) => {
           const btn = e.target.closest(".btn-need");
@@ -1538,7 +1607,7 @@
         saveState();
       });
 
-      // --- Handlers and render helpers ---
+      // --- Rendering & logic helpers ---
 
       function renderDayChip() {
         const d = new Date(state.todayDate + "T00:00:00");
@@ -1553,9 +1622,7 @@
         state.today.tasks.forEach(t => {
           const li = document.createElement("li");
           li.className = "quest-item";
-          if (state.today.completedTaskIds.includes(t.id)) {
-            li.classList.add("completed");
-          }
+          if (state.today.completedTaskIds.includes(t.id)) li.classList.add("completed");
           li.innerHTML = `
             <input type="checkbox" data-quest-id="${t.id}" ${state.today.completedTaskIds.includes(t.id) ? "checked" : ""}/>
             <div class="quest-text">${t.text}</div>
@@ -1568,80 +1635,73 @@
       function renderBadDay() {
         if (state.today.badDay) {
           badDayButton.classList.add("bad-day-active");
-          badDayButton.textContent = "Bad day logged — you still win 💗";
-          badDayMessage.textContent = "This day is marked as a win because you survived it. That’s enough.";
+          badDayButton.innerHTML = `<span class="icon">💗</span><span>Bad day logged — you still win</span>`;
+          badDayMessage.textContent = "This day is marked as a win because you lived through it. That’s enough.";
         } else {
           badDayButton.classList.remove("bad-day-active");
-          badDayButton.textContent = "Had a rough day? 💗";
-          badDayMessage.textContent = "Tap if the day just… wasn’t it. It still counts as a win on the calendar.";
+          badDayButton.innerHTML = `<span class="icon">💗</span><span>Had a rough day?</span>`;
+          badDayMessage.textContent = "Tap this for the days that were just too much. The calendar will still count it as a win.";
         }
       }
 
       function handleFeeling(feelingKey, category, tone) {
         state.stats.feelingsCheckins += 1;
-
-        let delta = 0;
-        if (category === "good") delta = +8;
-        else if (category === "neutral") delta = 0;
-        else if (category === "low") delta = -8;
-
-        state.mood.score = clamp(state.mood.score + delta, 0, 100);
+        state.mood.lastFeelingTone = tone || "neutral";
 
         let msg = "";
         let sub = "";
+
         switch (feelingKey) {
           case "stressed":
-            msg = "Stressed & still showing up";
-            sub = "Your brain is juggling a lot. You are not failing — you’re overloaded.";
+            msg = "Stressed & still standing";
+            sub = "Your brain is juggling a lot. Overload isn’t a failure; it’s a signal.";
             break;
           case "overwhelmed":
             msg = "Overwhelmed, not weak";
-            sub = "Too much on one person is a system issue, not a you issue.";
+            sub = "Too much on one person is a village problem, not a you problem.";
             break;
           case "low":
             msg = "Low battery";
-            sub = "Low mood is a signal, not a verdict on your worth.";
+            sub = "Low mood is your nervous system asking for gentleness, not proof of being ‘lazy’.";
             break;
           case "sad":
-            msg = "Heavy heart";
-            sub = "You’re allowed to be soft and sad and still be a powerful mom.";
+            msg = "Soft sadness";
+            sub = "Tears and heaviness are allowed here. You don’t have to push them away.";
             break;
           case "angry":
-            msg = "Fire in the hearth";
-            sub = "Anger is your body guarding your boundaries, not you being ‘too much’.";
+            msg = "Guarding your fire";
+            sub = "Anger is your boundary alarm, not proof that you’re ‘too much’.";
             break;
           case "hungry":
             msg = "Body needs fuel";
-            sub = "Food for you is a family upgrade, not selfish.";
+            sub = "Feeding yourself is a family buff, not selfish.";
             break;
           case "good":
             msg = "Gently good";
-            sub = "Notice this softness — your nervous system is grateful.";
+            sub = "Let yourself enjoy the softness of this moment.";
             break;
           case "happy":
             msg = "Bright & warm";
-            sub = "Let yourself enjoy this without waiting for the other shoe to drop.";
+            sub = "Joy is allowed even when everything isn’t perfect.";
             break;
           case "peace":
             msg = "Tiny pocket of peace";
-            sub = "Even a few quiet breaths count as real rest.";
+            sub = "Even a quiet breath on the couch counts as rest.";
             break;
           case "ease":
             msg = "Moving with ease";
-            sub = "Momentum plus kindness to yourself is powerful magic.";
+            sub = "Ease plus tiny actions is powerful magic.";
             break;
           default:
             msg = "Gently okay";
             sub = "You’re doing more than enough.";
         }
 
+        feelingMessage.textContent = sub;
         state.mood.labelMain = msg;
         state.mood.labelSub = sub;
-        state.mood.tone = tone;
 
-        feelingMessage.textContent = sub;
-
-        // Adjust some needs based on feeling (very lightly)
+        // Light need effects
         if (feelingKey === "hungry") {
           adjustNeed("hunger", -5, false);
         }
@@ -1653,14 +1713,18 @@
           adjustNeed("fun", +5, false);
         }
 
-        // Sounds
-        if (category === "good") playSound("feel-good");
-        else if (category === "neutral") playSound("feel-neutral");
-        else playSound("feel-low");
+        // Add or update moodlet
+        addMoodlet({
+          id: `feeling-${feelingKey}`,
+          label: msg,
+          tone: tone || "neutral"
+        });
 
+        recomputeMoodFromNeeds();
         renderStats();
         renderNeeds();
-        renderMood();
+        renderMood(true);
+        renderMoodlets();
         saveState();
       }
 
@@ -1675,7 +1739,6 @@
                      + (state.stats.daysWin || 0) * 1.5;
         const levelIndex = Math.min(levelNames.length - 1, Math.floor(points / 10));
         levelNameEl.textContent = levelNames[levelIndex];
-        // Fill within this band of 10 points
         const bandStart = levelIndex * 10;
         const bandProgress = clamp((points - bandStart) / 10, 0, 1);
         const fillPercent = ((levelIndex) / (levelNames.length - 1)) * 70 + bandProgress * 30;
@@ -1688,8 +1751,9 @@
         const current = state.needs[needId] ?? 60;
         const next = clamp(current + delta, 0, 100);
         state.needs[needId] = next;
+        recomputeMoodFromNeeds();
         renderNeeds();
-        renderMood();
+        renderMood(true);
         if (shouldSave) saveState();
       }
 
@@ -1703,23 +1767,46 @@
           if (label) label.textContent = value;
         });
 
-        // Update HUD dots based on average needs
         const vals = Object.values(state.needs);
         const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
         const dotsOn =
           avg >= 75 ? 3 :
           avg >= 45 ? 2 :
           avg >= 20 ? 1 : 0;
-
         [dot1, dot2, dot3].forEach((dot, i) => {
           if (!dot) return;
           dot.classList.toggle("on", i < dotsOn);
         });
       }
 
-      function renderMood() {
+      function recomputeMoodFromNeeds() {
+        const vals = Object.values(state.needs);
+        const avgNeeds = vals.reduce((a, b) => a + b, 0) / vals.length;
+
+        let base = avgNeeds; // center around needs
+        const tone = state.mood.lastFeelingTone || "neutral";
+
+        if (tone === "good") base += 5;
+        if (tone === "low") base -= 5;
+
+        state.mood.score = clamp(base, 0, 100);
+
+        // If no explicit label (e.g. after fresh load) choose a neutral one
+        if (!state.mood.labelMain) {
+          state.mood.labelMain = "Gently okay";
+          state.mood.labelSub = "You’re doing more than enough.";
+        }
+      }
+
+      function renderMood(shouldPlaySound) {
         const score = state.mood.score ?? 60;
-        const tone = state.mood.tone || "neutral";
+        const prevTier = state.mood.tier || "neutral";
+
+        let tier = "neutral";
+        if (score < 40) tier = "low";
+        else if (score >= 70) tier = "good";
+
+        state.mood.tier = tier;
 
         moodLabelMain.textContent = state.mood.labelMain || "Gently okay";
         moodLabelSub.textContent = state.mood.labelSub || "You’re doing more than enough.";
@@ -1727,15 +1814,42 @@
         moodGaugeFill.style.width = `${clamp(score, 5, 100)}%`;
 
         plumbob.classList.remove("low", "neutral", "good");
-        if (score < 35) {
-          plumbob.classList.add("low");
-        } else if (score < 70) {
-          plumbob.classList.add("neutral");
-        } else {
-          plumbob.classList.add("good");
+        plumbob.classList.add(tier);
+
+        // Only play sound when tier actually changes due to user action
+        if (shouldPlaySound && tier !== prevTier) {
+          if (tier === "good") playSound("feel-good");
+          else if (tier === "neutral") playSound("feel-neutral");
+          else playSound("feel-low");
         }
 
-        if (tone === "good" && score < 60) state.mood.score = 60;
+        state.mood.lastTier = tier;
+      }
+
+      function addMoodlet({ id, label, tone }) {
+        const existingIndex = state.moodlets.findIndex(m => m.id === id);
+        if (existingIndex >= 0) {
+          state.moodlets[existingIndex] = { id, label, tone };
+        } else {
+          state.moodlets.push({ id, label, tone });
+          if (state.moodlets.length > 4) {
+            state.moodlets.shift();
+          }
+        }
+      }
+
+      function renderMoodlets() {
+        moodletBar.innerHTML = "";
+        state.moodlets.forEach(m => {
+          const div = document.createElement("div");
+          div.className = "moodlet-chip";
+          div.dataset.tone = m.tone || "neutral";
+          div.innerHTML = `
+            <span class="moodlet-dot"></span>
+            <span>${m.label}</span>
+          `;
+          moodletBar.appendChild(div);
+        });
       }
 
       function updateWinFlagForToday() {
@@ -1754,16 +1868,15 @@
       function renderCalendar() {
         const now = new Date(state.todayDate + "T00:00:00");
         const year = now.getFullYear();
-        const month = now.getMonth(); // 0-based
+        const month = now.getMonth();
         const first = new Date(year, month, 1);
-        const firstDay = first.getDay(); // 0 = Sun
+        const firstDay = first.getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         calendarGrid.innerHTML = "";
         const monthName = now.toLocaleDateString(undefined, { month: "long", year: "numeric" });
         calendarMonthLabel.textContent = monthName;
 
-        // Leading empty slots
         for (let i = 0; i < firstDay; i++) {
           const empty = document.createElement("div");
           calendarGrid.appendChild(empty);
@@ -1774,12 +1887,8 @@
           const div = document.createElement("div");
           div.className = "calendar-day";
           div.textContent = day;
-          if (state.winsByDate[dateStr]) {
-            div.classList.add("win");
-          }
-          if (dateStr === state.todayDate) {
-            div.classList.add("today");
-          }
+          if (state.winsByDate[dateStr]) div.classList.add("win");
+          if (dateStr === state.todayDate) div.classList.add("today");
           calendarGrid.appendChild(div);
         }
       }
@@ -1794,32 +1903,43 @@
         journalYear.value = state.journals.year[yKey] || "";
       }
 
+      // Timers & real-time update when app reopens
       function startTimersTick() {
         if (timersInterval) clearInterval(timersInterval);
+        tickTimers(); // initial tick to account for time while app was closed
+        renderTimers();
         timersInterval = setInterval(() => {
           tickTimers();
           renderTimers();
         }, 1000);
-        renderTimers();
       }
 
       function tickTimers() {
         const now = Date.now();
         let changed = false;
+
         for (const id in state.timers) {
           const t = state.timers[id];
           if (!t.isRunning || !t.lastStart) continue;
+
           const elapsed = now - t.lastStart;
           const remaining = t.remainingMs - elapsed;
+
           if (remaining <= 0) {
             t.remainingMs = 0;
             t.isRunning = false;
             t.lastStart = null;
             t.completedCount = (t.completedCount || 0) + 1;
-            // Self-care bonus for shower / skincare completion
+
             if (id === "shower" || id === "skincare") {
               state.stats.selfCareBonuses += 1;
+              addMoodlet({
+                id: `timer-${id}`,
+                label: id === "shower" ? "Cozy shower buff" : "Skincare glow buff",
+                tone: "good"
+              });
             }
+
             changed = true;
           } else {
             t.remainingMs = remaining;
@@ -1827,8 +1947,10 @@
             changed = true;
           }
         }
+
         if (changed) {
           renderStats();
+          renderMoodlets();
           saveState();
         }
       }
@@ -1842,6 +1964,7 @@
 
           let label = "Off";
           let due = false;
+
           if (timer.isRunning && timer.remainingMs > 0) {
             const minutes = Math.floor(timer.remainingMs / 60000);
             const seconds = Math.floor((timer.remainingMs % 60000) / 1000);
@@ -1862,10 +1985,11 @@
       function startTimer(id) {
         const t = state.timers[id];
         if (!t) return;
-        // If it's off, reset duration; if paused, keep remaining
+
         if (t.remainingMs <= 0) {
           t.remainingMs = (t.durationMinutes || defaultTimersConfig[id].minutes) * 60000;
         }
+
         t.isRunning = true;
         t.lastStart = Date.now();
         saveState();
