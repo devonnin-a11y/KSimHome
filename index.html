@@ -20,8 +20,8 @@
       --muted: #d1d5db;
       --muted-soft: #9ca3af;
       --done: #22c55e;
-      --bad: #f97373;
     }
+
     * { box-sizing: border-box; }
 
     body {
@@ -32,7 +32,7 @@
       min-height: 100vh;
     }
 
-    /* SIMPLE MODE HIDES */
+    /* SIMPLE MODE: hide extra detail */
     body.simple-mode [data-simple-hide="true"] {
       display: none !important;
     }
@@ -45,8 +45,6 @@
       margin: 0 auto;
       padding: 0.4rem 0.8rem 2rem;
     }
-
-    /* NAV */
 
     .top-nav {
       display: flex;
@@ -149,70 +147,11 @@
       font-weight: 500;
     }
 
-    /* MOODLETS */
-
     .moodlet-strip {
       margin: 0.55rem auto 0.3rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      justify-content: center;
-    }
-
-    .moodlet {
-      min-width: 120px;
-      max-width: 190px;
-      padding: 0.25rem 0.5rem;
-      border-radius: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: rgba(12, 8, 7, 0.95);
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.75);
+      min-height: 1rem;
       font-size: 0.7rem;
-      position: relative;
-    }
-
-    .moodlet-positive {
-      border-color: rgba(190, 242, 100, 0.9);
-      box-shadow: 0 0 18px rgba(190, 242, 100, 0.3);
-    }
-
-    .moodlet-negative {
-      border-color: rgba(248, 113, 113, 0.9);
-      box-shadow: 0 0 18px rgba(248, 113, 113, 0.3);
-    }
-
-    .moodlet-neutral {
-      border-color: rgba(251, 191, 36, 0.8);
-      box-shadow: 0 0 16px rgba(251, 191, 36, 0.25);
-    }
-
-    .moodlet-title-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.4rem;
-      align-items: center;
-      margin-bottom: 0.12rem;
-    }
-
-    .moodlet-name {
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
-
-    .moodlet-pips {
-      font-size: 0.7rem;
-    }
-
-    .moodlet-desc {
-      font-size: 0.68rem;
       color: var(--muted-soft);
-    }
-
-    .moodlet-timer {
-      font-size: 0.63rem;
-      color: var(--muted-soft);
-      margin-top: 0.08rem;
-      text-align: right;
     }
 
     .current-mood-label {
@@ -226,8 +165,6 @@
       color: #fef3c7;
       font-weight: 600;
     }
-
-    /* GRID */
 
     .grid-main {
       display: grid;
@@ -297,8 +234,6 @@
       color: var(--accent-soft);
     }
 
-    /* DAILY RHYTHM */
-
     .timeline {
       display: flex;
       flex-direction: column;
@@ -355,8 +290,6 @@
       color: #fecaca;
       font-weight: 500;
     }
-
-    /* TODAY TASKS */
 
     .today-day-tag {
       font-size: 0.72rem;
@@ -518,8 +451,6 @@
       background: rgba(27, 46, 18, 0.95);
     }
 
-    /* SELF-CARE & FEELINGS */
-
     .selfcare-groups {
       display: flex;
       flex-direction: column;
@@ -612,8 +543,6 @@
       min-height: 1.2em;
     }
 
-    /* CALENDAR & JOURNALS */
-
     .calendar-wrapper {
       margin-top: 0.7rem;
       padding-top: 0.6rem;
@@ -650,7 +579,6 @@
       border: 1px solid rgba(75, 85, 99, 0.7);
       background: rgba(10, 6, 5, 0.9);
       text-align: center;
-      cursor: pointer;
       position: relative;
     }
 
@@ -739,8 +667,6 @@
       color: var(--sage-soft);
     }
 
-    /* STATS VIEW */
-
     .view {
       display: none;
     }
@@ -789,66 +715,6 @@
       border: 1px solid rgba(75, 85, 99, 0.6);
       font-size: 0.74rem;
     }
-
-    .need-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.4rem;
-      margin-bottom: 0.05rem;
-      flex-wrap: wrap;
-    }
-
-    .need-name {
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: #fee2b3;
-    }
-
-    .need-status {
-      font-size: 0.68rem;
-      color: var(--muted-soft);
-    }
-
-    .need-status.overdue {
-      color: #fecaca;
-    }
-
-    .need-next {
-      font-size: 0.68rem;
-      color: var(--muted-soft);
-      margin-bottom: 0.22rem;
-    }
-
-    .need-btns {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-    }
-
-    .need-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: rgba(10, 6, 5, 0.9);
-      color: var(--muted-soft);
-      padding: 0.16rem 0.55rem;
-      font-size: 0.68rem;
-      cursor: pointer;
-    }
-
-    .need-btn.ok {
-      border-color: rgba(34, 197, 94, 0.9);
-      color: #bbf7d0;
-    }
-
-    .need-btn.skip {
-      border-color: rgba(248, 113, 113, 0.9);
-      color: #fecaca;
-    }
-
-    .need-btn:hover {
-      background: rgba(35, 24, 18, 0.95);
-    }
   </style>
 </head>
 <body>
@@ -886,7 +752,7 @@
     <!-- HOME VIEW -->
     <div id="homeView" class="view active">
       <div class="grid-main">
-        <!-- LEFT: rhythm + quests -->
+        <!-- LEFT -->
         <div class="card card-soft">
           <div class="section-title-row" data-simple-hide="true">
             <div>
@@ -1035,7 +901,7 @@
           </div>
         </div>
 
-        <!-- RIGHT: self-care, feelings, calendar -->
+        <!-- RIGHT -->
         <div class="card">
           <div class="section-title-row" data-simple-hide="true">
             <div>
@@ -1086,14 +952,12 @@
           <div class="feelings-section">
             <div class="feelings-title">How are you feeling right now?</div>
             <div class="feelings-buttons">
-              <!-- negative / heavy -->
               <button type="button" class="feeling-btn" data-feeling="stressed">Feeling Stressed</button>
               <button type="button" class="feeling-btn" data-feeling="overwhelmed">Feeling Overwhelmed</button>
               <button type="button" class="feeling-btn" data-feeling="depressed">Feeling Low</button>
               <button type="button" class="feeling-btn" data-feeling="sad">Feeling Sad</button>
               <button type="button" class="feeling-btn" data-feeling="angry">Feeling Angry</button>
               <button type="button" class="feeling-btn" data-feeling="hungry">Feeling Hungry</button>
-              <!-- positive -->
               <button type="button" class="feeling-btn" data-feeling="good">Feeling Good</button>
               <button type="button" class="feeling-btn" data-feeling="happy">Feeling Happy</button>
               <button type="button" class="feeling-btn" data-feeling="peace">Feeling at Peace</button>
@@ -1143,7 +1007,7 @@
         <div class="stats-grid">
           <div>
             <div class="stat-card-title">Lifetime Progress</div>
-            <div class="stat-label">Total house quests counted</div>
+            <div class="stat-label">Total house quests checked off</div>
             <div class="stat-number" id="statTotalQuests">0</div>
 
             <div class="stat-label" style="margin-top:0.3rem;">Days counted as a win (tasks or bad day)</div>
@@ -1158,513 +1022,225 @@
 
           <div>
             <div class="stat-card-title">Needs (Sims-style)</div>
-            <div class="stat-label">Tap “Did it” when you meet a need. These update moodlets & stats.</div>
+            <div class="stat-label">These are gentle reminders, not homework.</div>
 
-            <div id="needsContainer"></div>
+            <div class="need-card">
+              Water • aim for a few refills through the day, even if it’s just sips.
+            </div>
+            <div class="need-card">
+              Food • you deserve real meals, not just kid leftovers.
+            </div>
+            <div class="need-card">
+              Bathroom breaks • you don’t have to hold it until everything’s done.
+            </div>
+            <div class="need-card">
+              Shower & skincare • even tiny versions count as a full ritual.
+            </div>
           </div>
         </div>
 
         <div class="hint" style="margin-top:0.7rem;">
-          Needs reminders use your browser’s timers, so they only work while this page is open. 
-          Voice cues and glowing cards act as your “alarm.”
+          Stats and journals are stored only on this device (in the browser). If you want to keep them safe, use the <span>Save Backup</span> button from the top bar and store the file somewhere safe.
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    /*************** CONFIG ***************/
-    const STORAGE_PREFIX = "HearthHomeTwoTask_";
+    // ---------- CONFIG & SAFE STORAGE ----------
+    const PREFIX = "HearthHome_KSim_";
+
+    function safeGet(key) {
+      try { return window.localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function safeSet(key, value) {
+      try { window.localStorage.setItem(key, value); } catch (e) {}
+    }
+    function safeRemove(key) {
+      try { window.localStorage.removeItem(key); } catch (e) {}
+    }
+
+    function taskKey(dateStr, id) { return PREFIX + "done_" + dateStr + "_" + id; }
+    function badDayKey(dateStr) { return PREFIX + "badday_" + dateStr; }
+    function monthNotesKey(monthKey) { return PREFIX + "notes_" + monthKey; }
+    function dailyJournalKey(dateStr) { return PREFIX + "journal_daily_" + dateStr; }
+    function yearJournalKey(year) { return PREFIX + "journal_year_" + year; }
+    function statKey(name) { return PREFIX + "stat_" + name; }
+
+    const FEELING_TEXTS = {
+      stressed: [
+        "Your body is carrying a lot. One tiny step and one slow breath is enough right now.",
+        "You’re juggling so much. It’s okay to lower the bar and do just the next small thing."
+      ],
+      overwhelmed: [
+        "Shrink the day down to one move: feed someone, hug someone, or sit down for a minute.",
+        "You’re not failing. This season is just very full. One task is a win."
+      ],
+      depressed: [
+        "Feeling low doesn’t mean you’re weak. You’ve been strong for a long time.",
+        "If this stays heavy, it’s okay to talk to someone you trust or a professional."
+      ],
+      sad: [
+        "Sad days happen. They don’t erase everything good you’ve done.",
+        "You are allowed to be sad and still be a good mom and partner."
+      ],
+      angry: [
+        "Anger is a signal, not a flaw. It means something feels like too much or not fair.",
+        "You’re allowed to step away for a minute, even if it’s just into the bathroom."
+      ],
+      hungry: [
+        "Feed yourself too. You matter as much as the kids.",
+        "Even a simple snack is real self-care for your body."
+      ],
+      good: [
+        "Notice this good feeling. It’s a real moment you created.",
+        "You’re allowed to feel okay even if everything isn’t perfect around you."
+      ],
+      happy: [
+        "This happiness is proof your effort is paying off.",
+        "Soak in this little bright spot. You earned it."
+      ],
+      peace: [
+        "Peace is powerful, even when it’s quiet. Let your body rest here a bit.",
+        "You carved out this pocket of calm in the middle of chaos."
+      ],
+      ease: [
+        "Feeling at ease means your body finally gets to exhale.",
+        "You don’t have to brace for the next thing every second. You can rest here for a bit."
+      ]
+    };
 
     const MASTER_TASKS = [
       { id: 1,  area: "Kitchen",   title: "Wipe kitchen counters & stove", desc: "Clear and wipe counters and stovetop so cooking feels calmer." },
       { id: 2,  area: "Kitchen",   title: "Sink & faucet scrub",           desc: "Scrub sink, faucet, and around the drain until it feels fresh." },
       { id: 3,  area: "Kitchen",   title: "Fridge handles & doors",        desc: "Wipe handles and front of the fridge (the “touch spots”)." },
-      { id: 4,  area: "Kitchen",   title: "Quick pantry front tidy",       desc: "Straighten front shelves where you grab snacks / kid things." },
-      { id: 5,  area: "Kitchen",   title: "Sweep or vacuum kitchen floor", desc: "Focus on crumbs under the table and in high-traffic spots." },
+      { id: 4,  area: "Kitchen",   title: "Sweep or vacuum kitchen floor", desc: "Focus on crumbs under the table and in high-traffic spots." },
 
-      { id: 6,  area: "Living Room", title: "Couch & blanket reset",       desc: "Fluff cushions, fold blankets, clear off couch surfaces." },
-      { id: 7,  area: "Living Room", title: "Toy basket reset",            desc: "Toys into bins/baskets so the floor mostly appears again." },
-      { id: 8,  area: "Living Room", title: "Living room surfaces",        desc: "Wipe coffee table, TV stand, or any cluttered flat surface." },
-      { id: 9,  area: "Living Room", title: "Vacuum living room",          desc: "Just main paths and under the table/couch if possible." },
+      { id: 5,  area: "Living Room", title: "Couch & blanket reset",       desc: "Fluff cushions, fold blankets, clear off couch surfaces." },
+      { id: 6,  area: "Living Room", title: "Toy basket reset",            desc: "Toys into bins/baskets so the floor mostly appears again." },
+      { id: 7,  area: "Living Room", title: "Living room surfaces",        desc: "Wipe coffee table, TV stand, or any cluttered flat surface." },
+      { id: 8,  area: "Living Room", title: "Vacuum living room",          desc: "Just main paths and under the table/couch if possible." },
 
-      { id: 10, area: "Bathrooms",  title: "Main bathroom wipe",          desc: "Sink, faucet, counter, quick mirror wipe, toilet seat once-over." },
-      { id: 11, area: "Bathrooms",  title: "Toilet deep clean",           desc: "Inside bowl, seat, outside, and floor around the base." },
-      { id: 12, area: "Bathrooms",  title: "Tub/shower quick scrub",      desc: "Quick scrub on walls and tub floor where soap builds up." },
-      { id: 13, area: "Bathrooms",  title: "Bathroom floor & trash",      desc: "Sweep / spot mop and empty small trash cans." },
+      { id: 9,  area: "Bathrooms",  title: "Main bathroom wipe",          desc: "Sink, faucet, counter, quick mirror wipe, toilet seat once-over." },
+      { id: 10, area: "Bathrooms",  title: "Toilet deep clean",           desc: "Inside bowl, seat, outside, and floor around the base." },
+      { id: 11, area: "Bathrooms",  title: "Tub/shower quick scrub",      desc: "Quick scrub on walls and tub floor where soap builds up." },
+      { id: 12, area: "Bathrooms",  title: "Bathroom floor & trash",      desc: "Sweep / spot mop and empty small trash cans." },
 
-      { id: 14, area: "Bedrooms",   title: "Master bedroom surfaces",     desc: "Clear and wipe your nightstand + one other surface." },
-      { id: 15, area: "Bedrooms",   title: "Kids bedroom tidy",           desc: "Pick one kid’s room: floor mostly clear, toys to their homes." },
-      { id: 16, area: "Bedrooms",   title: "Change one bed",              desc: "Fresh sheets on one bed only. The others can wait." },
-      { id: 17, area: "Bedrooms",   title: "Clothing mini-purge",         desc: "Pull 3–5 worn or outgrown items to donate or toss." },
+      { id: 13, area: "Bedrooms",   title: "Master bedroom surfaces",     desc: "Clear and wipe your nightstand + one other surface." },
+      { id: 14, area: "Bedrooms",   title: "Kids bedroom tidy",           desc: "Pick one kid’s room: floor mostly clear, toys to their homes." },
+      { id: 15, area: "Bedrooms",   title: "Change one bed",              desc: "Fresh sheets on one bed only. The others can wait." },
 
-      { id: 18, area: "Floors",     title: "Entry & hallway sweep",       desc: "Entry, hallway, and main walkway crumb-free if possible." },
-      { id: 19, area: "Floors",     title: "Spot mop sticky spots",       desc: "Just the worst sticky/dirty floor patches (not the whole house)." },
+      { id: 16, area: "Floors",     title: "Entry & hallway sweep",       desc: "Entry, hallway, and main walkway crumb-free if possible." },
+      { id: 17, area: "Floors",     title: "Spot mop sticky spots",       desc: "Just the worst sticky/dirty floor patches (not the whole house)." },
 
-      { id: 20, area: "Laundry",    title: "Fold & put away one load",    desc: "One basket from basket to drawers/closet. All the way done." },
-      { id: 21, area: "Laundry",    title: "Laundry corner tidy",         desc: "Clear tops of machines, gather stray clothes, quick wipe." },
+      { id: 18, area: "Laundry",    title: "Fold & put away one load",    desc: "One basket from basket to drawers/closet. All the way done." },
+      { id: 19, area: "Laundry",    title: "Laundry corner tidy",         desc: "Clear tops of machines, gather stray clothes, quick wipe." },
 
-      { id: 22, area: "Entry",      title: "Shoe & coat reset",           desc: "Line up shoes and hang coats so leaving the house feels easier." },
-      { id: 23, area: "Entry",      title: "Bag refresh",                 desc: "Empty trash, restock diapers/snacks in the go-bag." },
-
-      { id: 24, area: "Dining",     title: "Dining table clear & wipe",   desc: "Clear clutter and wipe the full table surface." },
-      { id: 25, area: "Dining",     title: "Chairs / highchair wipe",     desc: "Seat, arms, and tray where kids eat the most." },
-
-      { id: 26, area: "Dusting",    title: "Dust one zone",               desc: "Pick one area (TV, shelves, window sills) and dust just that." },
-      { id: 27, area: "Dusting",    title: "Doors & switches",            desc: "Wipe door handles and main light switches in key rooms." },
-
-      { id: 28, area: "Deep-ish",   title: "One drawer or shelf",         desc: "Declutter/clean just one drawer or shelf that bugs you." },
-      { id: 29, area: "Deep-ish",   title: "Appliance fronts",            desc: "Wipe outside of dishwasher, oven, and fridge doors." },
-
-      { id: 30, area: "Bonus",      title: "Pick any “bother spot”",      desc: "Choose one little thing that’s been bugging you and clear it." }
+      { id: 20, area: "Entry",      title: "Shoe & coat reset",           desc: "Line up shoes and hang coats so leaving the house feels easier." },
+      { id: 21, area: "Dining",     title: "Dining table clear & wipe",   desc: "Clear clutter and wipe the full table surface." },
+      { id: 22, area: "Dusting",    title: "Dust one zone",               desc: "Pick one area (TV, shelves, window sills) and dust just that." },
+      { id: 23, area: "Deep-ish",   title: "One drawer or shelf",         desc: "Declutter/clean just one drawer or shelf that bugs you." }
     ];
 
-    const CHAOS_AFFIRMATIONS = [
-      "Today was heavy, but you still showed up for your kids. That is not nothing—that is everything.",
-      "Some days the victory is simply that everyone is fed and safe. That absolutely counts.",
-      "You are allowed to have bad days and still be a good mom, a good partner, and a good you.",
-      "The house will wait. Your heart and your body are more important than the dishes.",
-      "You are not behind. You are moving through a hard season doing your best in every direction."
-    ];
+    function getTasksForDate(date) {
+      const dayOfMonth = date.getDate();
+      const total = MASTER_TASKS.length;
+      const baseIndex = ((dayOfMonth - 1) * 2) % total;
+      const i1 = baseIndex;
+      const i2 = (baseIndex + 1) % total;
+      return [MASTER_TASKS[i1], MASTER_TASKS[i2]];
+    }
 
-    const FEELING_TEXTS = {
-      stressed: [
-        "Your body is telling you it’s carrying a lot. Take one slow breath in, one slow breath out. You don’t have to fix everything right now.",
-        "You’re juggling so much. It’s okay to pause for a minute, drink water, and do just the next tiny thing.",
-        "You’re allowed to lower the bar today. Two small wins are enough when your nervous system is tired."
-      ],
-      overwhelmed: [
-        "When everything feels like too much, shrink your world to one small step: feed someone, hug someone, or sit down for a moment.",
-        "You don’t have to carry the whole house, the whole day, and everyone’s emotions all at once. One thing at a time is enough.",
-        "If today feels like too much, that doesn’t mean you’re failing. It means you are human in a very full season."
-      ],
-      depressed: [
-        "Feeling low doesn’t mean you’re weak. It means you’ve been strong for a very long time. You deserve gentleness too.",
-        "If getting through the day feels hard, surviving it is a real accomplishment. Please consider telling someone you trust how you feel.",
-        "You’re not alone, and these feelings are not your fault. If they stay heavy, it’s okay to reach out for help from a professional or someone you trust."
-      ],
-      sad: [
-        "It’s okay to be sad and still be an amazing mom. Your feelings are allowed to exist here.",
-        "Tears and quiet days are part of being human. You don’t have to pretend you’re okay for this to still be a good life.",
-        "If you feel like crying, that’s your heart letting some of the weight out. It’s okay."
-      ],
-      angry: [
-        "Anger is a signal that something feels unfair or too much—it doesn’t make you a bad person.",
-        "If you can, put the day on pause for 30 seconds: unclench your jaw, drop your shoulders, and breathe out the frustration.",
-        "You’re allowed to step away for a minute, even if it’s just to the bathroom, to come back calmer."
-      ],
-      hungry: [
-        "Feed yourself too. You matter just as much as the kids.",
-        "It’s okay to grab something simple. You don’t have to cook a perfect meal to deserve food.",
-        "Your body needs fuel, not just coffee and stress. A quick snack is a real act of self-care."
-      ],
-      good: [
-        "Feeling good is worth noticing. Let yourself enjoy this softness in your day.",
-        "You’re allowed to feel okay, even if everything isn’t perfect around you.",
-        "Savor this moment of ‘good’—it’s proof that your efforts are paying off."
-      ],
-      happy: [
-        "Happiness is a real resource. Let it refill you a little.",
-        "Notice what’s making you happy and tuck it away as a tiny memory.",
-        "You deserve these happy moments. You didn’t accidentally stumble into them—you helped create them."
-      ],
-      peace: [
-        "Peace isn’t loud, but it’s powerful. Let your body rest here for a bit.",
-        "This peaceful moment is medicine. You can carry it with you into the next chaos wave.",
-        "You’ve carved out a pocket of peace inside a full life. That’s a skill, not an accident."
-      ],
-      ease: [
-        "Feeling at ease means your nervous system finally gets to exhale.",
-        "Let your shoulders drop and let yourself fully enjoy this ease.",
-        "You don’t have to brace for the next thing right now. Let this ease soak in."
-      ]
-    };
-
-    // Needs in minutes
-    const NEEDS_CONFIG = {
-      hydrate: {
-        name: "Hydration",
-        key: "need_hydrate",
-        label: "Drink water",
-        intervalMin: 90,
-        reminderVoice: "Shield-maiden, it’s time to drink water and refill your cup.",
-        overdueVoice: "Even a warrior of the North needs water. Take a sip if you can.",
-        positiveMood: { name: "Hydrated", desc: "You drank water. Your body thanks you.", type: "positive" },
-        negativeMood: { name: "Parched", desc: "You’ve gone a while without water. Be gentle with yourself.", type: "negative" }
-      },
-      eat: {
-        name: "Meal",
-        key: "need_eat",
-        label: "Meal / real food",
-        intervalMin: 4 * 60,
-        reminderVoice: "It might be time for a real meal, not just bites off tiny plates.",
-        overdueVoice: "Your warrior’s body needs food, not only coffee and crumbs.",
-        positiveMood: { name: "Fed", desc: "You ate something real. Energy slowly returning.", type: "positive" },
-        negativeMood: { name: "Running on empty", desc: "You’ve been pushing without real food.", type: "negative" }
-      },
-      snack: {
-        name: "Snack",
-        key: "need_snack",
-        label: "Small snack",
-        intervalMin: 150,
-        reminderVoice: "A small snack would keep your energy steady, shield-maiden.",
-        overdueVoice: "Even a few bites count as taking care of you.",
-        positiveMood: { name: "Snacked", desc: "A small snack topped up your energy.", type: "positive" },
-        negativeMood: { name: "Lightheaded", desc: "It’s been a while since you refueled.", type: "negative" }
-      },
-      bathroom: {
-        name: "Bathroom",
-        key: "need_bathroom",
-        label: "Bathroom break",
-        intervalMin: 120,
-        reminderVoice: "If you’ve been holding it, this is your sign to take a bathroom break.",
-        overdueVoice: "Your body’s needs matter, too—pause and take the break.",
-        positiveMood: { name: "Relief", desc: "You actually took a bathroom break.", type: "positive" },
-        negativeMood: { name: "Holding it", desc: "You’ve postponed your own basic needs again.", type: "negative" }
-      },
-      shower: {
-        name: "Shower",
-        key: "need_shower",
-        label: "Shower reset",
-        intervalMin: 24 * 60,
-        reminderVoice: "A quick hot shower could reset your whole mood, even if it’s short.",
-        overdueVoice: "You deserve to feel fresh and reset, not just functional.",
-        positiveMood: { name: "Fresh & clean", desc: "A shower buffed your mood and energy.", type: "positive" },
-        negativeMood: { name: "Stale", desc: "You’ve been running nonstop. A reset would help.", type: "negative" }
-      },
-      skincare: {
-        name: "Skincare",
-        key: "need_skincare",
-        label: "Skincare ritual",
-        intervalMin: 24 * 60,
-        reminderVoice: "Skincare is your small ritual of honor, not vanity.",
-        overdueVoice: "You’re allowed to care about your own face in this season.",
-        positiveMood: { name: "Skincare buff", desc: "You did your skincare. Goddess unlocked.", type: "positive" },
-        negativeMood: { name: "Neglected", desc: "You haven’t been able to touch your skincare lately.", type: "negative" }
-      }
-    };
-
-    /*************** STORAGE KEYS ***************/
-    function doneKey(dateStr, taskId) { return STORAGE_PREFIX + "done_" + dateStr + "_" + taskId; }
-    function notesKey(monthKey) { return STORAGE_PREFIX + "notes_" + monthKey; }
-    function badDayKey(dateStr) { return STORAGE_PREFIX + "badday_" + dateStr; }
-    function dailyJournalKey(dateStr) { return STORAGE_PREFIX + "journal_daily_" + dateStr; }
-    function yearJournalKey(year) { return STORAGE_PREFIX + "journal_year_" + year; }
-    function statKey(name) { return STORAGE_PREFIX + "stat_" + name; }
-    function needLastKey(needKey) { return STORAGE_PREFIX + "need_last_" + needKey; }
-    function needMissKey(needKey) { return STORAGE_PREFIX + "need_miss_" + needKey; }
-
-    /*************** UTIL ***************/
     function formatDateLabel(date) {
       return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
     }
-    function getDayName(date) { return date.toLocaleDateString(undefined, { weekday: "long" }); }
-    function getTasksForDate(date) {
-      const dayOfMonth = date.getDate();
-      const totalTasks = MASTER_TASKS.length;
-      const baseIndex = ((dayOfMonth - 1) * 2) % totalTasks;
-      const index1 = baseIndex;
-      const index2 = (baseIndex + 1) % totalTasks;
-      return [MASTER_TASKS[index1], MASTER_TASKS[index2]];
-    }
+
     function getMonthKey(date) {
       const y = date.getFullYear();
-      const m = date.getMonth() + 1;
-      return y + "-" + String(m).padStart(2, "0");
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      return y + "-" + m;
     }
 
-    /*************** VIKING VOICE SELECTION ***************/
-    let vikingVoice = null;
-
-    function selectVikingVoice() {
-      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      const voices = window.speechSynthesis.getVoices();
-      if (!voices || voices.length === 0) return;
-
-      const preferredNames = [
-        "Google UK English Female",
-        "Google US English Female",
-        "Samantha",
-        "Victoria",
-        "Karen",
-        "Serena"
-      ];
-
-      let match = voices.find(v => preferredNames.includes(v.name));
-      if (!match) {
-        match = voices.find(v => /female/i.test(v.name + v.voiceURI));
-      }
-      vikingVoice = match || voices[0];
-    }
-
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      const synth = window.speechSynthesis;
-      if (typeof synth.addEventListener === "function") {
-        synth.addEventListener("voiceschanged", selectVikingVoice);
-      } else {
-        synth.onvoiceschanged = selectVikingVoice;
-      }
-      selectVikingVoice();
-    }
-
-    function speakText(text) {
-      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      try {
-        const utter = new SpeechSynthesisUtterance(text);
-        if (vikingVoice) {
-          utter.voice = vikingVoice;
-        }
-        utter.rate = 0.93;
-        utter.pitch = 0.98;
-        utter.volume = 1.0;
-
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utter);
-      } catch (e) {
-        // ignore if blocked
-      }
-    }
-
-    /*************** STATS HELPERS ***************/
+    // ---------- STATS HELPERS ----------
     function getStat(name) {
-      const raw = localStorage.getItem(statKey(name));
+      const raw = safeGet(statKey(name));
       return raw ? parseInt(raw, 10) || 0 : 0;
     }
-    function incStat(name, delta = 1) {
+    function incStat(name, delta) {
       const current = getStat(name);
-      localStorage.setItem(statKey(name), String(current + delta));
+      safeSet(statKey(name), String(current + (delta || 1)));
     }
 
-    /*************** MOODLET SYSTEM ***************/
-    const moodlets = [];
+    function computeStatsFromStorage() {
+      let totalQuests = 0;
+      const winDaysSet = new Set();
 
-    function addMoodlet({ name, desc, type = "neutral", intensity = 1, durationMinutes = 120 }) {
-      const now = Date.now();
-      const id = STORAGE_PREFIX + "mood_" + now + "_" + Math.random().toString(36).slice(2);
-      const expiresAt = now + durationMinutes * 60 * 1000;
-      moodlets.push({ id, name, desc, type, intensity, expiresAt });
-      renderMoodlets();
-      return id;
-    }
-
-    function cleanupMoodlets() {
-      const now = Date.now();
-      for (let i = moodlets.length - 1; i >= 0; i--) {
-        if (moodlets[i].expiresAt && moodlets[i].expiresAt < now) {
-          moodlets.splice(i, 1);
-        }
-      }
-      renderMoodlets();
-    }
-
-    function computeCurrentMood() {
-      if (moodlets.length === 0) return "Neutral • Just existing (which is enough).";
-      const active = moodlets.slice().sort((a, b) => b.intensity - a.intensity).slice(0, 3);
-      const dominant = active[0];
-      if (dominant.type === "positive") {
-        return "Gently positive • " + dominant.name;
-      } else if (dominant.type === "negative") {
-        return "Strained • " + dominant.name;
-      } else {
-        return "Mixed • " + dominant.name;
-      }
-    }
-
-    function minutesRemaining(expiresAt) {
-      const diffMs = expiresAt - Date.now();
-      if (diffMs <= 0) return 0;
-      return Math.round(diffMs / 60000);
-    }
-
-    function renderMoodlets() {
-      const strip = document.getElementById("moodletStrip");
-      const label = document.getElementById("currentMoodLabel");
-      if (!strip || !label) return;
-
-      cleanupMoodlets();
-      strip.innerHTML = "";
-
-      const sorted = moodlets.slice().sort((a, b) => a.expiresAt - b.expiresAt).slice(0, 4);
-
-      sorted.forEach(m => {
-        const div = document.createElement("div");
-        div.className = "moodlet moodlet-" + (m.type || "neutral");
-
-        const titleRow = document.createElement("div");
-        titleRow.className = "moodlet-title-row";
-
-        const nameEl = document.createElement("div");
-        nameEl.className = "moodlet-name";
-        nameEl.textContent = m.name;
-
-        const pipsEl = document.createElement("div");
-        pipsEl.className = "moodlet-pips";
-        pipsEl.textContent = "●".repeat(m.intensity).padEnd(3, "○");
-
-        titleRow.appendChild(nameEl);
-        titleRow.appendChild(pipsEl);
-        div.appendChild(titleRow);
-
-        const descEl = document.createElement("div");
-        descEl.className = "moodlet-desc";
-        descEl.textContent = m.desc;
-        div.appendChild(descEl);
-
-        const timeEl = document.createElement("div");
-        timeEl.className = "moodlet-timer";
-        const minsLeft = minutesRemaining(m.expiresAt);
-        timeEl.textContent = minsLeft > 0 ? `${minsLeft} min left` : "ending soon";
-        div.appendChild(timeEl);
-
-        strip.appendChild(div);
-      });
-
-      const moodText = computeCurrentMood();
-      const span = label.querySelector("span");
-      if (span) span.textContent = moodText;
-    }
-
-    setInterval(cleanupMoodlets, 60000);
-
-    /*************** DONE / NOTES / JOURNALS / BAD DAY ***************/
-    function saveDone(dateStr, taskId, done) {
-      const key = doneKey(dateStr, taskId);
-      if (done) {
-        localStorage.setItem(key, "1");
-      } else {
-        localStorage.removeItem(key);
-      }
-    }
-    function isDone(dateStr, taskId) {
-      return localStorage.getItem(doneKey(dateStr, taskId)) === "1";
-    }
-    function saveMonthNotes(monthKey, text) {
-      localStorage.setItem(notesKey(monthKey), text || "");
-    }
-    function loadMonthNotes(monthKey) {
-      return localStorage.getItem(notesKey(monthKey)) || "";
-    }
-    function saveBadDay(dateStr, isBad) {
-      const key = badDayKey(dateStr);
-      if (isBad) localStorage.setItem(key, "1");
-      else localStorage.removeItem(key);
-    }
-    function isBadDay(dateStr) { return localStorage.getItem(badDayKey(dateStr)) === "1"; }
-
-    function updateBadDayUI(dateStr) {
-      const btn = document.getElementById("badDayBtn");
-      const msg = document.getElementById("badDayMsg");
-      if (!btn || !msg) return;
-
-      const active = isBadDay(dateStr);
-      if (active) {
-        btn.classList.add("active");
-        btn.textContent = "Bad day marked • This day still counts as a win";
-        msg.textContent = "Even if nothing else happened, keeping three kids fed and loved is enough. You still showed up.";
-      } else {
-        btn.classList.remove("active");
-        btn.textContent = "Bad day? Tap here to still count this day as a win";
-        msg.textContent = "";
-      }
-    }
-
-    function updateDailyJournal(date) {
-      const area = document.getElementById("dailyJournal");
-      const label = document.getElementById("dailyJournalLabel");
-      if (!area || !label) return;
-      const dateStr = date.toISOString().slice(0, 10);
-      label.textContent = "Today’s journal for " + formatDateLabel(date);
-      area.value = localStorage.getItem(dailyJournalKey(dateStr)) || "";
-      area.oninput = () => localStorage.setItem(dailyJournalKey(dateStr), area.value);
-    }
-
-    function updateYearJournal(referenceDate) {
-      const area = document.getElementById("yearJournal");
-      const label = document.getElementById("yearJournalLabel");
-      if (!area || !label) return;
-      const year = referenceDate.getFullYear();
-      label.textContent = "Year journal for " + year;
-      area.value = localStorage.getItem(yearJournalKey(year)) || "";
-      area.oninput = () => localStorage.setItem(yearJournalKey(year), area.value);
-    }
-
-    /*************** BACKUP / SIMPLE MODE ***************/
-    function backupData() {
-      const data = {};
-      for (let i = 0; i < localStorage.length; i++) {
+      for (let i = 0; i < (window.localStorage ? localStorage.length : 0); i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith(STORAGE_PREFIX)) {
-          data[key] = localStorage.getItem(key);
+        if (!key || !key.startsWith(PREFIX)) continue;
+
+        if (key.includes("done_")) {
+          totalQuests += 1;
+          const datePart = key.split("done_")[1].split("_")[0];
+          winDaysSet.add(datePart);
+        }
+        if (key.includes("badday_")) {
+          const datePart = key.split("badday_")[1];
+          winDaysSet.add(datePart);
         }
       }
-      const json = JSON.stringify(data, null, 2);
-      const blob = new Blob([json], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      const dateStr = new Date().toISOString().slice(0, 10);
-      a.href = url;
-      a.download = "hearth-home-backup-" + dateStr + ".json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      speakText("Backup created. Your stats and journals are saved in a file.");
+
+      return {
+        totalQuests,
+        winDays: winDaysSet.size,
+        selfCare: getStat("selfcare"),
+        feelings: getStat("feelings")
+      };
     }
 
-    function setSimpleMode(on) {
-      const btn = document.getElementById("simpleToggleBtn");
-      if (on) {
-        document.body.classList.add("simple-mode");
-        localStorage.setItem(STORAGE_PREFIX + "simpleMode", "1");
-        if (btn) btn.textContent = "Simple View: On";
+    // ---------- TODAY VIEW ----------
+    function isTaskDone(dateStr, id) {
+      return safeGet(taskKey(dateStr, id)) === "1";
+    }
+    function setTaskDone(dateStr, id, done) {
+      if (done) {
+        safeSet(taskKey(dateStr, id), "1");
       } else {
-        document.body.classList.remove("simple-mode");
-        localStorage.removeItem(STORAGE_PREFIX + "simpleMode");
-        if (btn) btn.textContent = "Simple View: Off";
+        safeRemove(taskKey(dateStr, id));
       }
     }
 
-    function initMetaButtons() {
-      const simpleBtn = document.getElementById("simpleToggleBtn");
-      const saveBtn = document.getElementById("saveBtn");
-
-      // Restore simple mode preference
-      const simpleStored = localStorage.getItem(STORAGE_PREFIX + "simpleMode") === "1";
-      setSimpleMode(simpleStored);
-
-      if (simpleBtn) {
-        simpleBtn.addEventListener("click", () => {
-          const on = !document.body.classList.contains("simple-mode");
-          setSimpleMode(on);
-        });
-      }
-      if (saveBtn) {
-        saveBtn.addEventListener("click", backupData);
+    function isBadDay(dateStr) {
+      return safeGet(badDayKey(dateStr)) === "1";
+    }
+    function setBadDay(dateStr, isBad) {
+      if (isBad) {
+        safeSet(badDayKey(dateStr), "1");
+      } else {
+        safeRemove(badDayKey(dateStr));
       }
     }
 
-    /*************** TODAY & CALENDAR ***************/
-    function renderToday(date, isRealToday) {
-      const todayDateStr = date.toISOString().slice(0, 10);
-      const dayName = getDayName(date);
+    function renderToday(date) {
+      const dateStr = date.toISOString().slice(0, 10);
+      const dayName = date.toLocaleDateString(undefined, { weekday: "long" });
 
-      const labelDayEl = document.querySelector("#todayLabel .day-name");
-      const labelDateEl = document.querySelector("#todayLabel .date-text");
-      if (labelDayEl) labelDayEl.textContent = isRealToday ? "TODAY" : dayName.toUpperCase();
-      if (labelDateEl) labelDateEl.textContent = "• " + formatDateLabel(date);
+      const dateLabel = document.querySelector("#todayLabel .date-text");
+      const dayNameLabel = document.getElementById("todayDayName");
+      const daySummary = document.getElementById("todayDaySummary");
 
-      const todayDayName = document.getElementById("todayDayName");
-      if (todayDayName) todayDayName.textContent = dayName + " • 2 quests";
+      if (dateLabel) dateLabel.textContent = "• " + formatDateLabel(date);
+      if (dayNameLabel) dayNameLabel.textContent = dayName + " • 2 quests";
 
       const tasksUl = document.getElementById("todayTasks");
-      const todaySummary = document.getElementById("todayDaySummary");
+      if (!tasksUl) return;
       tasksUl.innerHTML = "";
 
       const tasks = getTasksForDate(date);
       const areaShort = a => a.split(" ")[0];
 
-      if (todaySummary) {
-        todaySummary.textContent = `Today focuses on: ${areaShort(tasks[0].area)} + ${areaShort(tasks[1].area)}`;
+      if (daySummary) {
+        daySummary.textContent = "Today focuses on: " + areaShort(tasks[0].area) + " + " + areaShort(tasks[1].area);
       }
 
       tasks.forEach(task => {
@@ -1673,18 +1249,19 @@
 
         const cb = document.createElement("input");
         cb.type = "checkbox";
-        cb.checked = isDone(todayDateStr, task.id);
+        cb.checked = isTaskDone(dateStr, task.id);
+
         cb.addEventListener("change", () => {
-          saveDone(todayDateStr, task.id, cb.checked);
-          if (cb.checked) {
+          const wasDone = isTaskDone(dateStr, task.id);
+          setTaskDone(dateStr, task.id, cb.checked);
+          if (!wasDone && cb.checked) {
             incStat("quests", 1);
-            addMoodlet({ name: "Small house win", desc: "You chipped away at the chaos.", type: "positive", intensity: 1, durationMinutes: 180 });
           }
           renderCalendar(date);
           renderStatsPanel();
         });
 
-        const label = document.createElement("div");
+        const info = document.createElement("div");
         const area = document.createElement("div");
         area.className = "task-area";
         area.textContent = task.area;
@@ -1697,65 +1274,75 @@
         desc.className = "task-desc";
         desc.textContent = task.desc;
 
-        label.appendChild(area);
-        label.appendChild(main);
-        label.appendChild(desc);
+        info.appendChild(area);
+        info.appendChild(main);
+        info.appendChild(desc);
 
         li.appendChild(cb);
-        li.appendChild(label);
+        li.appendChild(info);
         tasksUl.appendChild(li);
       });
 
-      updateBadDayUI(todayDateStr);
-
+      // Bad day button
       const badBtn = document.getElementById("badDayBtn");
       const badMsg = document.getElementById("badDayMsg");
+      const active = isBadDay(dateStr);
+
       if (badBtn && badMsg) {
+        if (active) {
+          badBtn.classList.add("active");
+          badBtn.textContent = "Bad day marked • This day still counts as a win";
+          badMsg.textContent = "Even if nothing else happened, keeping three kids fed and loved is enough.";
+        } else {
+          badBtn.classList.remove("active");
+          badBtn.textContent = "Bad day? Tap here to still count this day as a win";
+          badMsg.textContent = "";
+        }
+
         badBtn.onclick = () => {
-          const currentlyBad = isBadDay(todayDateStr);
-          const newValue = !currentlyBad;
-          saveBadDay(todayDateStr, newValue);
-          updateBadDayUI(todayDateStr);
-          renderCalendar(date);
-          renderStatsPanel();
-          if (newValue) {
-            const aff = CHAOS_AFFIRMATIONS[Math.floor(Math.random() * CHAOS_AFFIRMATIONS.length)];
-            badMsg.textContent = aff;
-            speakText(aff);
-            addMoodlet({
-              name: "Chaos acknowledged",
-              desc: "You named that today was hard instead of pretending it wasn’t.",
-              type: "neutral",
-              intensity: 2,
-              durationMinutes: 240
-            });
+          const now = !isBadDay(dateStr);
+          setBadDay(dateStr, now);
+          if (now) {
+            badMsg.textContent = "You named that today was rough. That still counts as a win.";
           } else {
             badMsg.textContent = "";
           }
+          renderCalendar(date);
+          renderStatsPanel();
+          renderToday(date);
         };
       }
 
-      const selfBonusBtn = document.getElementById("selfBonusBtn");
-      if (selfBonusBtn) {
-        selfBonusBtn.onclick = () => {
+      // Self-care bonus
+      const bonusBtn = document.getElementById("selfBonusBtn");
+      if (bonusBtn) {
+        bonusBtn.onclick = () => {
           incStat("selfcare", 1);
-          addMoodlet({
-            name: "Self-care buff",
-            desc: "You did something kind for yourself. That matters.",
-            type: "positive",
-            intensity: 3,
-            durationMinutes: 300
-          });
-          speakText("Good. That counts as a real bonus in your day.");
+          const strip = document.getElementById("moodletStrip");
+          if (strip) {
+            strip.textContent = "Self-care buff: you did something just for you. That matters.";
+          }
+          updateCurrentMood("A bit boosted • you gave yourself a tiny bonus.");
           renderStatsPanel();
         };
       }
 
-      updateDailyJournal(date);
+      // Daily journal binding
+      const dailyArea = document.getElementById("dailyJournal");
+      const dailyLabel = document.getElementById("dailyJournalLabel");
+      if (dailyArea && dailyLabel) {
+        dailyLabel.textContent = "Today’s journal for " + formatDateLabel(date);
+        dailyArea.value = safeGet(dailyJournalKey(dateStr)) || "";
+        dailyArea.oninput = () => {
+          safeSet(dailyJournalKey(dateStr), dailyArea.value);
+        };
+      }
     }
 
+    // ---------- CALENDAR ----------
     function renderCalendarHeader() {
       const header = document.getElementById("calendarHeader");
+      if (!header) return;
       header.innerHTML = "";
       ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
         const div = document.createElement("div");
@@ -1765,46 +1352,60 @@
       });
     }
 
-    function renderCalendar(referenceDate) {
+    function renderCalendar(refDate) {
       const grid = document.getElementById("calendarGrid");
-      grid.innerHTML = "";
+      const monthLabel = document.getElementById("monthLabel");
+      const statsRow = document.getElementById("statsRow");
+      const notesArea = document.getElementById("monthNotes");
+      if (!grid || !monthLabel || !statsRow || !notesArea) return;
 
-      const year = referenceDate.getFullYear();
-      const month = referenceDate.getMonth();
+      grid.innerHTML = "";
+      statsRow.innerHTML = "";
+
+      const year = refDate.getFullYear();
+      const month = refDate.getMonth();
       const firstDay = new Date(year, month, 1);
       const lastDay = new Date(year, month + 1, 0);
       const daysInMonth = lastDay.getDate();
       const startWeekday = firstDay.getDay();
 
-      const monthLabel = document.getElementById("monthLabel");
       monthLabel.textContent = firstDay.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
-      let daysWithAnyDone = 0;
-      let totalTasksDone = 0;
-      const totalTasksThisMonth = daysInMonth * 2;
-
-      const today = new Date();
-      const sameMonthAsToday = (today.getMonth() === month && today.getFullYear() === year);
-
+      // blanks
       for (let i = 0; i < startWeekday; i++) {
         const placeholder = document.createElement("div");
         grid.appendChild(placeholder);
       }
 
+      const today = new Date();
+      const sameMonthAsToday = today.getFullYear() === year && today.getMonth() === month;
+
+      let daysWithAnyDone = 0;
+      let totalTasksDone = 0;
+      const totalTasksPossible = daysInMonth * 2;
+
       for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(year, month, day);
-        const dateStr = date.toISOString().slice(0, 10);
+        const dateStr = date.toISOString().slice(0,10);
         const tasks = getTasksForDate(date);
-        const done1 = isDone(dateStr, tasks[0].id);
-        const done2 = isDone(dateStr, tasks[1].id);
+
+        const done1 = isTaskDone(dateStr, tasks[0].id);
+        const done2 = isTaskDone(dateStr, tasks[1].id);
         const bad = isBadDay(dateStr);
 
         let doneCount = (done1 ? 1 : 0) + (done2 ? 1 : 0);
         if (bad && doneCount < 2) doneCount = 2;
 
+        if (doneCount > 0) {
+          daysWithAnyDone++;
+          totalTasksDone += doneCount;
+        }
+
         const cell = document.createElement("div");
         cell.className = "day-cell";
-        if (sameMonthAsToday && day === today.getDate()) cell.classList.add("today");
+        if (sameMonthAsToday && day === today.getDate()) {
+          cell.classList.add("today");
+        }
 
         const num = document.createElement("div");
         num.className = "day-cell-number";
@@ -1821,49 +1422,55 @@
           const dot = document.createElement("div");
           dot.className = "day-cell-complete";
           cell.appendChild(dot);
-          daysWithAnyDone++;
-          totalTasksDone += doneCount;
         }
 
         cell.addEventListener("click", () => {
-          const todayNow = new Date();
-          const isRealToday =
-            todayNow.getFullYear() === date.getFullYear() &&
-            todayNow.getMonth() === date.getMonth() &&
-            todayNow.getDate() === date.getDate();
-          renderToday(date, isRealToday);
+          renderToday(date);
         });
 
         grid.appendChild(cell);
       }
 
-      const statsRow = document.getElementById("statsRow");
-      statsRow.innerHTML = "";
+      const pill1 = document.createElement("div");
+      pill1.className = "stat-pill";
+      pill1.innerHTML = "<strong>" + daysWithAnyDone + "</strong> days with at least one counted win";
 
-      const stat1 = document.createElement("div");
-      stat1.className = "stat-pill";
-      stat1.innerHTML = `<strong>${daysWithAnyDone}</strong> days with at least 1 quest or bad-day win`;
-      statsRow.appendChild(stat1);
+      const pill2 = document.createElement("div");
+      pill2.className = "stat-pill";
+      pill2.innerHTML = "<strong>" + totalTasksDone + "</strong> / " + totalTasksPossible + " quests counted this month";
 
-      const stat2 = document.createElement("div");
-      stat2.className = "stat-pill";
-      stat2.innerHTML = `<strong>${totalTasksDone}</strong> / ${totalTasksThisMonth} quests counted this month`;
-      statsRow.appendChild(stat2);
+      const pill3 = document.createElement("div");
+      pill3.className = "stat-pill";
+      pill3.textContent = "Goal: two quests a day is enough. Chaos days still count.";
 
-      const stat3 = document.createElement("div");
-      stat3.className = "stat-pill";
-      stat3.textContent = "Goal: two quests a day is enough. Chaos days still count.";
-      statsRow.appendChild(stat3);
+      statsRow.appendChild(pill1);
+      statsRow.appendChild(pill2);
+      statsRow.appendChild(pill3);
 
-      const monthKey = getMonthKey(referenceDate);
-      const notesArea = document.getElementById("monthNotes");
-      notesArea.value = loadMonthNotes(monthKey);
-      notesArea.oninput = () => saveMonthNotes(monthKey, notesArea.value);
+      // month notes
+      const monthKey = getMonthKey(refDate);
+      notesArea.value = safeGet(monthNotesKey(monthKey)) || "";
+      notesArea.oninput = () => safeSet(monthNotesKey(monthKey), notesArea.value);
 
-      updateYearJournal(referenceDate);
+      // year journal
+      const yearArea = document.getElementById("yearJournal");
+      const yearLabel = document.getElementById("yearJournalLabel");
+      if (yearArea && yearLabel) {
+        yearLabel.textContent = "Year journal for " + year;
+        yearArea.value = safeGet(yearJournalKey(year)) || "";
+        yearArea.oninput = () => safeSet(yearJournalKey(year), yearArea.value);
+      }
     }
 
-    /*************** FEELINGS ***************/
+    // ---------- FEELINGS & MOOD ----------
+    function updateCurrentMood(text) {
+      const label = document.getElementById("currentMoodLabel");
+      if (!label) return;
+      const span = label.querySelector("span");
+      if (span) span.textContent = text;
+      safeSet(PREFIX + "lastMood", text);
+    }
+
     function initFeelings() {
       const buttons = document.querySelectorAll(".feeling-btn");
       const msgEl = document.getElementById("feelingsMsg");
@@ -1876,222 +1483,24 @@
           if (options.length === 0) return;
           const text = options[Math.floor(Math.random() * options.length)];
           msgEl.textContent = text;
-          speakText(text);
           incStat("feelings", 1);
 
-          const nameMap = {
-            stressed: "Stressed moodlet",
-            overwhelmed: "Overwhelmed moodlet",
-            depressed: "Heavy heart",
-            sad: "Sad moodlet",
-            angry: "Angry sparks",
-            hungry: "Hunger ping",
-            good: "Soft good feeling",
-            happy: "Happy glow",
-            peace: "Peaceful aura",
-            ease: "Ease in your chest"
-          };
+          const moodSummary = feeling === "good" || feeling === "happy" || feeling === "peace" || feeling === "ease"
+            ? "Gently positive • " + feeling
+            : "Heavy but honest • " + feeling;
 
-          const positiveSet = ["good", "happy", "peace", "ease"];
-          const isPositive = positiveSet.includes(feeling);
-
-          addMoodlet({
-            name: nameMap[feeling] || "Feeling check",
-            desc: isPositive
-              ? "You noticed a good feeling in the middle of everything."
-              : "You named how you feel. That counts.",
-            type: isPositive ? "positive" : (feeling === "hungry" ? "neutral" : "negative"),
-            intensity: isPositive ? 2 : (feeling === "depressed" ? 3 : 2),
-            durationMinutes: 180
-          });
-
+          updateCurrentMood(moodSummary);
           renderStatsPanel();
         });
       });
+
+      // restore last mood if any
+      const lastMood = safeGet(PREFIX + "lastMood");
+      if (lastMood) updateCurrentMood(lastMood);
+      else updateCurrentMood("Neutral • just existing (which is enough).");
     }
 
-    /*************** NEEDS & TIMERS ***************/
-    function getLastNeedTime(need) {
-      const raw = localStorage.getItem(needLastKey(need.key));
-      return raw ? parseInt(raw, 10) || 0 : 0;
-    }
-    function setLastNeedTime(need) {
-      localStorage.setItem(needLastKey(need.key), String(Date.now()));
-    }
-    function incNeedMiss(need) {
-      const raw = localStorage.getItem(needMissKey(need.key));
-      const current = raw ? parseInt(raw, 10) || 0 : 0;
-      localStorage.setItem(needMissKey(need.key), String(current + 1));
-    }
-
-    function minutesSince(timestamp) {
-      if (!timestamp) return Infinity;
-      return (Date.now() - timestamp) / 60000;
-    }
-
-    function renderNeeds() {
-      const container = document.getElementById("needsContainer");
-      if (!container) return;
-      container.innerHTML = "";
-
-      Object.values(NEEDS_CONFIG).forEach(need => {
-        const card = document.createElement("div");
-        card.className = "need-card";
-        card.id = "needCard_" + need.key;
-
-        const header = document.createElement("div");
-        header.className = "need-header";
-
-        const nameEl = document.createElement("div");
-        nameEl.className = "need-name";
-        nameEl.textContent = need.name;
-
-        const statusEl = document.createElement("div");
-        statusEl.className = "need-status";
-        statusEl.id = "needStatus_" + need.key;
-
-        header.appendChild(nameEl);
-        header.appendChild(statusEl);
-        card.appendChild(header);
-
-        const nextEl = document.createElement("div");
-        nextEl.className = "need-next";
-        nextEl.id = "needNext_" + need.key;
-        card.appendChild(nextEl);
-
-        const btnRow = document.createElement("div");
-        btnRow.className = "need-btns";
-
-        const okBtn = document.createElement("button");
-        okBtn.className = "need-btn ok";
-        okBtn.textContent = "Did it";
-        okBtn.onclick = () => {
-          setLastNeedTime(need);
-          incStat("needs_met", 1);
-          addMoodlet({ name: need.positiveMood.name, desc: need.positiveMood.desc, type: "positive", intensity: 2, durationMinutes: 180 });
-          speakText("Good. That need is met for now.");
-          updateNeedDisplay(need);
-          renderStatsPanel();
-        };
-
-        const skipBtn = document.createElement("button");
-        skipBtn.className = "need-btn skip";
-        skipBtn.textContent = "Couldn’t now";
-        skipBtn.onclick = () => {
-          incNeedMiss(need);
-          incStat("needs_missed", 1);
-          addMoodlet({ name: need.negativeMood.name, desc: need.negativeMood.desc, type: "negative", intensity: 2, durationMinutes: 180 });
-          speakText("Understood. It’s still a lot, but you are trying.");
-          updateNeedDisplay(need);
-          renderStatsPanel();
-        };
-
-        btnRow.appendChild(okBtn);
-        btnRow.appendChild(skipBtn);
-        card.appendChild(btnRow);
-
-        container.appendChild(card);
-
-        updateNeedDisplay(need);
-      });
-    }
-
-    function updateNeedDisplay(need) {
-      const last = getLastNeedTime(need);
-      const since = minutesSince(last);
-      const statusEl = document.getElementById("needStatus_" + need.key);
-      const nextEl = document.getElementById("needNext_" + need.key);
-      if (!statusEl || !nextEl) return;
-
-      const interval = need.intervalMin;
-      const remaining = interval - since;
-      if (!last || since === Infinity) {
-        statusEl.textContent = "Not tracked yet";
-        statusEl.classList.remove("overdue");
-        nextEl.textContent = "Tap “Did it” next time you do this.";
-      } else if (remaining > 15) {
-        statusEl.textContent = "Satisfied";
-        statusEl.classList.remove("overdue");
-        nextEl.textContent = `Roughly ${Math.round(remaining)} min until next ideal check-in.`;
-      } else if (remaining > 0) {
-        statusEl.textContent = "Coming up soon";
-        statusEl.classList.remove("overdue");
-        nextEl.textContent = `About ${Math.round(remaining)} min until ideal time.`;
-      } else {
-        statusEl.textContent = "Overdue";
-        statusEl.classList.add("overdue");
-        nextEl.textContent = `Ideally this happened ${Math.abs(Math.round(remaining))} min ago.`;
-      }
-    }
-
-    function checkNeedsAndRemind() {
-      Object.values(NEEDS_CONFIG).forEach(need => {
-        const last = getLastNeedTime(need);
-        const since = minutesSince(last);
-        const interval = need.intervalMin;
-        if (since === Infinity) return;
-
-        const card = document.getElementById("needCard_" + need.key);
-        const remaining = interval - since;
-
-        if (remaining <= 0 && remaining > -15) {
-          if (card) card.style.boxShadow = "0 0 18px rgba(251,191,36,0.5)";
-          speakText(need.reminderVoice);
-        } else if (remaining <= -30 && remaining > -90) {
-          if (card) card.style.boxShadow = "0 0 18px rgba(248,113,113,0.6)";
-          speakText(need.overdueVoice);
-          addMoodlet({
-            name: need.negativeMood.name,
-            desc: need.negativeMood.desc,
-            type: "negative",
-            intensity: 2,
-            durationMinutes: 120
-          });
-        } else {
-          if (card) card.style.boxShadow = "";
-        }
-
-        updateNeedDisplay(need);
-      });
-    }
-
-    setInterval(checkNeedsAndRemind, 60000);
-
-    /*************** STATS VIEW ***************/
-    function renderStatsPanel() {
-      const totalQuests = getStat("quests");
-      const selfCare = getStat("selfcare");
-      const feelings = getStat("feelings");
-      const winDays = getStat("winDays") || 0;
-
-      const statTotalQuests = document.getElementById("statTotalQuests");
-      const statSelfCare = document.getElementById("statSelfCare");
-      const statFeelings = document.getElementById("statFeelings");
-      const statWinDays = document.getElementById("statWinDays");
-
-      if (statTotalQuests) statTotalQuests.textContent = totalQuests;
-      if (statSelfCare) statSelfCare.textContent = selfCare;
-      if (statFeelings) statFeelings.textContent = feelings;
-      if (statWinDays) statWinDays.textContent = winDays;
-
-      const levelScore = totalQuests + selfCare * 2;
-      const tag = document.getElementById("simLevelTag");
-      if (tag) {
-        let levelText = "Level 1 • Solopa Seedling of the North";
-
-        if (levelScore > 20 && levelScore <= 60) {
-          levelText = "Level 2 • Hearthstead Shield-Maiden";
-        } else if (levelScore > 60 && levelScore <= 150) {
-          levelText = "Level 3 • Vorpal Hearth-Warden";
-        } else if (levelScore > 150) {
-          levelText = "Level 4 • Solopa Hearth Goddess of the North";
-        }
-
-        tag.textContent = levelText;
-      }
-    }
-
-    /*************** NAV ***************/
+    // ---------- NAV / SIMPLE / SAVE ----------
     function initNav() {
       const buttons = document.querySelectorAll(".nav-btn[data-view]");
       buttons.forEach(btn => {
@@ -2100,43 +1509,117 @@
           document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
           const view = document.getElementById(viewId);
           if (view) view.classList.add("active");
+
           buttons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
 
           if (viewId === "statsView") {
             renderStatsPanel();
-            renderNeeds();
           }
         });
       });
     }
 
-    /*************** INIT ***************/
-    (function init() {
-      const today = new Date();
-      addMoodlet({
-        name: "New day",
-        desc: "You opened the app. That’s already a step toward caring for yourself.",
-        type: "neutral",
-        intensity: 1,
-        durationMinutes: 180
-      });
+    function applySimpleMode(enabled) {
+      const btn = document.getElementById("simpleToggleBtn");
+      if (enabled) {
+        document.body.classList.add("simple-mode");
+        safeSet(PREFIX + "simpleMode", "1");
+        if (btn) btn.textContent = "Simple View: On";
+      } else {
+        document.body.classList.remove("simple-mode");
+        safeRemove(PREFIX + "simpleMode");
+        if (btn) btn.textContent = "Simple View: Off";
+      }
+    }
 
-      const todayLabel = document.querySelector("#todayLabel .date-text");
-      if (todayLabel) {
-        todayLabel.textContent = "• " + formatDateLabel(today);
+    function initSimpleAndSave() {
+      const simpleBtn = document.getElementById("simpleToggleBtn");
+      const saveBtn = document.getElementById("saveBtn");
+
+      // restore simple mode
+      const storedSimple = safeGet(PREFIX + "simpleMode") === "1";
+      applySimpleMode(storedSimple);
+
+      if (simpleBtn) {
+        simpleBtn.addEventListener("click", () => {
+          const on = !document.body.classList.contains("simple-mode");
+          applySimpleMode(on);
+        });
       }
 
-      renderToday(today, true);
+      if (saveBtn) {
+        saveBtn.addEventListener("click", () => {
+          const data = {};
+          try {
+            for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              if (key && key.startsWith(PREFIX)) {
+                data[key] = localStorage.getItem(key);
+              }
+            }
+          } catch (e) {}
+
+          const json = JSON.stringify(data, null, 2);
+          const blob = new Blob([json], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          const todayStr = new Date().toISOString().slice(0,10);
+          a.href = url;
+          a.download = "hearth-home-backup-" + todayStr + ".json";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+      }
+    }
+
+    // ---------- STATS PANEL ----------
+    function renderStatsPanel() {
+      const stats = computeStatsFromStorage();
+      const qEl = document.getElementById("statTotalQuests");
+      const wEl = document.getElementById("statWinDays");
+      const sEl = document.getElementById("statSelfCare");
+      const fEl = document.getElementById("statFeelings");
+
+      if (qEl) qEl.textContent = stats.totalQuests;
+      if (wEl) wEl.textContent = stats.winDays;
+      if (sEl) sEl.textContent = stats.selfCare;
+      if (fEl) fEl.textContent = stats.feelings;
+
+      const levelScore = stats.totalQuests + stats.selfCare * 2;
+      const tag = document.getElementById("simLevelTag");
+      if (tag) {
+        let text = "Level 1 • Solopa Seedling of the North";
+        if (levelScore > 20 && levelScore <= 60) {
+          text = "Level 2 • Hearthstead Shield-Maiden";
+        } else if (levelScore > 60 && levelScore <= 150) {
+          text = "Level 3 • Vorpal Hearth-Warden";
+        } else if (levelScore > 150) {
+          text = "Level 4 • Solopa Hearth Goddess of the North";
+        }
+        tag.textContent = text;
+      }
+    }
+
+    // ---------- INIT ----------
+    document.addEventListener("DOMContentLoaded", () => {
+      const today = new Date();
+
+      const todayLabel = document.querySelector("#todayLabel .day-name");
+      if (todayLabel) {
+        todayLabel.textContent = "TODAY";
+      }
+
+      renderToday(today);
       renderCalendarHeader();
       renderCalendar(today);
       initFeelings();
       initNav();
-      initMetaButtons();
+      initSimpleAndSave();
       renderStatsPanel();
-      renderNeeds();
-    })();
+    });
   </script>
 </body>
 </html>
-
