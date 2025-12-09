@@ -1439,22 +1439,24 @@
         const now = Date.now();
         const today = todayDateString();
         return {
-          version: 4,
-          todayDate: today,
-          today: {
-            tasks: [],
-            completedTaskIds: [],
-            badDay: false
-          },
-          winsByDate: {},
-          needs: {
-            hunger: 60,
-            energy: 60,
-            social: 60,
-            fun: 60,
-            hygiene: 60,
-            quiet: 60
-          },
+  version: 4,
+  todayDate: today,
+  today: {
+    tasks: [],
+    completedTaskIds: [],
+    badDay: false
+  },
+  winsByDate: {},
+  dayDetails: {},            // ← ADD THIS LINE
+  needs: {
+    hunger: 60,
+    energy: 60,
+    social: 60,
+    fun: 60,
+    hygiene: 60,
+    quiet: 60
+  },
+  ...},
           lastNeedsUpdate: now,
           stats: {
             questsCompleted: 0,
