@@ -667,6 +667,8 @@
       background: rgba(255,255,255,0.95);
       border: 1px solid rgba(0,0,0,0.12);
       box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+      /* moodlet life animation: fade in, stay, fade left */
+      animation: moodlet-life 7s ease-in-out forwards;
     }
 
     .moodlet-chip[data-tone="good"] {
@@ -868,6 +870,25 @@
       background: rgba(0,0,0,0.4);
       color: #e7f7ff;
       cursor: pointer;
+    }
+
+    @keyframes moodlet-life {
+      0% {
+        opacity: 0;
+        transform: translateX(10px);
+      }
+      10% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      80% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-14px);
+      }
     }
 
     @media (min-width: 640px) {
@@ -1497,7 +1518,7 @@
 
       function pickTodayTasks(dateStr) {
         const d = new Date(dateStr + "T00:00:00");
-        const seed = d.getDate() + (d.getMonth() + 1) * 13;
+        the seed = d.getDate() + (d.getMonth() + 1) * 13;
         const index1 = seed % tasksPool.length;
         const index2 = (seed * 5 + 3) % tasksPool.length;
         const ids = [index1, index2 === index1 ? (index2 + 1) % tasksPool.length : index2];
@@ -1752,24 +1773,28 @@
           startTimer("snack");
           label = "Snack boost";
           state.stats.selfCareBonuses += 1;
+          playSound("feel-good");
         } else if (action === "meal") {
           n.hunger = 100;
           n.energy = clamp(n.energy + 75, 0, 100);
           startTimer("meal");
           label = "Full meal buff";
           state.stats.selfCareBonuses += 1;
+          playSound("feel-good");
         } else if (action === "bathroom") {
           // Using toilet: small hygiene drop in a realistic Sims way
           n.hygiene = clamp(n.hygiene - 15, 0, 100);
           startTimer("bathroom");
           label = "Relieved";
           tone = "neutral";
+          playSound("feel-neutral");
         } else if (action === "quick-shower") {
           // Quick shower: big hygiene bump
           n.hygiene = clamp(n.hygiene + 60, 0, 100);
           startTimer("shower");
           label = "Quick shower fresh";
           state.stats.selfCareBonuses += 1;
+          playSound("feel-good");
         }
 
         if (label) {
@@ -1863,10 +1888,15 @@
           tone: tone || "neutral"
         });
 
+        // Play sound directly based on feeling tone
+        if (tone === "good") playSound("feel-good");
+        else if (tone === "low") playSound("feel-low");
+        else playSound("feel-neutral");
+
         recomputeMoodFromNeeds();
         renderStats();
         renderNeeds();
-        renderMood(true);  // will play mood sound if tier changed
+        renderMood(true);  // still plays tier-change sound if tier shifts
         renderMoodlets();
         saveState();
       }
