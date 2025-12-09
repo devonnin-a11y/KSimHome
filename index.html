@@ -780,6 +780,29 @@
       clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
       box-shadow: 0 0 10px rgba(154,255,180,0.9);
     }
+    
+    .plumbob {
+  width: 22px;
+  height: 32px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.plumbob-shape {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #4df18d, #178348);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  box-shadow: 0 0 10px rgba(154,255,180,0.9);
+}
+
+/* Keep proportions on very small screens */
+@media (max-width: 380px) {
+  .plumbob {
+    width: 20px;
+    height: 28px;
+  }
+}
 
     .plumbob.low {
       filter: hue-rotate(-35deg) brightness(0.85);
