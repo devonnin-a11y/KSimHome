@@ -1339,7 +1339,7 @@
 
   <script>
     (function () {
-      const STORAGE_KEY = "ksimHomeState_v3";
+      const STORAGE_KEY = "ksimHomeState_v4";
 
       const defaultTimersConfig = {
         hydration: { minutes: 60 },
@@ -1416,7 +1416,7 @@
         const now = Date.now();
         const today = todayDateString();
         return {
-          version: 3,
+          version: 4,
           todayDate: today,
           today: {
             tasks: [],
@@ -1469,7 +1469,7 @@
       }
 
       function migrateState(state) {
-        if (!state.version) state.version = 3;
+        if (!state.version) state.version = 4;
         if (!state.timers) state.timers = initTimersState();
         if (!state.journals) state.journals = { day: {}, month: {}, year: {} };
         if (!state.mood) {
@@ -2225,4 +2225,3 @@
   </script>
 </body>
 </html>
-
