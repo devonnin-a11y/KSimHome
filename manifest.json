@@ -1,0 +1,22 @@
+{
+  "name": "Hearth & Home – Solopa Viking HUD",
+  "short_name": "Hearth & Home",
+  "start_url": "/KSimHome/",
+  "scope": "/KSimHome/",
+  "display": "standalone",
+  "background_color": "#12090b",
+  "theme_color": "#12090b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
