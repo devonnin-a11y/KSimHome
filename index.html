@@ -125,15 +125,18 @@
 
     /* Dashboard: Sim center */
     .sim-center {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px;
-      background: var(--card-soft);
-      border-radius: var(--radius-lg);
-      margin-bottom: 10px;
-      border: 1px solid var(--border-soft);
-    }
+  display: flex;
+  flex-direction: column;      /* stack avatar above text */
+  align-items: center;         /* center horizontally */
+  gap: 8px;
+  padding: 10px;
+  background: var(--card-soft);
+  border-radius: var(--radius-lg);
+  margin-bottom: 10px;
+  border: 1px solid var(--border-soft);
+  text-align: center;          /* center text too */
+}
+
 
     .sim-avatar {
       width: 64px;
@@ -1749,3 +1752,4 @@
   </script>
 </body>
 </html>
+
