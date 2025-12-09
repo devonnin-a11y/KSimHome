@@ -676,7 +676,7 @@
       border-color: #8fd0a0;
     }
     .moodlet-chip[data-tone="neutral"] {
-      background: #fff6e6;
+     background: #fff6e6;
       border-color: #f0cd8c;
     }
     .moodlet-chip[data-tone="low"] {
@@ -1006,7 +1006,7 @@
               <span class="icon">⚡</span><span>Stressed</span>
             </button>
             <button class="feeling-btn" data-feeling="overwhelmed" data-tone="low" data-category="low" type="button">
-              <span class="icon">🌊</span><span>Overwhelmed</span>
+              <span classicon">🌊</span><span>Overwhelmed</span>
             </button>
             <button class="feeling-btn" data-feeling="low" data-tone="low" data-category="low" type="button">
               <span class="icon">🌧️</span><span>Low</span>
@@ -1316,7 +1316,7 @@
           </div>
         </div>
         <div class="hud-right">
-          <button class="btn-music" id="musicToggle" type="button">Music: Off</button>
+          <button class="btn-music" id="musicToggle" type="button">Music: On</button>
           <div class="dot-row">
             <span class="dot-label">Needs</span>
             <span class="dot" id="dot1"></span>
@@ -1453,7 +1453,7 @@
             month: {},
             year: {}
           },
-          moodlets: [] // {id, label, tone}
+          moodlets: []
         };
       }
 
@@ -1581,7 +1581,10 @@
 
       const musicToggle = document.getElementById("musicToggle");
       const musicAudio = document.querySelector('audio[data-sound="bg-music"]');
-      let musicOn = false;
+
+      // music ON by default in logic
+      let musicOn = true;
+      let musicStartedOnce = false;
 
       let timersInterval = null;
 
@@ -1619,20 +1622,42 @@
         document.body.classList.toggle("simple-mode");
       });
 
-      // Music toggle
+      // --- Background music helpers ---
+      function updateMusicLabel() {
+        if (!musicToggle) return;
+        musicToggle.textContent = musicOn ? "Music: On" : "Music: Off";
+      }
+
+      function tryStartMusic() {
+        if (!musicAudio) return;
+        if (!musicOn) return;
+        musicAudio.loop = true;
+        musicAudio.play().then(() => {
+          musicStartedOnce = true;
+        }).catch(() => {
+          // autoplay likely blocked; will try again on next interaction
+        });
+      }
+
+      // First interaction anywhere on the page will try to start music
+      function handleFirstInteraction() {
+        tryStartMusic();
+        // listener removed because { once: true } is used
+      }
+
+      document.addEventListener("pointerdown", handleFirstInteraction, { once: true });
+
+      // Music toggle button
       if (musicToggle) {
+        updateMusicLabel();
         musicToggle.addEventListener("click", () => {
-          if (!musicAudio) return;
-          if (musicOn) {
-            musicAudio.pause();
-            musicOn = false;
-            musicToggle.textContent = "Music: Off";
+          musicOn = !musicOn;
+          if (!musicOn) {
+            if (musicAudio) musicAudio.pause();
           } else {
-            musicAudio.loop = true;
-            musicAudio.play().catch(() => {});
-            musicOn = true;
-            musicToggle.textContent = "Music: On";
+            tryStartMusic();
           }
+          updateMusicLabel();
         });
       }
 
@@ -1782,14 +1807,12 @@
           state.stats.selfCareBonuses += 1;
           playSound("feel-good");
         } else if (action === "bathroom") {
-          // Using toilet: small hygiene drop in a realistic Sims way
           n.hygiene = clamp(n.hygiene - 15, 0, 100);
           startTimer("bathroom");
           label = "Relieved";
           tone = "neutral";
           playSound("feel-neutral");
         } else if (action === "quick-shower") {
-          // Quick shower: big hygiene bump
           n.hygiene = clamp(n.hygiene + 60, 0, 100);
           startTimer("shower");
           label = "Quick shower fresh";
@@ -1870,7 +1893,6 @@
         state.mood.labelMain = msg;
         state.mood.labelSub = sub;
 
-        // Light need effects
         if (feelingKey === "hungry") {
           adjustNeed("hunger", -5, false);
         }
@@ -1888,7 +1910,6 @@
           tone: tone || "neutral"
         });
 
-        // Play sound directly based on feeling tone
         if (tone === "good") playSound("feel-good");
         else if (tone === "low") playSound("feel-low");
         else playSound("feel-neutral");
@@ -1896,7 +1917,7 @@
         recomputeMoodFromNeeds();
         renderStats();
         renderNeeds();
-        renderMood(true);  // still plays tier-change sound if tier shifts
+        renderMood(true);
         renderMoodlets();
         saveState();
       }
@@ -2113,7 +2134,7 @@
       // Timers & needs tick
       function startTimersTick() {
         if (timersInterval) clearInterval(timersInterval);
-        tickTimers(); // initial tick
+        tickTimers();
         renderTimers();
         timersInterval = setInterval(() => {
           updateNeedsOverTime(false);
