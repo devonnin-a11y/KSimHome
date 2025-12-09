@@ -32,7 +32,6 @@
       min-height: 100vh;
     }
 
-    /* SIMPLE MODE: hide extra detail */
     body.simple-mode [data-simple-hide="true"] {
       display: none !important;
     }
@@ -856,7 +855,6 @@
             </div>
           </div>
 
-          <!-- Today tasks -->
           <div style="margin-top:0.8rem;">
             <div class="section-title-row">
               <div>
@@ -948,7 +946,6 @@
             You don’t have to earn rest by “finishing everything.” One tiny moment is enough to keep <span>you</span> alive inside the routine.
           </div>
 
-          <!-- Feelings -->
           <div class="feelings-section">
             <div class="feelings-title">How are you feeling right now?</div>
             <div class="feelings-buttons">
@@ -966,7 +963,6 @@
             <div class="feelings-msg" id="feelingsMsg"></div>
           </div>
 
-          <!-- Calendar & Journals -->
           <div class="calendar-wrapper" data-simple-hide="true">
             <div class="calendar-header-title" id="monthLabel">This Month</div>
             <div class="calendar" id="calendarHeader"></div>
@@ -1047,7 +1043,6 @@
   </div>
 
   <script>
-    // ---------- CONFIG & SAFE STORAGE ----------
     const PREFIX = "HearthHome_KSim_";
 
     function safeGet(key) {
@@ -1161,7 +1156,6 @@
       return y + "-" + m;
     }
 
-    // ---------- STATS HELPERS ----------
     function getStat(name) {
       const raw = safeGet(statKey(name));
       return raw ? parseInt(raw, 10) || 0 : 0;
@@ -1198,7 +1192,6 @@
       };
     }
 
-    // ---------- TODAY VIEW ----------
     function isTaskDone(dateStr, id) {
       return safeGet(taskKey(dateStr, id)) === "1";
     }
@@ -1283,7 +1276,6 @@
         tasksUl.appendChild(li);
       });
 
-      // Bad day button
       const badBtn = document.getElementById("badDayBtn");
       const badMsg = document.getElementById("badDayMsg");
       const active = isBadDay(dateStr);
@@ -1313,7 +1305,6 @@
         };
       }
 
-      // Self-care bonus
       const bonusBtn = document.getElementById("selfBonusBtn");
       if (bonusBtn) {
         bonusBtn.onclick = () => {
@@ -1327,7 +1318,6 @@
         };
       }
 
-      // Daily journal binding
       const dailyArea = document.getElementById("dailyJournal");
       const dailyLabel = document.getElementById("dailyJournalLabel");
       if (dailyArea && dailyLabel) {
@@ -1339,7 +1329,6 @@
       }
     }
 
-    // ---------- CALENDAR ----------
     function renderCalendarHeader() {
       const header = document.getElementById("calendarHeader");
       if (!header) return;
@@ -1371,7 +1360,6 @@
 
       monthLabel.textContent = firstDay.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 
-      // blanks
       for (let i = 0; i < startWeekday; i++) {
         const placeholder = document.createElement("div");
         grid.appendChild(placeholder);
@@ -1447,12 +1435,10 @@
       statsRow.appendChild(pill2);
       statsRow.appendChild(pill3);
 
-      // month notes
-      const monthKey = getMonthKey(refDate);
-      notesArea.value = safeGet(monthNotesKey(monthKey)) || "";
-      notesArea.oninput = () => safeSet(monthNotesKey(monthKey), notesArea.value);
+      const monthKeyVal = getMonthKey(refDate);
+      notesArea.value = safeGet(monthNotesKey(monthKeyVal)) || "";
+      notesArea.oninput = () => safeSet(monthNotesKey(monthKeyVal), notesArea.value);
 
-      // year journal
       const yearArea = document.getElementById("yearJournal");
       const yearLabel = document.getElementById("yearJournalLabel");
       if (yearArea && yearLabel) {
@@ -1462,7 +1448,6 @@
       }
     }
 
-    // ---------- FEELINGS & MOOD ----------
     function updateCurrentMood(text) {
       const label = document.getElementById("currentMoodLabel");
       if (!label) return;
@@ -1494,13 +1479,11 @@
         });
       });
 
-      // restore last mood if any
       const lastMood = safeGet(PREFIX + "lastMood");
       if (lastMood) updateCurrentMood(lastMood);
       else updateCurrentMood("Neutral • just existing (which is enough).");
     }
 
-    // ---------- NAV / SIMPLE / SAVE ----------
     function initNav() {
       const buttons = document.querySelectorAll(".nav-btn[data-view]");
       buttons.forEach(btn => {
@@ -1537,7 +1520,6 @@
       const simpleBtn = document.getElementById("simpleToggleBtn");
       const saveBtn = document.getElementById("saveBtn");
 
-      // restore simple mode
       const storedSimple = safeGet(PREFIX + "simpleMode") === "1";
       applySimpleMode(storedSimple);
 
@@ -1575,7 +1557,6 @@
       }
     }
 
-    // ---------- STATS PANEL ----------
     function renderStatsPanel() {
       const stats = computeStatsFromStorage();
       const qEl = document.getElementById("statTotalQuests");
@@ -1603,7 +1584,6 @@
       }
     }
 
-    // ---------- INIT ----------
     document.addEventListener("DOMContentLoaded", () => {
       const today = new Date();
 
