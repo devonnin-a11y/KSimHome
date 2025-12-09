@@ -1995,31 +1995,54 @@
       }
 
       function renderMood(shouldPlaySound) {
-        const score = state.mood.score ?? 60;
-        const prevTier = state.mood.tier || "neutral";
+  const score = state.mood.score ?? 60;
+  const prevTier = state.mood.tier || "neutral";
+  const prevScore = state.mood.lastScore ?? score;
 
-        let tier = "neutral";
-        if (score < 40) tier = "low";
-        else if (score >= 70) tier = "good";
+  let tier = "neutral";
+  if (score < 40) tier = "low";
+  else if (score >= 70) tier = "good";
 
-        state.mood.tier = tier;
+  state.mood.tier = tier;
 
-        moodLabelMain.textContent = state.mood.labelMain || "Gently okay";
-        moodLabelSub.textContent = state.mood.labelSub || "You’re doing more than enough.";
+  moodLabelMain.textContent = state.mood.labelMain || "Gently okay";
+  moodLabelSub.textContent = state.mood.labelSub || "You’re doing more than enough.";
 
-        moodGaugeFill.style.width = `${clamp(score, 5, 100)}%`;
+  moodGaugeFill.style.width = `${clamp(score, 5, 100)}%`;
 
-        plumbob.classList.remove("low", "neutral", "good");
-        plumbob.classList.add(tier);
+  plumbob.classList.remove("low", "neutral", "good");
+  plumbob.classList.add(tier);
 
-        if (shouldPlaySound && tier !== prevTier) {
-          if (tier === "good") playSound("feel-good");
-          else if (tier === "neutral") playSound("feel-neutral");
-          else playSound("feel-low");
-        }
+  let soundPlayed = false;
 
-        state.mood.lastTier = tier;
+  // Tier-change sounds
+  if (shouldPlaySound && tier !== prevTier) {
+    if (tier === "good") playSound("feel-good");
+    else if (tier === "neutral") playSound("feel-neutral");
+    else playSound("feel-low");
+    soundPlayed = true;
+  }
+
+  // Threshold sounds at 25 / 50 / 75
+  if (shouldPlaySound && !soundPlayed) {
+    const thresholds = [25, 50, 75];
+    let crossed = null;
+    for (const t of thresholds) {
+      if ((prevScore < t && score >= t) || (prevScore > t && score <= t)) {
+        crossed = t;
+        break;
       }
+    }
+    if (crossed !== null) {
+      if (score < 40) playSound("feel-low");
+      else if (score >= 70) playSound("feel-good");
+      else playSound("feel-neutral");
+    }
+  }
+
+  state.mood.lastTier = tier;
+  state.mood.lastScore = score;
+}
 
       function addMoodlet({ id, label, tone }) {
         const existingIndex = state.moodlets.findIndex(m => m.id === id);
