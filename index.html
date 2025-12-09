@@ -2,2542 +2,1894 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Hearth & Home – Kelly Sims HUD</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#020617" />
+  <title>KSim Home – Kelly HUD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f3f4a" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Inter:wght@300;400;600&display=swap">
   <style>
     :root {
-      /* Sims 4 HUD vibe + soft nordic night */
-      --bg: #020617;
-      --bg-soft: #050b18;
-
-      --card: #020617;
-      --card-soft: #020617;
-
-      --border: #1e293b;
-
-      /* Sims 4 teal / blue accents */
-      --accent: #22d3ee;        /* main teal */
-      --accent-soft: #38bdf8;   /* lighter blue */
-
-      /* “life bar” greens */
-      --sage: #4ade80;
-      --sage-soft: #a7f3d0;
-
-      --text: #f9fafb;
-      --muted: #d1d5db;
-      --muted-soft: #9ca3af;
-      --done: #22c55e;
-
-      --mood-good: #22c55e;
-      --mood-neutral: #eab308;
-      --mood-low: #60a5fa;
+      --bg: #f4eee7;
+      --bg-soft: #f9f4ee;
+      --bg-card: #ffffff;
+      --border-soft: #e1d2c4;
+      --accent: #00b2c8; /* Sims-ish teal */
+      --accent-soft: #93dde6;
+      --accent-dark: #007e8f;
+      --text-main: #2a221a;
+      --text-soft: #756458;
+      --danger: #c4475e;
+      --good: #3fa76a;
+      --neutral: #f6c15b;
+      --low: #e45b5b;
+      --hud-bg: #1f3f4a;
+      --hud-soft: #284a57;
+      --hud-outline: #c2f5ff;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-soft: 0 10px 25px rgba(0,0,0,0.10);
+      --shadow-hud: 0 14px 40px rgba(0,0,0,0.35);
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 16px;
-      background: radial-gradient(circle at top, #1e293b 0, #020617 45%, #02010a 100%);
-      color: var(--text);
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top, #fffaf3 0, #f0e6d6 45%, #e3d3c2 100%);
+      color: var(--text-main);
       min-height: 100vh;
-      padding-top: constant(safe-area-inset-top);
-      padding-top: env(safe-area-inset-top);
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 98px; /* space for HUD */
     }
 
     body.simple-mode [data-simple-hide="true"] {
       display: none !important;
     }
-    body.simple-mode .nav-btn[data-view="statsView"] {
-      display: none !important;
-    }
 
-    .app {
-      max-width: 980px;
+    .app-shell {
+      max-width: 520px;
       margin: 0 auto;
-      padding: 0.6rem 0.9rem 2rem;
+      padding: 8px 10px 16px;
     }
 
-    .top-nav {
+    /* Top Bar */
+    .top-bar {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.45rem;
-      margin-top: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .nav-group {
-      display: flex;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    .nav-btn {
+      gap: 8px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(10, 16, 26, 0.9);
-      color: var(--muted-soft);
-      font-size: 0.8rem;
-      padding: 0.3rem 0.9rem;
-      cursor: pointer;
-      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
+      background: linear-gradient(135deg, rgba(0,178,200,0.15), rgba(179,117,72,0.08));
+      border: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+      backdrop-filter: blur(8px);
     }
 
-    .nav-btn:hover {
-      background: rgba(15, 23, 42, 0.95);
-      color: #e0f2fe;
-      transform: translateY(-1px);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
-    }
-
-    .nav-btn:active {
-      transform: translateY(0);
-    }
-
-    .nav-btn.active {
-      background: radial-gradient(circle at top left, #0ea5e9 0, #0369a1 65%);
-      border-color: var(--accent);
-      color: #f0f9ff;
-      box-shadow:
-        0 0 20px rgba(56, 189, 248, 0.8),
-        0 0 35px rgba(15, 23, 42, 1);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 0.6rem;
-    }
-
-    .title {
-      font-family: "Uncial Antiqua", system-ui;
-      font-size: 1.9rem;
-      color: var(--accent);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-shadow:
-        0 0 18px rgba(56, 189, 248, 0.45),
-        0 0 40px rgba(0, 0, 0, 0.9);
-    }
-
-    .subtitle {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-top: 0.25rem;
-    }
-
-    .subtitle span.em {
-      color: var(--sage);
-      font-weight: 600;
-    }
-
-    .today-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.25rem 0.85rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 60%);
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 0.4rem;
-    }
-
-    .today-pill span.day-name {
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .today-pill span.date-text {
-      color: var(--muted);
-    }
-
-    .goddess-line {
-      font-size: 0.78rem;
-      color: var(--muted-soft);
-      margin-top: 0.3rem;
-    }
-
-    .goddess-line span {
-      color: var(--sage-soft);
-      font-weight: 500;
-    }
-
-    .mood-hud-row {
-      margin-top: 0.5rem;
+    .top-bar-title {
       display: flex;
-      justify-content: center;
-      gap: 1rem;
       align-items: center;
-      flex-wrap: wrap;
+      gap: 8px;
     }
 
-    .moodlet-icon-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 0.78rem;
-      color: var(--muted-soft);
-      gap: 0.3rem;
-    }
-
-    .sim-portrait {
-      width: 58px;
-      height: 58px;
-      border-radius: 20px;
-      padding: 4px;
-      border: 2px solid rgba(148, 163, 184, 0.8);
-      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.25), rgba(15,23,42,0.95));
+    .top-bar-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 20%, #fff, #1f3f4a);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow:
-        0 0 18px rgba(15,23,42,1),
-        0 0 18px rgba(56, 189, 248, 0.4);
+      color: #f7fbff;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
     }
 
-    .sim-portrait-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: 16px;
-      background: radial-gradient(circle at top, #1e293b, #020617);
+    .top-bar-text-main {
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      font-size: 15px;
+    }
+
+    .top-bar-text-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .top-bar-meta {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #e5e7eb;
-    }
-
-    .moodlet-icon-border {
-      width: 42px;
-      height: 64px;
-      border-radius: 999px;
-      padding: 4px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.35), rgba(15, 23, 42, 0.95));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow:
-        0 0 14px rgba(15, 23, 42, 1),
-        0 0 14px rgba(56, 189, 248, 0.4);
-      animation: float-plumbob 3s ease-in-out infinite;
-    }
-
-    .moodlet-icon {
-      width: 20px;
-      height: 20px;
-      transform: rotate(45deg);
-      border-radius: 4px;
-      box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-      background: var(--mood-neutral);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .moodlet-icon::after {
-      content: "";
-      position: absolute;
-      inset: 3px;
-      border-radius: 2px;
-      background: radial-gradient(circle at top, rgba(255,255,255,0.8), transparent);
-    }
-
-    .moodlet-icon.mood-good {
-      background: var(--mood-good);
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
-    }
-
-    .moodlet-icon.mood-low {
-      background: var(--mood-low);
-      box-shadow: 0 0 12px rgba(96, 165, 250, 0.9);
-    }
-
-    .moodlet-icon.mood-neutral {
-      background: var(--mood-neutral);
-      box-shadow: 0 0 10px rgba(234, 179, 8, 0.8);
-    }
-
-    @keyframes float-plumbob {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-      100% { transform: translateY(0); }
-    }
-
-    .mood-gauge {
-      min-width: 160px;
-      max-width: 320px;
-      flex: 1;
-    }
-
-    .mood-gauge-label {
-      font-size: 0.74rem;
-      color: var(--muted-soft);
-      margin-bottom: 0.18rem;
-      text-align: left;
-    }
-
-    .mood-gauge-bar {
-      width: 100%;
-      height: 10px;
-      border-radius: 999px;
-      background: radial-gradient(circle at top, rgba(30,64,175,0.9), rgba(15,23,42,0.9));
-      overflow: hidden;
-      border: 1px solid rgba(30,64,175,0.8);
-    }
-
-    .mood-gauge-fill {
-      height: 100%;
-      width: 50%;
-      border-radius: 999px;
-      background: linear-gradient(to right, #60a5fa, #fbbf24, #4ade80);
-      transition: width 0.25s ease;
-    }
-
-    .current-mood-label {
-      font-size: 0.8rem;
-      color: var(--muted-soft);
-      text-align: center;
-      margin-top: 0.35rem;
-    }
-
-    .current-mood-label span {
-      color: #fef3c7;
-      font-weight: 600;
-    }
-
-    .moodlet-strip {
-      margin: 0.45rem auto 0;
-      padding: 0.3rem 0.9rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      font-size: 0.78rem;
-      color: #e5e7eb;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-
-    .moodlet-strip-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: #fde68a;
-      box-shadow: 0 0 8px rgba(253, 230, 138, 0.9);
-      flex-shrink: 0;
-    }
-
-    .grid-main {
-      display: grid;
-      grid-template-columns: 1.2fr 1.1fr;
-      gap: 0.9rem;
-      margin-top: 0.7rem;
-    }
-
-    @media (max-width: 820px) {
-      .grid-main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 55%, #020617 100%);
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      padding: 1rem 1.1rem;
-      box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.9),
-        inset 0 0 0 1px rgba(15, 23, 42, 0.7);
-    }
-
-    .card-soft {
-      background: radial-gradient(circle at top left, #111827 0, #020617 70%);
-    }
-
-    .section-title-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 0.5rem;
-      margin-bottom: 0.45rem;
-      flex-wrap: wrap;
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .section-sub {
-      font-size: 0.76rem;
-      color: var(--muted-soft);
-    }
-
-    .tag {
-      font-size: 0.68rem;
-      padding: 0.16rem 0.65rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .tag-soft {
-      border-color: var(--sage);
-      color: var(--sage-soft);
-    }
-
-    .tag-fire {
-      border-color: var(--accent-soft);
-      color: var(--accent-soft);
-    }
-
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-      margin-top: 0.15rem;
-    }
-
-    .block {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.35rem 0.5rem;
-      padding: 0.4rem 0.5rem;
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid rgba(51,65,85, 0.7);
-    }
-
-    .block-time {
-      font-size: 0.76rem;
-      color: var(--muted-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      padding-top: 0.1rem;
-    }
-
-    .block-main {
-      font-size: 0.84rem;
-    }
-
-    .block-main-title {
-      font-weight: 600;
-      color: var(--accent-soft);
-      margin-bottom: 0.14rem;
-    }
-
-    .block-main-items {
-      list-style: none;
-      margin: 0;
-      padding-left: 0;
-      font-size: 0.76rem;
-      color: var(--muted);
-    }
-
-    .block-main-items li {
-      margin-bottom: 0.08rem;
-    }
-
-    .block-main-items li span.self {
-      color: var(--sage-soft);
-      font-weight: 500;
-    }
-
-    .block-main-items li span.kids {
-      color: #fee2e2;
-      font-weight: 500;
-    }
-
-    .today-day-tag {
-      font-size: 0.76rem;
-      color: var(--muted-soft);
-      margin-bottom: 0.2rem;
-    }
-
-    .task-list {
-      list-style: none;
-      margin: 0.25rem 0 0;
-      padding: 0;
-    }
-
-    .task {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      padding: 0.32rem 0;
-      border-bottom: 1px solid rgba(15, 23, 42, 1);
-      font-size: 0.84rem;
-    }
-
-    .task:last-child {
-      border-bottom: none;
-    }
-
-    .task input[type="checkbox"] {
-      margin-top: 0.12rem;
-      width: 18px;
-      height: 18px;
-      border-radius: 5px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      accent-color: var(--done);
-      background: #020617;
-      flex-shrink: 0;
-    }
-
-    .task-area {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--muted-soft);
-    }
-
-    .task-main {
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .task-desc {
-      font-size: 0.76rem;
-      color: var(--muted-soft);
-      margin-top: 0.08rem;
-    }
-
-    .self-note {
-      font-size: 0.76rem;
-      color: var(--muted-soft);
-      margin-top: 0.55rem;
-    }
-
-    .self-note span {
-      color: var(--sage);
-      font-weight: 500;
-    }
-
-    .bad-day-row {
-      margin-top: 0.6rem;
-      font-size: 0.76rem;
-    }
-
-    .bad-day-btn {
-      width: 100%;
-      border-radius: 999px;
-      border: 1px dashed rgba(148, 163, 184, 0.7);
-      background: transparent;
-      color: var(--muted-soft);
-      padding: 0.45rem 0.6rem;
-      cursor: pointer;
-      font-size: 0.76rem;
-      text-align: center;
-      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
-    }
-
-    .bad-day-btn:hover {
-      background: rgba(15, 23, 42, 0.9);
-      border-color: rgba(56, 189, 248, 0.8);
-      color: #e0f2fe;
-      transform: translateY(-1px);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
-    }
-
-    .bad-day-btn:active {
-      transform: translateY(0);
-    }
-
-    .bad-day-btn.active {
-      background: radial-gradient(circle at top left, #0ea5e9 0, #0369a1 65%);
-      border-color: var(--accent);
-      color: #f0f9ff;
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.8);
-    }
-
-    .bad-day-msg {
-      margin-top: 0.3rem;
-      font-size: 0.76rem;
-      color: var(--sage-soft);
-    }
-
-    .self-reward {
-      margin-top: 0.5rem;
-      padding: 0.5rem 0.55rem;
-      border-radius: 12px;
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 70%);
-      border: 1px dashed rgba(148, 163, 184, 0.7);
-      font-size: 0.76rem;
-    }
-
-    .self-reward-title {
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      font-size: 0.72rem;
-      color: var(--accent-soft);
-      margin-bottom: 0.25rem;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
+      gap: 6px;
     }
 
     .chip {
-      font-size: 0.74rem;
-      padding: 0.16rem 0.7rem;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.95);
-      color: #fef9c3;
+      padding: 4px 10px;
+      font-size: 11px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(0,0,0,0.06);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
     }
 
-    .chip-soft {
-      border-color: rgba(74, 222, 128, 0.8);
-      color: var(--sage-soft);
-    }
-
-    .chip-cozy {
-      border-color: rgba(251, 191, 36, 0.7);
-      color: #fed7aa;
-    }
-
-    .self-bonus-btn {
-      margin-top: 0.5rem;
-      width: 100%;
+    .chip-dot {
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      border: 1px solid rgba(74, 222, 128, 0.8);
-      background: rgba(7, 24, 13, 0.95);
-      color: var(--sage-soft);
-      padding: 0.38rem 0.6rem;
-      font-size: 0.76rem;
+      background: var(--accent);
+    }
+
+    .btn-pill {
+      appearance: none;
+      border: none;
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      background: rgba(10,10,10,0.04);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
-      transition: background 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
+      outline: none;
     }
 
-    .self-bonus-btn:hover {
-      background: rgba(21, 128, 61, 0.95);
-      transform: translateY(-1px);
-      box-shadow: 0 0 12px rgba(74, 222, 128, 0.8);
+    .btn-pill span.icon {
+      font-size: 13px;
     }
 
-    .self-bonus-btn:active {
-      transform: translateY(0);
+    .btn-pill:active {
+      transform: scale(0.97);
     }
 
-    .selfcare-groups {
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      margin: 8px 0 10px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      padding: 3px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .tab-button {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      padding: 7px 6px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .tab-button-icon {
+      font-size: 14px;
+    }
+
+    .tab-button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    }
+
+    .tab-button.active .tab-button-icon {
+      transform: translateY(-0.5px);
+    }
+
+    /* Layout cards */
+    .tab-panel {
+      display: none;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 12px 12px 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border: 1px solid var(--border-soft);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title-icon {
+      font-size: 15px;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    /* Daily quests */
+    .quest-list {
+      list-style: none;
+      margin: 2px 0 6px;
+      padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      margin-top: 0.3rem;
+      gap: 6px;
     }
 
-    .sc-group {
-      padding: 0.45rem 0.5rem;
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(51, 65, 85, 0.7);
-      font-size: 0.78rem;
+    .quest-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      background: var(--bg-soft);
+      border: 1px solid rgba(0,0,0,0.03);
     }
 
-    .sc-title {
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #bae6fd;
-      margin-bottom: 0.2rem;
+    .quest-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
     }
 
-    .sc-list {
-      list-style: none;
-      margin: 0;
-      padding-left: 1rem;
-      color: var(--muted);
+    .quest-text {
+      font-size: 13px;
+      flex: 1;
     }
 
-    .sc-list li {
-      margin-bottom: 0.08rem;
+    .quest-item.completed {
+      opacity: 0.8;
     }
 
-    .sc-list li span.strong {
-      color: var(--sage-soft);
-      font-weight: 500;
+    .quest-item.completed .quest-text {
+      text-decoration: line-through;
+      color: var(--text-soft);
     }
 
-    .sc-hint {
-      font-size: 0.7rem;
-      color: var(--muted-soft);
-      margin-top: 0.35rem;
+    .badge-soft {
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(0,0,0,0.02);
+      padding: 2px 7px;
+      font-size: 10px;
+      color: var(--text-soft);
     }
 
-    .sc-hint span {
-      color: var(--accent);
+    .btn-soft {
+      appearance: none;
+      border-radius: var(--radius-md);
+      border: none;
+      background: linear-gradient(135deg, #f8d0d0, #e194a2);
+      color: #3b1221;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
 
-    .feelings-section {
-      margin-top: 0.8rem;
-      padding-top: 0.6rem;
-      border-top: 1px solid rgba(51, 65, 85, 0.9);
+    .btn-soft.bad-day-active {
+      background: linear-gradient(135deg, #d5e6ff, #99c1ff);
+      color: #153057;
     }
 
-    .feelings-title {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #fee2b3;
-      margin-bottom: 0.3rem;
+    .muted-text {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 4px;
     }
 
-    .feelings-buttons {
+    /* Feelings */
+    .feelings-strip {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.35rem;
-      margin-bottom: 0.35rem;
+      gap: 6px;
+      margin-top: 6px;
     }
 
     .feeling-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(10, 15, 25, 0.95);
-      color: var(--muted-soft);
-      padding: 0.22rem 0.7rem;
-      font-size: 0.72rem;
+      flex: 1 0 calc(33.33% - 4px);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      padding: 6px 6px;
       cursor: pointer;
-      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
+      background: #f3eee8;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      min-width: 0;
     }
 
-    .feeling-btn:hover {
-      background: rgba(15, 23, 42, 0.95);
-      border-color: rgba(56, 189, 248, 0.9);
-      color: #e0f2fe;
-      transform: translateY(-1px);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+    .feeling-btn span.icon {
+      font-size: 13px;
     }
 
-    .feeling-btn:active {
-      transform: translateY(0);
+    .feeling-btn[data-tone="good"] { background: #e5f5ea; }
+    .feeling-btn[data-tone="neutral"] { background: #fef3dc; }
+    .feeling-btn[data-tone="low"] { background: #fbe6e6; }
+
+    .feeling-message {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-soft);
     }
 
-    .feelings-msg {
-      font-size: 0.74rem;
-      color: var(--sage-soft);
-      min-height: 1.2em;
-    }
-
-    .timers-section {
-      margin-top: 0.8rem;
-      padding-top: 0.6rem;
-      border-top: 1px solid rgba(51, 65, 85, 0.9);
-    }
-
-    .timers-title {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #fee2b3;
-      margin-bottom: 0.3rem;
+    /* Timers */
+    .timer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
     }
 
     .timer-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.4rem;
-      padding: 0.26rem 0;
-      font-size: 0.72rem;
-    }
-
-    .timer-label {
-      display: flex;
-      flex-direction: column;
-      gap: 0.06rem;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      background: #f5f1ea;
     }
 
     .timer-label-main {
-      color: #fef3c7;
+      font-size: 12px;
       font-weight: 500;
     }
 
     .timer-label-sub {
-      color: var(--muted-soft);
-      font-size: 0.68rem;
-    }
-
-    .timer-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.18rem;
-      min-width: 120px;
-    }
-
-    .timer-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(10,15,25,0.95);
-      color: var(--muted-soft);
-      padding: 0.16rem 0.7rem;
-      font-size: 0.68rem;
-      cursor: pointer;
-      text-align: center;
-      width: 100%;
-      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
-    }
-
-    .timer-btn.running {
-      border-color: var(--accent);
-      color: #e0f2fe;
-      background: radial-gradient(circle at top left, #0ea5e9 0, #0369a1 70%);
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
-    }
-
-    .timer-btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .timer-btn:active {
-      transform: translateY(0);
+      font-size: 11px;
+      color: var(--text-soft);
     }
 
     .timer-status {
-      font-size: 0.66rem;
-      color: var(--muted-soft);
-    }
-
-    .calendar-wrapper {
-      margin-top: 0.8rem;
-      padding-top: 0.65rem;
-      border-top: 1px solid rgba(51, 65, 85, 0.9);
-    }
-
-    .calendar-header-title {
-      font-size: 0.82rem;
+      font-size: 11px;
       font-weight: 500;
-      color: #fee2b3;
-      margin-bottom: 0.25rem;
-    }
-
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 0.25rem;
-      margin-top: 0.15rem;
-      font-size: 0.74rem;
-    }
-
-    .cal-header {
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--muted-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-top: 0.1rem;
-    }
-
-    .day-cell {
-      padding: 0.28rem 0.12rem 0.35rem;
-      border-radius: 9px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(10, 15, 25, 0.95);
-      text-align: center;
-      position: relative;
-      cursor: pointer;
-      transition: border-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
-    }
-
-    .day-cell:hover {
-      border-color: rgba(56, 189, 248, 0.7);
-      transform: translateY(-1px);
-      box-shadow: 0 0 10px rgba(15,23,42,0.9);
-      background: rgba(15, 23, 42, 0.95);
-    }
-
-    .day-cell.today {
-      border-color: var(--accent);
-      box-shadow:
-        0 0 0 1px rgba(56, 189, 248, 0.7),
-        0 0 16px rgba(15, 23, 42, 0.9);
-    }
-
-    .day-cell-number {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #fef3c7;
-    }
-
-    .day-cell-info {
-      margin-top: 0.08rem;
-      font-size: 0.66rem;
-      color: var(--muted-soft);
-    }
-
-    .day-cell-complete {
-      position: absolute;
-      top: 3px;
-      right: 4px;
-      width: 9px;
-      height: 9px;
+      padding: 2px 7px;
       border-radius: 999px;
-      background: var(--done);
-      box-shadow: 0 0 6px rgba(34, 197, 94, 0.8);
+      background: rgba(0,0,0,0.04);
+      min-width: 66px;
+      text-align: center;
     }
 
+    .timer-status.due {
+      background: rgba(228,91,91,0.12);
+      color: var(--low);
+    }
+
+    .timer-cta {
+      margin-left: auto;
+      display: flex;
+      gap: 4px;
+    }
+
+    .btn-timer {
+      border-radius: 999px;
+      border: none;
+      padding: 4px 9px;
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .btn-timer.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: #fff;
+    }
+
+    /* Stats & Needs */
     .stats-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.45rem;
-      margin-top: 0.5rem;
-      font-size: 0.72rem;
-      color: var(--muted-soft);
+      gap: 6px;
+      margin-top: 4px;
     }
 
     .stat-pill {
-      padding: 0.16rem 0.7rem;
-      border-radius: 999px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(10, 15, 25, 0.95);
+      flex: 1 0 calc(50% - 4px);
+      border-radius: var(--radius-md);
+      padding: 6px 7px;
+      background: #f5efe8;
+      font-size: 11px;
     }
 
-    .stat-pill strong {
-      color: var(--accent-soft);
+    .stat-pill-label {
+      color: var(--text-soft);
+      font-size: 10px;
     }
 
-    .month-notes-label,
-    .daily-journal-label,
-    .year-journal-label {
-      font-size: 0.76rem;
-      color: var(--muted-soft);
-      margin-top: 0.6rem;
-      margin-bottom: 0.18rem;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 80px;
-      border-radius: 12px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(6, 11, 20, 0.95);
-      color: var(--text);
-      font-size: 0.8rem;
-      padding: 0.6rem;
-      resize: vertical;
-    }
-
-    textarea:focus {
-      outline: 1px solid rgba(56, 189, 248, 0.9);
-    }
-
-    .hint {
-      font-size: 0.7rem;
-      color: var(--muted-soft);
-      margin-top: 0.4rem;
-    }
-
-    .hint span {
-      color: var(--sage-soft);
-    }
-
-    .view {
-      display: none;
-    }
-
-    .view.active {
-      display: block;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
-      gap: 0.9rem;
-      margin-top: 0.8rem;
-    }
-
-    @media (max-width: 820px) {
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .stat-card-title {
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 0.3rem;
-      color: #fee2b3;
-    }
-
-    .stat-number {
-      font-size: 1.2rem;
+    .stat-pill-value {
       font-weight: 600;
-      color: var(--accent-soft);
+      margin-top: 2px;
     }
 
-    .stat-label {
-      font-size: 0.74rem;
-      color: var(--muted-soft);
-      margin-bottom: 0.18rem;
+    .level-bar-wrap {
+      margin-top: 8px;
     }
 
-    .need-card {
-      margin-top: 0.4rem;
-      padding: 0.4rem 0.5rem;
-      border-radius: 12px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      font-size: 0.76rem;
+    .level-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 2px;
     }
 
-    .need-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.35rem;
+    .level-name {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 3px;
     }
 
-    .need-label {
-      width: 95px;
-      font-size: 0.74rem;
-      color: var(--muted-soft);
-    }
-
-    .need-bar-outer {
-      flex: 1;
-      height: 10px;
+    .level-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(0,0,0,0.06);
       border-radius: 999px;
-      background: #020617;
-      border: 1px solid #1f2937;
       overflow: hidden;
     }
 
-    .need-bar-inner {
+    .level-fill {
+      width: 0%;
       height: 100%;
-      width: 50%;
-      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent-dark));
       transition: width 0.25s ease;
     }
 
-    .need-bar-inner[data-need="hunger"] {
-      background: linear-gradient(to right, #b91c1c, #fde68a);
+    .needs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
-    .need-bar-inner[data-need="energy"] {
-      background: linear-gradient(to right, #1e3a8a, #22c55e);
+
+    .need-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) 2fr auto;
+      gap: 8px;
+      align-items: center;
     }
-    .need-bar-inner[data-need="social"] {
-      background: linear-gradient(to right, #4b5563, #a855f7);
+
+    .need-label {
+      font-size: 12px;
+      font-weight: 500;
     }
-    .need-bar-inner[data-need="fun"] {
-      background: linear-gradient(to right, #7c2d12, #eab308);
+
+    .need-bar-shell {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+      overflow: hidden;
+      position: relative;
     }
-    .need-bar-inner[data-need="hygiene"] {
-      background: linear-gradient(to right, #0369a1, #0ea5e9);
+
+    .need-bar-fill {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(90deg, #f6c15b, #3fa76a);
+      transition: width 0.25s ease;
     }
-    .need-bar-inner[data-need="quiet"] {
-      background: linear-gradient(to right, #334155, #22c55e);
+
+    .need-bar-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.25);
+      pointer-events: none;
     }
 
     .need-controls {
-      display: flex;
-      gap: 0.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
-    .need-btn {
+    .btn-need {
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(10,15,25,0.95);
-      color: var(--muted-soft);
-      width: 22px;
-      height: 22px;
-      font-size: 0.7rem;
+      border: none;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .need-value {
+      font-size: 11px;
+      color: var(--text-soft);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* Journals & Calendar */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      font-size: 9px;
+      color: var(--text-soft);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .calendar-day {
+      font-size: 11px;
+      padding: 4px 0;
+      border-radius: 999px;
+      text-align: center;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.04);
+      position: relative;
+    }
+
+    .calendar-day.win::after {
+      content: "★";
+      position: absolute;
+      top: 1px;
+      right: 4px;
+      font-size: 9px;
+      color: var(--accent);
+    }
+
+    .calendar-day.today {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0,178,200,0.6);
+      font-weight: 600;
+    }
+
+    .calendar-month-label {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .journal-group {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .journal-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 2px;
+    }
+
+    .journal-textarea {
+      width: 100%;
+      min-height: 68px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: #fbf6ee;
+      padding: 8px;
+      font-size: 12px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    /* HUD */
+    .hud-shell {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 8px 8px;
+      pointer-events: none;
+      z-index: 40;
+    }
+
+    .hud-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      background: radial-gradient(circle at top, #3f6f7f 0, #13242b 60%, #091015 100%);
+      border-radius: 22px 22px 8px 8px;
+      border: 1px solid #283c46;
+      box-shadow: var(--shadow-hud);
+      padding: 8px 10px 6px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      pointer-events: auto;
+      position: relative;
+    }
+
+    .hud-inner::before {
+      content: "";
+      position: absolute;
+      inset: 1px 1px auto;
+      border-radius: 20px 20px 6px 6px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      pointer-events: none;
+    }
+
+    .hud-portrait {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .portrait-frame {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 30% 20%, #fff, #4e2c1e);
+      border: 2px solid var(--hud-outline);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: background 0.15s ease, transform 0.1s ease;
+      color: #fdf9f2;
+      font-size: 22px;
+      font-weight: 700;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.5);
     }
 
-    .need-btn:hover {
-      background: rgba(15, 23, 42, 0.95);
-      transform: translateY(-1px);
+    .portrait-meta {
+      font-size: 11px;
+      color: #e7f7ff;
     }
 
-    .need-btn:active {
+    .portrait-meta-name {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      font-size: 11px;
+    }
+
+    .portrait-meta-sub {
+      font-size: 10px;
+      color: #b9d1db;
+    }
+
+    .hud-mood {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .plumbob-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .plumbob {
+      width: 18px;
+      height: 26px;
+      position: relative;
       transform: translateY(0);
     }
 
-    /* Mobile-friendly tweaks */
-    @media (max-width: 480px) {
+    .plumbob-shape {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #4df18d, #178348);
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      box-shadow: 0 0 10px rgba(154,255,180,0.85);
+    }
+
+    .plumbob.low {
+      filter: hue-rotate(-35deg) brightness(0.9);
+    }
+    .plumbob.neutral {
+      filter: hue-rotate(40deg);
+    }
+    .plumbob.good {
+      filter: hue-rotate(75deg) saturate(1.1);
+    }
+
+    .mood-label-main {
+      font-size: 12px;
+      font-weight: 600;
+      color: #f6fbff;
+    }
+
+    .mood-label-sub {
+      font-size: 11px;
+      color: #bfd7e0;
+    }
+
+    .mood-gauge-shell {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.5);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mood-gauge-fill {
+      height: 100%;
+      width: 60%;
+      background: linear-gradient(90deg, #f6c15b, #3fa76a);
+      transition: width 0.25s ease;
+    }
+
+    .mood-gauge-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.7);
+    }
+
+    .hud-dots {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .dot-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.24);
+    }
+
+    .dot.on {
+      background: #e7f6ff;
+      box-shadow: 0 0 5px rgba(202,246,255,0.9);
+    }
+
+    .dot-label {
+      font-size: 10px;
+      color: #c8dde6;
+      margin-right: 4px;
+    }
+
+    .hud-hint {
+      font-size: 9px;
+      color: #8ea6b2;
+    }
+
+    @media (min-width: 640px) {
       body {
-        font-size: 18px;
+        padding-top: 10px;
       }
-      .app {
-        padding: 0.6rem 0.7rem 2rem;
-      }
-      .title {
-        font-size: 2.1rem;
-      }
-      .card,
-      .card-soft {
-        border-radius: 20px;
-        padding: 1.1rem 1.1rem;
-      }
-      .nav-btn {
-        font-size: 0.9rem;
-        padding: 0.35rem 1rem;
-      }
-      .task {
-        font-size: 0.9rem;
-      }
-      .task-desc,
-      .section-sub,
-      .hint {
-        font-size: 0.8rem;
-      }
-      .feeling-btn,
-      .timer-btn {
-        font-size: 0.76rem;
+      .top-bar {
+        margin-top: 6px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <div class="top-nav">
-      <div class="nav-group">
-        <button class="nav-btn active" data-view="homeView">Rhythm & Quests</button>
-        <button class="nav-btn" data-view="statsView">Stats & Needs</button>
-      </div>
-      <div class="nav-group">
-        <button class="nav-btn" id="simpleToggleBtn">Simple View: Off</button>
-        <button class="nav-btn" id="saveBtn">Save Backup</button>
-      </div>
-    </div>
-
-    <header>
-      <div class="title">Hearth & Home</div>
-      <div class="subtitle">
-        Your life, like a cozy Sims 4 save: just <span class="em">two quests</span> + needs + self-care buffs.
-      </div>
-      <div class="today-pill" id="todayLabel">
-        <span class="day-name">TODAY</span>
-        <span class="date-text"></span>
-      </div>
-      <div class="goddess-line">
-        You are not “just a mom.” You are the <span>hearth-keeper</span> of this tiny homestead.
-      </div>
-
-      <div class="mood-hud-row">
-        <div class="moodlet-icon-wrapper">
-          <div class="sim-portrait">
-            <div class="sim-portrait-inner">
-              K
-              <!-- later you can replace this with an <img> of her -->
-            </div>
-          </div>
-          <div style="max-width:110px;text-align:center;">
-            <span style="color:#fef3c7;">Kelly</span><br />
-            <span style="font-size:0.68rem;color:#9ca3af;">Solopa Sims 4 Viking</span>
-          </div>
-        </div>
-
-        <div class="moodlet-icon-wrapper">
-          <div class="moodlet-icon-border">
-            <div id="moodletIcon" class="moodlet-icon mood-neutral"></div>
-          </div>
-          <div style="max-width:110px;text-align:center;">
-            <span style="font-size:0.68rem;color:#e5e7eb;">Main Moodlet</span><br />
-            <span style="font-size:0.66rem;color:#9ca3af;">Updates from feelings, reminders & wins.</span>
-          </div>
-        </div>
-
-        <div class="mood-gauge">
-          <div class="mood-gauge-label">Mood gauge (low → steady → glowing)</div>
-          <div class="mood-gauge-bar">
-            <div id="moodGaugeFill" class="mood-gauge-fill"></div>
-          </div>
+  <div class="app-shell">
+    <!-- TOP BAR -->
+    <header class="top-bar">
+      <div class="top-bar-title">
+        <div class="top-bar-logo">K</div>
+        <div>
+          <div class="top-bar-text-main">KSim Home</div>
+          <div class="top-bar-text-sub">Kelly’s cozy day HUD</div>
         </div>
       </div>
-
-      <div class="current-mood-label" id="currentMoodLabel">
-        Current mood: <span>loading…</span>
-      </div>
-
-      <div class="moodlet-strip" id="moodletStrip">
-        <span class="moodlet-strip-dot" id="moodletStripDot"></span>
-        <span id="moodletStripText">Moodlet: Just existing is allowed today.</span>
+      <div class="top-bar-meta">
+        <div class="chip" id="dayChip">
+          <span class="chip-dot"></span>
+          <span>Today</span>
+        </div>
+        <button class="btn-pill" id="simpleToggle" type="button">
+          <span class="icon">🌿</span>
+          <span>Simple view</span>
+        </button>
       </div>
     </header>
 
-    <!-- HOME VIEW -->
-    <div id="homeView" class="view active">
-      <div class="grid-main">
-        <!-- LEFT -->
-        <div class="card card-soft">
-          <div class="section-title-row" data-simple-hide="true">
-            <div>
-              <div class="section-title">Daily Rhythm</div>
-              <div class="section-sub">
-                Soft structure around what already happens. Times are flexible, not strict.
-              </div>
+    <!-- TABS -->
+    <nav class="tab-bar">
+      <button class="tab-button active" data-tab-target="dashboard" type="button">
+        <span class="tab-button-icon">🏠</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="tab-button" data-tab-target="needs" type="button">
+        <span class="tab-button-icon">📊</span>
+        <span>Needs &amp; Stats</span>
+      </button>
+      <button class="tab-button" data-tab-target="journals" type="button">
+        <span class="tab-button-icon">📖</span>
+        <span>Journals</span>
+      </button>
+    </nav>
+
+    <main>
+      <!-- DASHBOARD TAB -->
+      <section class="tab-panel active" data-tab="dashboard">
+        <!-- Daily quests -->
+        <section class="card" id="questsCard">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">✨</span>
+              <span>Daily house quests</span>
             </div>
-            <span class="tag tag-fire">Kids • Home • You</span>
+            <span class="badge-soft" id="questsSummary">0 / 2 done</span>
           </div>
+          <p class="card-subtitle">
+            Only two tiny quests. If today is heavy, you still win just for showing up.
+          </p>
+          <ul class="quest-list" id="questList">
+            <!-- Filled by JS -->
+          </ul>
+          <button class="btn-soft" id="badDayButton" type="button">
+            <span>Had a rough day?</span>
+            <span>💗</span>
+          </button>
+          <div class="muted-text" id="badDayMessage">
+            Tap if the day just… wasn’t it. It still counts as a win on the calendar.
+          </div>
+        </section>
 
-          <div class="timeline" data-simple-hide="true">
-            <div class="block">
-              <div class="block-time">4:00–8:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Early Dawn – Cozy Wake & Check-in</div>
-                <ul class="block-main-items">
-                  <li><span class="kids">Kids:</span> show time while everyone wakes slowly.</li>
-                  <li><span class="self">You:</span> vlogs / quiet screen time, simple breakfast or drink.</li>
-                  <li><span class="self">Together:</span> wake husband, short call, then breathe.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="block-time">8:00–9:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Slow Morning Scroll + Tiny Reset</div>
-                <ul class="block-main-items">
-                  <li><span class="self">You:</span> Pinterest / phone time is okay.</li>
-                  <li><span class="self">Tiny win:</span> wash face, brush teeth, hair up or oil in hair.</li>
-                  <li><span class="kids">Kids:</span> light play / shows nearby.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="block-time">9:00–11:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Homeschool Focus Block</div>
-                <ul class="block-main-items">
-                  <li><span class="kids">Kids:</span> lessons, learning, or structured play.</li>
-                  <li><span class="self">You:</span> you’ve done enough when they’ve engaged, not when it’s perfect.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="block-time">11:00–1:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Lunch + Quick Home Reset</div>
-                <ul class="block-main-items">
-                  <li><span class="kids">Kids:</span> eat, educational playlist / show.</li>
-                  <li><span class="self">House:</span> choose 1 quick reset: sink, counters, or living room tidy.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="block-time">1:00–3:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Nap Attempt / Quiet Block</div>
-                <ul class="block-main-items">
-                  <li><span class="kids">Kids:</span> nap attempt or quiet activities if they won’t sleep.</li>
-                  <li><span class="self">You:</span> shower OR skincare OR YouTube guilt-free while baby nurses.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="block-time">3:00–5:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Afternoon – Prep & Gentle Reset</div>
-                <ul class="block-main-items">
-                  <li><span class="self">House:</span> start dinner prep, quick dish load if possible.</li>
-                  <li><span class="self">You:</span> water, snack, and choose one small task instead of “everything.”</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="block-time">5:00–9:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Evening – Partner Home & Close</div>
-                <ul class="block-main-items">
-                  <li><span class="kids">Family:</span> dinner, laundry attempt, basic reset together.</li>
-                  <li><span class="self">You:</span> choose: hot shower / drawing / just sitting. All are valid.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="block">
-              <div class="block-time">9:00–10:00</div>
-              <div class="block-main">
-                <div class="block-main-title">Night – Gentle Close of the Day</div>
-                <ul class="block-main-items">
-                  <li><span class="kids">Kids:</span> bedtime attempt, even if it runs late.</li>
-                  <li><span class="self">You:</span> one show, skincare, or read 2–3 pages. That counts.</li>
-                </ul>
-              </div>
+        <!-- Feelings -->
+        <section class="card" id="feelingsCard">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">🧠</span>
+              <span>How are you feeling?</span>
             </div>
           </div>
+          <p class="card-subtitle">
+            Tap what fits closest. No fixing required — this just helps your “Sim self” be seen.
+          </p>
+          <div class="feelings-strip">
+            <!-- low -->
+            <button class="feeling-btn" data-feeling="stressed" data-tone="low" data-category="low" type="button">
+              <span class="icon">⚡</span><span>Stressed</span>
+            </button>
+            <button class="feeling-btn" data-feeling="overwhelmed" data-tone="low" data-category="low" type="button">
+              <span class="icon">🌊</span><span>Overwhelmed</span>
+            </button>
+            <button class="feeling-btn" data-feeling="low" data-tone="low" data-category="low" type="button">
+              <span class="icon">🌧️</span><span>Low</span>
+            </button>
+            <button class="feeling-btn" data-feeling="sad" data-tone="low" data-category="low" type="button">
+              <span class="icon">💧</span><span>Sad</span>
+            </button>
+            <button class="feeling-btn" data-feeling="angry" data-tone="low" data-category="low" type="button">
+              <span class="icon">🔥</span><span>Angry</span>
+            </button>
+            <button class="feeling-btn" data-feeling="hungry" data-tone="neutral" data-category="neutral" type="button">
+              <span class="icon">🍞</span><span>Hungry</span>
+            </button>
+            <!-- neutral/good -->
+            <button class="feeling-btn" data-feeling="good" data-tone="good" data-category="good" type="button">
+              <span class="icon">🙂</span><span>Good</span>
+            </button>
+            <button class="feeling-btn" data-feeling="happy" data-tone="good" data-category="good" type="button">
+              <span class="icon">😊</span><span>Happy</span>
+            </button>
+            <button class="feeling-btn" data-feeling="peace" data-tone="good" data-category="good" type="button">
+              <span class="icon">🕊️</span><span>Peace</span>
+            </button>
+            <button class="feeling-btn" data-feeling="ease" data-tone="good" data-category="good" type="button">
+              <span class="icon">🌿</span><span>Ease</span>
+            </button>
+          </div>
+          <div class="feeling-message" id="feelingMessage">
+            Your feelings are information, not a to-do list. Whatever you tapped is valid.
+          </div>
+        </section>
 
-          <!-- Today tasks -->
-          <div style="margin-top:0.9rem;">
-            <div class="section-title-row">
+        <!-- Timers -->
+        <section class="card" id="timersCard">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">⏱️</span>
+              <span>Gentle check-in timers</span>
+            </div>
+          </div>
+          <p class="card-subtitle">
+            These are soft nudges. If they expire and you do nothing, you’re still a good mom.
+          </p>
+          <div class="timer-list">
+            <!-- Each row uses data-timer-id -->
+            <div class="timer-row" data-timer-id="hydration">
               <div>
-                <div class="section-title">Today’s 2 House Quests</div>
-                <div class="section-sub">
-                  Two focused tasks only. The rest of the mess is just life happening.
-                </div>
+                <div class="timer-label-main">Hydration</div>
+                <div class="timer-label-sub">Sip water or tea</div>
               </div>
-              <span class="tag tag-soft" id="todayDayName"></span>
-            </div>
-            <div class="today-day-tag" id="todayDaySummary"></div>
-            <ul class="task-list" id="todayTasks"></ul>
-
-            <div class="self-note">
-              When these two are done, the house part of today is a <span>complete win</span>.
-              Everything else is bonus or can wait.
-            </div>
-
-            <div class="bad-day-row">
-              <button type="button" class="bad-day-btn" id="badDayBtn">
-                Bad day? Tap here to still count this day as a win
-              </button>
-              <div class="bad-day-msg" id="badDayMsg"></div>
-            </div>
-
-            <div class="self-reward">
-              <div class="self-reward-title">After your two tasks…</div>
-              <div class="chips">
-                <span class="chip chip-cozy">Hot shower with no rush for a few minutes</span>
-                <span class="chip chip-soft">Nighttime skincare (even just cleanser + moisturizer)</span>
-                <span class="chip">Draw a tiny doodle or read 2–3 pages</span>
-                <span class="chip">Scroll Pinterest guilt-free for 10–15 min</span>
+              <div class="timer-status" data-timer-status>Off</div>
+              <div class="timer-cta">
+                <button class="btn-timer primary" data-timer-action="start" type="button">Start</button>
+                <button class="btn-timer" data-timer-action="stop" type="button">Pause</button>
               </div>
-              <button type="button" class="self-bonus-btn" id="selfBonusBtn">
-                I did some extra self-care or something just for me
-              </button>
             </div>
-
-            <div class="hint">
-              If today explodes, it’s okay to move a quest to tomorrow. The point is <span>kind rhythm</span>, not perfection.
+            <div class="timer-row" data-timer-id="meal">
+              <div>
+                <div class="timer-label-main">Meal</div>
+                <div class="timer-label-sub">Real food for you</div>
+              </div>
+              <div class="timer-status" data-timer-status>Off</div>
+              <div class="timer-cta">
+                <button class="btn-timer primary" data-timer-action="start" type="button">Start</button>
+                <button class="btn-timer" data-timer-action="stop" type="button">Pause</button>
+              </div>
+            </div>
+            <div class="timer-row" data-timer-id="snack">
+              <div>
+                <div class="timer-label-main">Snack</div>
+                <div class="timer-label-sub">Quick energy boost</div>
+              </div>
+              <div class="timer-status" data-timer-status>Off</div>
+              <div class="timer-cta">
+                <button class="btn-timer primary" data-timer-action="start" type="button">Start</button>
+                <button class="btn-timer" data-timer-action="stop" type="button">Pause</button>
+              </div>
+            </div>
+            <div class="timer-row" data-timer-id="bathroom">
+              <div>
+                <div class="timer-label-main">Bathroom break</div>
+                <div class="timer-label-sub">Your body matters too</div>
+              </div>
+              <div class="timer-status" data-timer-status>Off</div>
+              <div class="timer-cta">
+                <button class="btn-timer primary" data-timer-action="start" type="button">Start</button>
+                <button class="btn-timer" data-timer-action="stop" type="button">Pause</button>
+              </div>
+            </div>
+            <div class="timer-row" data-timer-id="shower" data-simple-hide="true">
+              <div>
+                <div class="timer-label-main">Hot shower</div>
+                <div class="timer-label-sub">Steam, breathe, reset</div>
+              </div>
+              <div class="timer-status" data-timer-status>Off</div>
+              <div class="timer-cta">
+                <button class="btn-timer primary" data-timer-action="start" type="button">Start</button>
+                <button class="btn-timer" data-timer-action="stop" type="button">Pause</button>
+              </div>
+            </div>
+            <div class="timer-row" data-timer-id="skincare" data-simple-hide="true">
+              <div>
+                <div class="timer-label-main">Skincare</div>
+                <div class="timer-label-sub">Tiny goddess ritual</div>
+              </div>
+              <div class="timer-status" data-timer-status>Off</div>
+              <div class="timer-cta">
+                <button class="btn-timer primary" data-timer-action="start" type="button">Start</button>
+                <button class="btn-timer" data-timer-action="stop" type="button">Pause</button>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
+      </section>
 
-        <!-- RIGHT -->
-        <div class="card">
-          <div class="section-title-row" data-simple-hide="true">
+      <!-- NEEDS & STATS TAB -->
+      <section class="tab-panel" data-tab="needs">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">🛡️</span>
+              <span>Solopa Viking stats</span>
+            </div>
+          </div>
+          <p class="card-subtitle">
+            These grow quietly in the background as you do tiny things, not giant ones.
+          </p>
+          <div class="stats-row">
+            <div class="stat-pill">
+              <div class="stat-pill-label">Quests completed</div>
+              <div class="stat-pill-value" id="statQuests">0</div>
+            </div>
+            <div class="stat-pill">
+              <div class="stat-pill-label">Days counted as wins</div>
+              <div class="stat-pill-value" id="statWins">0</div>
+            </div>
+            <div class="stat-pill" data-simple-hide="true">
+              <div class="stat-pill-label">Self-care bonuses</div>
+              <div class="stat-pill-value" id="statSelfCare">0</div>
+            </div>
+            <div class="stat-pill" data-simple-hide="true">
+              <div class="stat-pill-label">Feelings check-ins</div>
+              <div class="stat-pill-value" id="statFeelings">0</div>
+            </div>
+          </div>
+          <div class="level-bar-wrap">
+            <div class="level-label">Solopa Viking level</div>
+            <div class="level-name" id="levelName">Hearth Seedling</div>
+            <div class="level-bar">
+              <div class="level-fill" id="levelFill"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">💚</span>
+              <span>Needs check-in</span>
+            </div>
+          </div>
+          <p class="card-subtitle">
+            Nudge these up or down based on how real-life Kelly feels — not how she “should.”
+          </p>
+          <div class="needs-list">
+            <!-- Each row: data-need-id -->
+            <div class="need-row" data-need-id="hunger">
+              <div class="need-label">Hunger</div>
+              <div class="need-bar-shell">
+                <div class="need-bar-fill" data-need-fill></div>
+              </div>
+              <div class="need-controls">
+                <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                <span class="need-value" data-need-value>60</span>
+                <button class="btn-need" data-need-delta="10" type="button">+</button>
+              </div>
+            </div>
+            <div class="need-row" data-need-id="energy">
+              <div class="need-label">Energy</div>
+              <div class="need-bar-shell">
+                <div class="need-bar-fill" data-need-fill></div>
+              </div>
+              <div class="need-controls">
+                <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                <span class="need-value" data-need-value>60</span>
+                <button class="btn-need" data-need-delta="10" type="button">+</button>
+              </div>
+            </div>
+            <div class="need-row" data-need-id="social">
+              <div class="need-label">Social</div>
+              <div class="need-bar-shell">
+                <div class="need-bar-fill" data-need-fill></div>
+              </div>
+              <div class="need-controls">
+                <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                <span class="need-value" data-need-value>60</span>
+                <button class="btn-need" data-need-delta="10" type="button">+</button>
+              </div>
+            </div>
+            <div class="need-row" data-need-id="fun">
+              <div class="need-label">Fun</div>
+              <div class="need-bar-shell">
+                <div class="need-bar-fill" data-need-fill></div>
+              </div>
+              <div class="need-controls">
+                <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                <span class="need-value" data-need-value>60</span>
+                <button class="btn-need" data-need-delta="10" type="button">+</button>
+              </div>
+            </div>
+            <div class="need-row" data-need-id="hygiene" data-simple-hide="true">
+              <div class="need-label">Hygiene</div>
+              <div class="need-bar-shell">
+                <div class="need-bar-fill" data-need-fill></div>
+              </div>
+              <div class="need-controls">
+                <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                <span class="need-value" data-need-value>60</span>
+                <button class="btn-need" data-need-delta="10" type="button">+</button>
+              </div>
+            </div>
+            <div class="need-row" data-need-id="quiet" data-simple-hide="true">
+              <div class="need-label">Quiet / Alone</div>
+              <div class="need-bar-shell">
+                <div class="need-bar-fill" data-need-fill></div>
+              </div>
+              <div class="need-controls">
+                <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                <span class="need-value" data-need-value>60</span>
+                <button class="btn-need" data-need-delta="10" type="button">+</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- JOURNALS TAB -->
+      <section class="tab-panel" data-tab="journals">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">🗓️</span>
+              <span>Win-the-day calendar</span>
+            </div>
+            <span class="calendar-month-label" id="calendarMonthLabel"></span>
+          </div>
+          <p class="card-subtitle">
+            A day is a “win” if you did any quest <em>or</em> tapped “Had a rough day?”.
+          </p>
+          <div class="calendar-header">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="card-title-icon">📓</span>
+              <span>Journals</span>
+            </div>
+          </div>
+          <div class="journal-group">
             <div>
-              <div class="section-title">Goddess Self-Care Menu</div>
-              <div class="section-sub">
-                Pick what fits your energy and the kids. Tiny versions still count.
-              </div>
+              <div class="journal-label">Today’s little log</div>
+              <textarea class="journal-textarea" id="journalDay" placeholder="A few lines about today is plenty."></textarea>
             </div>
-            <span class="tag">Tiny is enough</span>
-          </div>
-
-          <div class="selfcare-groups" data-simple-hide="true">
-            <div class="sc-group">
-              <div class="sc-title">With kids awake</div>
-              <ul class="sc-list">
-                <li><span class="strong">5-minute skincare:</span> wash face, moisturizer, maybe oil. Kids can be in the room.</li>
-                <li><span class="strong">Hair care touch:</span> oil scalp, braid, or quick bun that makes you feel put together.</li>
-                <li><span class="strong">Quiet together:</span> sit on the floor near them and just breathe while they watch a show.</li>
-              </ul>
+            <div data-simple-hide="true">
+              <div class="journal-label">This month’s story</div>
+              <textarea class="journal-textarea" id="journalMonth" placeholder="What this month feels like overall…"></textarea>
             </div>
-
-            <div class="sc-group">
-              <div class="sc-title">During nap or “quiet attempt”</div>
-              <ul class="sc-list">
-                <li><span class="strong">Hot shower:</span> even 5–10 minutes is a full reset.</li>
-                <li><span class="strong">Drawing moment:</span> one small doodle in a notebook.</li>
-                <li><span class="strong">Reading:</span> 2–5 pages of a book, not a full chapter.</li>
-                <li><span class="strong">YouTube guilt-free:</span> watch something for you while baby nurses.</li>
-              </ul>
-            </div>
-
-            <div class="sc-group">
-              <div class="sc-title">Evening / night</div>
-              <ul class="sc-list">
-                <li><span class="strong">Shower ritual:</span> warm water + favorite soap = day officially over.</li>
-                <li><span class="strong">Skincare + hair wrap:</span> tell yourself “today was enough” in the mirror.</li>
-                <li><span class="strong">Cozy plan time:</span> Pinterest homestead / balcony plant ideas for later.</li>
-                <li><span class="strong">Baking as creative outlet:</span> when you have energy, once in a while, not every day.</li>
-              </ul>
+            <div data-simple-hide="true">
+              <div class="journal-label">This year’s chapter</div>
+              <textarea class="journal-textarea" id="journalYear" placeholder="Big picture thoughts that future you might smile at."></textarea>
             </div>
           </div>
+        </section>
+      </section>
+    </main>
+  </div>
 
-          <div class="sc-hint" data-simple-hide="true">
-            You don’t have to earn rest by “finishing everything.” One tiny moment is enough to keep <span>you</span> alive inside the routine.
-          </div>
-
-          <!-- Feelings -->
-          <div class="feelings-section">
-            <div class="feelings-title">How are you feeling right now?</div>
-            <div class="feelings-buttons">
-              <button type="button" class="feeling-btn" data-feeling="stressed">Feeling Stressed</button>
-              <button type="button" class="feeling-btn" data-feeling="overwhelmed">Feeling Overwhelmed</button>
-              <button type="button" class="feeling-btn" data-feeling="depressed">Feeling Low</button>
-              <button type="button" class="feeling-btn" data-feeling="sad">Feeling Sad</button>
-              <button type="button" class="feeling-btn" data-feeling="angry">Feeling Angry</button>
-              <button type="button" class="feeling-btn" data-feeling="hungry">Feeling Hungry</button>
-              <button type="button" class="feeling-btn" data-feeling="good">Feeling Good</button>
-              <button type="button" class="feeling-btn" data-feeling="happy">Feeling Happy</button>
-              <button type="button" class="feeling-btn" data-feeling="peace">Feeling at Peace</button>
-              <button type="button" class="feeling-btn" data-feeling="ease">Feeling at Ease</button>
-            </div>
-            <div class="feelings-msg" id="feelingsMsg"></div>
-          </div>
-
-          <!-- Needs timers -->
-          <div class="timers-section" data-simple-hide="true">
-            <div class="timers-title">Needs timers (Sims-style)</div>
-
-            <div class="timer-row">
-              <div class="timer-label">
-                <span class="timer-label-main">Hydration</span>
-                <span class="timer-label-sub">Gentle water reminder through the day.</span>
-              </div>
-              <div class="timer-controls">
-                <button type="button" class="timer-btn" data-timer-id="water">Start</button>
-                <div class="timer-status" data-timer-status="water">Off</div>
-              </div>
-            </div>
-
-            <div class="timer-row">
-              <div class="timer-label">
-                <span class="timer-label-main">Meals</span>
-                <span class="timer-label-sub">Check in on “have I really eaten?”</span>
-              </div>
-              <div class="timer-controls">
-                <button type="button" class="timer-btn" data-timer-id="meal">Start</button>
-                <div class="timer-status" data-timer-status="meal">Off</div>
-              </div>
-            </div>
-
-            <div class="timer-row">
-              <div class="timer-label">
-                <span class="timer-label-main">Snacks</span>
-                <span class="timer-label-sub">Small fuel between kid chaos moments.</span>
-              </div>
-              <div class="timer-controls">
-                <button type="button" class="timer-btn" data-timer-id="snack">Start</button>
-                <div class="timer-status" data-timer-status="snack">Off</div>
-              </div>
-            </div>
-
-            <div class="timer-row">
-              <div class="timer-label">
-                <span class="timer-label-main">Bathroom breaks</span>
-                <span class="timer-label-sub">You don’t have to wait until everything is done.</span>
-              </div>
-              <div class="timer-controls">
-                <button type="button" class="timer-btn" data-timer-id="bathroom">Start</button>
-                <div class="timer-status" data-timer-status="bathroom">Off</div>
-              </div>
-            </div>
-
-            <div class="timer-row">
-              <div class="timer-label">
-                <span class="timer-label-main">Shower reset</span>
-                <span class="timer-label-sub">Gentle reminder for a hot shower window.</span>
-              </div>
-              <div class="timer-controls">
-                <button type="button" class="timer-btn" data-timer-id="shower">Start</button>
-                <div class="timer-status" data-timer-status="shower">Off</div>
-              </div>
-            </div>
-
-            <div class="timer-row">
-              <div class="timer-label">
-                <span class="timer-label-main">Skincare ritual</span>
-                <span class="timer-label-sub">Once-a-day reminder for your glow.</span>
-              </div>
-              <div class="timer-controls">
-                <button type="button" class="timer-btn" data-timer-id="skincare">Start</button>
-                <div class="timer-status" data-timer-status="skincare">Off</div>
-              </div>
-            </div>
-
-            <div class="hint">
-              Timers work best while this page / app is open. Some phones pause them when the app is fully in the background.
-            </div>
-          </div>
-
-          <!-- Calendar & Journals -->
-          <div class="calendar-wrapper" data-simple-hide="true">
-            <div class="calendar-header-title" id="monthLabel">This Month</div>
-            <div class="calendar" id="calendarHeader"></div>
-            <div class="calendar" id="calendarGrid"></div>
-
-            <div class="stats-row" id="statsRow"></div>
-
-            <div class="month-notes-label">Notes for this month</div>
-            <textarea id="monthNotes" placeholder="What worked? What felt too much? What tiny changes do you want next month?"></textarea>
-
-            <div class="daily-journal-label" id="dailyJournalLabel">Today’s journal</div>
-            <textarea id="dailyJournal" placeholder="Write a couple of lines about today. Wins, hard parts, anything."></textarea>
-
-            <div class="year-journal-label" id="yearJournalLabel">Year journal</div>
-            <textarea id="yearJournal" placeholder="Bigger thoughts, goals, memories from this year."></textarea>
-
-            <div class="hint">
-              Everything here saves on this device only. If most days you use your phone, open it there and let this be your <span>little Sims HUD</span>.
-            </div>
-          </div>
+  <!-- HUD -->
+  <div class="hud-shell">
+    <div class="hud-inner">
+      <div class="hud-portrait">
+        <div class="portrait-frame">K</div>
+        <div class="portrait-meta">
+          <div class="portrait-meta-name">Kelly</div>
+          <div class="portrait-meta-sub" id="hudSubtext">Solopa Hearthling</div>
         </div>
       </div>
-    </div>
-
-    <!-- STATS VIEW -->
-    <div id="statsView" class="view">
-      <div class="card" data-simple-hide="true">
-        <div class="section-title-row">
-          <div>
-            <div class="section-title">Stats & Level-Up</div>
-            <div class="section-sub">
-              See your long-term progress like a real-world Sim leveling up her Solopa Viking life.
-            </div>
+      <div class="hud-mood">
+        <div class="plumbob-wrap">
+          <div class="plumbob" id="plumbob">
+            <div class="plumbob-shape"></div>
           </div>
-          <span class="tag tag-soft" id="simLevelTag">Level 1 • Solopa Seedling of the North</span>
-        </div>
-
-        <div class="stats-grid">
           <div>
-            <div class="stat-card-title">Lifetime Progress</div>
-            <div class="stat-label">Total house quests checked off</div>
-            <div class="stat-number" id="statTotalQuests">0</div>
-
-            <div class="stat-label" style="margin-top:0.3rem;">Days counted as a win (quests or bad day)</div>
-            <div class="stat-number" id="statWinDays">0</div>
-
-            <div class="stat-label" style="margin-top:0.3rem;">Self-care bonuses logged</div>
-            <div class="stat-number" id="statSelfCare">0</div>
-
-            <div class="stat-label" style="margin-top:0.3rem;">Feelings check-ins</div>
-            <div class="stat-number" id="statFeelings">0</div>
-          </div>
-
-          <div>
-            <div class="stat-card-title">Needs (Sims-style sliders)</div>
-            <div class="stat-label">Tap + / – to roughly track how your needs feel.</div>
-
-            <div class="need-card">
-              <div class="need-row">
-                <div class="need-label">Hunger</div>
-                <div class="need-bar-outer">
-                  <div class="need-bar-inner" data-need="hunger"></div>
-                </div>
-                <div class="need-controls">
-                  <button type="button" class="need-btn" data-need-btn="hunger" data-delta="-10">–</button>
-                  <button type="button" class="need-btn" data-need-btn="hunger" data-delta="10">+</button>
-                </div>
-              </div>
-
-              <div class="need-row">
-                <div class="need-label">Energy</div>
-                <div class="need-bar-outer">
-                  <div class="need-bar-inner" data-need="energy"></div>
-                </div>
-                <div class="need-controls">
-                  <button type="button" class="need-btn" data-need-btn="energy" data-delta="-10">–</button>
-                  <button type="button" class="need-btn" data-need-btn="energy" data-delta="10">+</button>
-                </div>
-              </div>
-
-              <div class="need-row">
-                <div class="need-label">Social</div>
-                <div class="need-bar-outer">
-                  <div class="need-bar-inner" data-need="social"></div>
-                </div>
-                <div class="need-controls">
-                  <button type="button" class="need-btn" data-need-btn="social" data-delta="-10">–</button>
-                  <button type="button" class="need-btn" data-need-btn="social" data-delta="10">+</button>
-                </div>
-              </div>
-
-              <div class="need-row">
-                <div class="need-label">Fun</div>
-                <div class="need-bar-outer">
-                  <div class="need-bar-inner" data-need="fun"></div>
-                </div>
-                <div class="need-controls">
-                  <button type="button" class="need-btn" data-need-btn="fun" data-delta="-10">–</button>
-                  <button type="button" class="need-btn" data-need-btn="fun" data-delta="10">+</button>
-                </div>
-              </div>
-
-              <div class="need-row">
-                <div class="need-label">Hygiene</div>
-                <div class="need-bar-outer">
-                  <div class="need-bar-inner" data-need="hygiene"></div>
-                </div>
-                <div class="need-controls">
-                  <button type="button" class="need-btn" data-need-btn="hygiene" data-delta="-10">–</button>
-                  <button type="button" class="need-btn" data-need-btn="hygiene" data-delta="10">+</button>
-                </div>
-              </div>
-
-              <div class="need-row">
-                <div class="need-label">Quiet / Alone</div>
-                <div class="need-bar-outer">
-                  <div class="need-bar-inner" data-need="quiet"></div>
-                </div>
-                <div class="need-controls">
-                  <button type="button" class="need-btn" data-need-btn="quiet" data-delta="-10">–</button>
-                  <button type="button" class="need-btn" data-need-btn="quiet" data-delta="10">+</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="hint" style="margin-top:0.45rem;">
-              These don’t have to be perfect. They’re just to <span>visualize how full you are</span> so you remember you’re a Sim too.
-            </div>
+            <div class="mood-label-main" id="moodLabelMain">Gently okay</div>
+            <div class="mood-label-sub" id="moodLabelSub">You’re doing more than enough.</div>
           </div>
         </div>
-
-        <div class="hint" style="margin-top:0.7rem;">
-          Stats and journals are stored only on this device (in the browser). Use <span>Save Backup</span> to download a file if you ever want to keep a copy.
+        <div class="mood-gauge-shell">
+          <div class="mood-gauge-fill" id="moodGaugeFill"></div>
         </div>
+      </div>
+      <div class="hud-dots">
+        <div class="dot-row">
+          <span class="dot-label">Needs</span>
+          <span class="dot" id="dot1"></span>
+          <span class="dot" id="dot2"></span>
+          <span class="dot" id="dot3"></span>
+        </div>
+        <div class="hud-hint">Tap anything gently. Nothing here can fail.</div>
       </div>
     </div>
   </div>
 
+  <!-- AUDIO -->
+  <audio data-sound="ui-click" src="sounds/ui-click.mp3" preload="auto"></audio>
+  <audio data-sound="feel-good" src="sounds/feel-good.mp3" preload="auto"></audio>
+  <audio data-sound="feel-neutral" src="sounds/feel-neutral.mp3" preload="auto"></audio>
+  <audio data-sound="feel-low" src="sounds/feel-low.mp3" preload="auto"></audio>
+
   <script>
-    const PREFIX = "HearthHome_KSim_";
+    (function () {
+      const STORAGE_KEY = "ksimHomeState_v1";
 
-    // ---- SOUND SYSTEM (Sims-style clicks & mood sounds) ----
-    const SOUND_FILES = {
-      uiClick: "sounds/ui-click.mp3",        // generic button click
-      feelGood: "sounds/feel-good.mp3",      // happy/peace/ease
-      feelNeutral: "sounds/feel-neutral.mp3",
-      feelLow: "sounds/feel-low.mp3"         // stressed/overwhelmed/sad/etc
-    };
-
-    const soundCache = {};
-
-    function playSound(name) {
-      try {
-        const src = SOUND_FILES[name];
-        if (!src) return;
-
-        let audio = soundCache[name];
-        if (!audio) {
-          audio = new Audio(src);
-          audio.preload = "auto";
-          soundCache[name] = audio;
-        } else {
-          audio.currentTime = 0;
-        }
-
-        audio.volume = 0.45; // not too loud
-        audio.play().catch(() => {});
-      } catch (e) {
-        // ignore sound errors so the app never breaks
-      }
-    }
-
-    // ---- Local storage helpers ----
-    function safeGet(key) {
-      try { return window.localStorage.getItem(key); } catch (e) { return null; }
-    }
-    function safeSet(key, value) {
-      try { window.localStorage.setItem(key, value); } catch (e) {}
-    }
-    function safeRemove(key) {
-      try { window.localStorage.removeItem(key); } catch (e) {}
-    }
-
-    function taskKey(dateStr, id) { return PREFIX + "done_" + dateStr + "_" + id; }
-    function badDayKey(dateStr) { return PREFIX + "badday_" + dateStr; }
-    function monthNotesKey(monthKey) { return PREFIX + "notes_" + monthKey; }
-    function dailyJournalKey(dateStr) { return PREFIX + "journal_daily_" + dateStr; }
-    function yearJournalKey(year) { return PREFIX + "journal_year_" + year; }
-    function statKey(name) { return PREFIX + "stat_" + name; }
-    function needKey(id) { return PREFIX + "need_" + id; }
-
-    const FEELING_TEXTS = {
-      stressed: [
-        "Your body is carrying a lot. One tiny step and one slow breath is enough right now.",
-        "You’re juggling so much. It’s okay to lower the bar and do just the next small thing."
-      ],
-      overwhelmed: [
-        "Shrink the day down to one move: feed someone, hug someone, or sit down for a minute.",
-        "You’re not failing. This season is just very full. One task is a win."
-      ],
-      depressed: [
-        "Feeling low doesn’t mean you’re weak. You’ve been strong for a long time.",
-        "If this stays heavy, it’s okay to talk to someone you trust or a professional."
-      ],
-      sad: [
-        "Sad days happen. They don’t erase everything good you’ve done.",
-        "You are allowed to be sad and still be a good mom and partner."
-      ],
-      angry: [
-        "Anger is a signal, not a flaw. It means something feels like too much or not fair.",
-        "You’re allowed to step away for a minute, even if it’s just into the bathroom."
-      ],
-      hungry: [
-        "Feed yourself too. You matter as much as the kids.",
-        "Even a simple snack is real self-care for your body."
-      ],
-      good: [
-        "Notice this good feeling. It’s a real moment you created.",
-        "You’re allowed to feel okay even if everything isn’t perfect around you."
-      ],
-      happy: [
-        "This happiness is proof your effort is paying off.",
-        "Soak in this little bright spot. You earned it."
-      ],
-      peace: [
-        "Peace is powerful, even when it’s quiet. Let your body rest here a bit.",
-        "You carved out this pocket of calm in the middle of chaos."
-      ],
-      ease: [
-        "Feeling at ease means your body finally gets to exhale.",
-        "You don’t have to brace for the next thing every second. You can rest here for a bit."
-      ]
-    };
-
-    const MASTER_TASKS = [
-      { id: 1,  area: "Kitchen",   title: "Wipe kitchen counters & stove", desc: "Clear and wipe counters and stovetop so cooking feels calmer." },
-      { id: 2,  area: "Kitchen",   title: "Sink & faucet scrub",           desc: "Scrub sink, faucet, and around the drain until it feels fresh." },
-      { id: 3,  area: "Kitchen",   title: "Fridge handles & doors",        desc: "Wipe handles and front of the fridge (the “touch spots”)." },
-      { id: 4,  area: "Kitchen",   title: "Sweep or vacuum kitchen floor", desc: "Focus on crumbs under the table and in high-traffic spots." },
-
-      { id: 5,  area: "Living Room", title: "Couch & blanket reset",       desc: "Fluff cushions, fold blankets, clear off couch surfaces." },
-      { id: 6,  area: "Living Room", title: "Toy basket reset",            desc: "Toys into bins/baskets so the floor mostly appears again." },
-      { id: 7,  area: "Living Room", title: "Living room surfaces",        desc: "Wipe coffee table, TV stand, or any cluttered flat surface." },
-      { id: 8,  area: "Living Room", title: "Vacuum living room",          desc: "Just main paths and under the table/couch if possible." },
-
-      { id: 9,  area: "Bathrooms",  title: "Main bathroom wipe",          desc: "Sink, faucet, counter, quick mirror wipe, toilet seat once-over." },
-      { id: 10, area: "Bathrooms",  title: "Toilet deep clean",           desc: "Inside bowl, seat, outside, and floor around the base." },
-      { id: 11, area: "Bathrooms",  title: "Tub/shower quick scrub",      desc: "Quick scrub on walls and tub floor where soap builds up." },
-      { id: 12, area: "Bathrooms",  title: "Bathroom floor & trash",      desc: "Sweep / spot mop and empty small trash cans." },
-
-      { id: 13, area: "Bedrooms",   title: "Master bedroom surfaces",     desc: "Clear and wipe your nightstand + one other surface." },
-      { id: 14, area: "Bedrooms",   title: "Kids bedroom tidy",           desc: "Pick one kid’s room: floor mostly clear, toys to their homes." },
-      { id: 15, area: "Bedrooms",   title: "Change one bed",              desc: "Fresh sheets on one bed only. The others can wait." },
-
-      { id: 16, area: "Floors",     title: "Entry & hallway sweep",       desc: "Entry, hallway, and main walkway crumb-free if possible." },
-      { id: 17, area: "Floors",     title: "Spot mop sticky spots",       desc: "Just the worst sticky/dirty floor patches (not the whole house)." },
-
-      { id: 18, area: "Laundry",    title: "Fold & put away one load",    desc: "One basket from basket to drawers/closet. All the way done." },
-      { id: 19, area: "Laundry",    title: "Laundry corner tidy",         desc: "Clear tops of machines, gather stray clothes, quick wipe." },
-
-      { id: 20, area: "Entry",      title: "Shoe & coat reset",           desc: "Line up shoes and hang coats so leaving the house feels easier." },
-      { id: 21, area: "Dining",     title: "Dining table clear & wipe",   desc: "Clear clutter and wipe the full table surface." },
-      { id: 22, area: "Dusting",    title: "Dust one zone",               desc: "Pick one area (TV, shelves, window sills) and dust just that." },
-      { id: 23, area: "Deep-ish",   title: "One drawer or shelf",         desc: "Declutter/clean just one drawer or shelf that bugs you." }
-    ];
-
-    function getTasksForDate(date) {
-      const dayOfMonth = date.getDate();
-      const total = MASTER_TASKS.length;
-      const baseIndex = ((dayOfMonth - 1) * 2) % total;
-      const i1 = baseIndex;
-      const i2 = (baseIndex + 1) % total;
-      return [MASTER_TASKS[i1], MASTER_TASKS[i2]];
-    }
-
-    function formatDateLabel(date) {
-      return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
-    }
-
-    function getMonthKey(date) {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      return y + "-" + m;
-    }
-
-    function getStat(name) {
-      const raw = safeGet(statKey(name));
-      return raw ? parseInt(raw, 10) || 0 : 0;
-    }
-    function incStat(name, delta) {
-      const current = getStat(name);
-      safeSet(statKey(name), String(current + (delta || 1)));
-    }
-
-    function computeStatsFromStorage() {
-      let totalQuests = 0;
-      const winDaysSet = new Set();
-
-      if (window.localStorage) {
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (!key || !key.startsWith(PREFIX)) continue;
-
-          if (key.includes("done_")) {
-            totalQuests += 1;
-            const datePart = key.split("done_")[1].split("_")[0];
-            winDaysSet.add(datePart);
-          }
-          if (key.includes("badday_")) {
-            const datePart = key.split("badday_")[1];
-            winDaysSet.add(datePart);
-          }
-        }
-      }
-
-      return {
-        totalQuests,
-        winDays: winDaysSet.size,
-        selfCare: getStat("selfcare"),
-        feelings: getStat("feelings")
+      const defaultTimersConfig = {
+        hydration: { minutes: 60 },
+        meal: { minutes: 180 },
+        snack: { minutes: 120 },
+        bathroom: { minutes: 90 },
+        shower: { minutes: 30 },
+        skincare: { minutes: 45 }
       };
-    }
 
-    function isTaskDone(dateStr, id) {
-      return safeGet(taskKey(dateStr, id)) === "1";
-    }
-    function setTaskDone(dateStr, id, done) {
-      if (done) {
-        safeSet(taskKey(dateStr, id), "1");
-      } else {
-        safeRemove(taskKey(dateStr, id));
-      }
-    }
-
-    function isBadDay(dateStr) {
-      return safeGet(badDayKey(dateStr)) === "1";
-    }
-    function setBadDay(dateStr, isBad) {
-      if (isBad) {
-        safeSet(badDayKey(dateStr), "1");
-      } else {
-        safeRemove(badDayKey(dateStr));
-      }
-    }
-
-    // ---- Needs ----
-    const NEEDS_DEFAULT = {
-      hunger: 70,
-      energy: 60,
-      social: 60,
-      fun: 55,
-      hygiene: 70,
-      quiet: 40
-    };
-
-    function getNeed(id) {
-      const raw = safeGet(needKey(id));
-      if (!raw) return NEEDS_DEFAULT[id] ?? 60;
-      const v = parseInt(raw, 10);
-      return isNaN(v) ? NEEDS_DEFAULT[id] ?? 60 : Math.min(100, Math.max(0, v));
-    }
-
-    function setNeed(id, value) {
-      const v = Math.min(100, Math.max(0, value));
-      safeSet(needKey(id), String(v));
-      renderNeedsBars();
-    }
-
-    function adjustNeed(id, delta) {
-      setNeed(id, getNeed(id) + delta);
-    }
-
-    function renderNeedsBars() {
-      const bars = document.querySelectorAll(".need-bar-inner[data-need]");
-      bars.forEach(bar => {
-        const id = bar.getAttribute("data-need");
-        const val = getNeed(id);
-        bar.style.width = val + "%";
-      });
-    }
-
-    function initNeedsControls() {
-      const btns = document.querySelectorAll(".need-btn[data-need-btn]");
-      btns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-need-btn");
-          const delta = parseInt(btn.getAttribute("data-delta"), 10) || 0;
-          adjustNeed(id, delta);
-        });
-      });
-
-      renderNeedsBars();
-    }
-
-    // ---- Voice setup ----
-    let selectedVoice = null;
-    let speechReady = false;
-
-    function chooseVikingVoice() {
-      if (!("speechSynthesis" in window)) return;
-      const voices = window.speechSynthesis.getVoices();
-      if (!voices || !voices.length) return;
-
-      const prefs = [
-        /female/i,
-        /woman/i,
-        /en-gb/i,
-        /english/i
+      const tasksPool = [
+        "Clear and wipe the kitchen counters",
+        "Sweep the living room floor",
+        "Fold one mini-load of laundry",
+        "Tidy toys from one room",
+        "Reset the bathroom sink area",
+        "Wipe the dining table",
+        "Quick vacuum of main hallway",
+        "Put away clean dishes / run dishwasher",
+        "Declutter one small surface",
+        "Start or switch one load of laundry"
       ];
 
-      for (const pattern of prefs) {
-        const match = voices.find(v => pattern.test(v.name) || pattern.test(v.lang));
-        if (match) {
-          selectedVoice = match;
-          break;
+      const levelNames = [
+        "Hearth Seedling",
+        "Cozy Sprout",
+        "Ember Keeper",
+        "Hearth Guardian",
+        "Solopa Shield-Maiden",
+        "Homestead High Priestess"
+      ];
+
+      function todayDateString() {
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      function getMonthKey(dateStr) {
+        return dateStr.slice(0, 7); // YYYY-MM
+      }
+
+      function getYearKey(dateStr) {
+        return dateStr.slice(0, 4);
+      }
+
+      function loadState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return createFreshState();
         }
-      }
-
-      if (!selectedVoice) {
-        selectedVoice = voices[0];
-      }
-
-      speechReady = true;
-    }
-
-    function speak(text) {
-      try {
-        if (!("speechSynthesis" in window)) return;
-        if (!speechReady) chooseVikingVoice();
-        const utter = new SpeechSynthesisUtterance(text);
-        if (selectedVoice) utter.voice = selectedVoice;
-        utter.rate = 0.98;
-        utter.pitch = 0.98;
-        window.speechSynthesis.speak(utter);
-      } catch (e) {}
-    }
-
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        chooseVikingVoice();
-      };
-    }
-
-    // ---- Mood visuals ----
-    function setMoodletStrip(text, type) {
-      const wrapper = document.getElementById("moodletStrip");
-      const textEl = document.getElementById("moodletStripText");
-      const dot = document.getElementById("moodletStripDot");
-      if (!wrapper || !textEl || !dot) return;
-
-      textEl.textContent = text;
-
-      if (type === "good") {
-        dot.style.backgroundColor = "#4ade80";
-        dot.style.boxShadow = "0 0 8px rgba(74,222,128,0.9)";
-      } else if (type === "low") {
-        dot.style.backgroundColor = "#60a5fa";
-        dot.style.boxShadow = "0 0 8px rgba(96,165,250,0.9)";
-      } else {
-        dot.style.backgroundColor = "#fde68a";
-        dot.style.boxShadow = "0 0 8px rgba(253,230,138,0.9)";
-      }
-    }
-
-    function updateMoodVisual(moodType) {
-      const icon = document.getElementById("moodletIcon");
-      const gauge = document.getElementById("moodGaugeFill");
-      if (!icon || !gauge) return;
-
-      icon.classList.remove("mood-good", "mood-neutral", "mood-low");
-
-      if (moodType === "good") {
-        icon.classList.add("mood-good");
-        gauge.style.width = "85%";
-      } else if (moodType === "low") {
-        icon.classList.add("mood-low");
-        gauge.style.width = "30%";
-      } else {
-        icon.classList.add("mood-neutral");
-        gauge.style.width = "55%";
-      }
-
-      safeSet(PREFIX + "lastMoodType", moodType);
-    }
-
-    function updateCurrentMood(text, moodType) {
-      const label = document.getElementById("currentMoodLabel");
-      if (label) {
-        const span = label.querySelector("span");
-        if (span) span.textContent = text;
-      }
-      safeSet(PREFIX + "lastMood", text);
-      if (moodType) updateMoodVisual(moodType);
-    }
-
-    function renderToday(date) {
-      const dateStr = date.toISOString().slice(0, 10);
-      const dayName = date.toLocaleDateString(undefined, { weekday: "long" });
-
-      const dateLabel = document.querySelector("#todayLabel .date-text");
-      const dayNameLabel = document.getElementById("todayDayName");
-      const daySummary = document.getElementById("todayDaySummary");
-
-      if (dateLabel) dateLabel.textContent = "• " + formatDateLabel(date);
-      if (dayNameLabel) dayNameLabel.textContent = dayName + " • 2 quests";
-
-      const tasksUl = document.getElementById("todayTasks");
-      if (!tasksUl) return;
-      tasksUl.innerHTML = "";
-
-      const tasks = getTasksForDate(date);
-      const areaShort = a => a.split(" ")[0];
-
-      if (daySummary) {
-        daySummary.textContent = "Today focuses on: " + areaShort(tasks[0].area) + " + " + areaShort(tasks[1].area);
-      }
-
-      tasks.forEach(task => {
-        const li = document.createElement("li");
-        li.className = "task";
-
-        const cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.checked = isTaskDone(dateStr, task.id);
-
-        cb.addEventListener("change", () => {
-          const wasDone = isTaskDone(dateStr, task.id);
-          setTaskDone(dateStr, task.id, cb.checked);
-          if (!wasDone && cb.checked) {
-            incStat("quests", 1);
-            updateCurrentMood("Quest completed • you pushed the bar up.", "good");
-            setMoodletStrip("Quest buff: one of today’s two house quests is done.", "good");
-          }
-          renderCalendar(date);
-          renderStatsPanel();
-        });
-
-        const info = document.createElement("div");
-        const area = document.createElement("div");
-        area.className = "task-area";
-        area.textContent = task.area;
-
-        const main = document.createElement("div");
-        main.className = "task-main";
-        main.textContent = task.title;
-
-        const desc = document.createElement("div");
-        desc.className = "task-desc";
-        desc.textContent = task.desc;
-
-        info.appendChild(area);
-        info.appendChild(main);
-        info.appendChild(desc);
-
-        li.appendChild(cb);
-        li.appendChild(info);
-        tasksUl.appendChild(li);
-      });
-
-      // Bad day
-      const badBtn = document.getElementById("badDayBtn");
-      const badMsg = document.getElementById("badDayMsg");
-      const active = isBadDay(dateStr);
-
-      if (badBtn && badMsg) {
-        if (active) {
-          badBtn.classList.add("active");
-          badBtn.textContent = "Bad day marked • This day still counts as a win";
-          badMsg.textContent = "Even if nothing else happened, keeping three kids fed and loved is enough.";
-        } else {
-          badBtn.classList.remove("active");
-          badBtn.textContent = "Bad day? Tap here to still count this day as a win";
-          badMsg.textContent = "";
-        }
-
-        badBtn.onclick = () => {
-          const now = !isBadDay(dateStr);
-          setBadDay(dateStr, now);
-          if (now) {
-            const text = "You named that today was rough. That still counts as a win.";
-            badMsg.textContent = text;
-            updateCurrentMood("Heavy day • but still a win", "low");
-            setMoodletStrip("Moodlet: “Bad day, but counted.” You gave yourself credit.", "low");
-            speak(text);
-          } else {
-            badMsg.textContent = "";
-          }
-          renderCalendar(date);
-          renderStatsPanel();
-          renderToday(date);
-        };
-      }
-
-      // Self-care bonus
-      const bonusBtn = document.getElementById("selfBonusBtn");
-      if (bonusBtn) {
-        bonusBtn.onclick = () => {
-          incStat("selfcare", 1);
-          updateCurrentMood("A bit boosted • you gave yourself a tiny bonus.", "good");
-          setMoodletStrip("Self-care buff: you did something just for you.", "good");
-          speak("Self-care buff added. You did something just for you, and that matters.");
-          renderStatsPanel();
-        };
-      }
-
-      // Daily journal binding
-      const dailyArea = document.getElementById("dailyJournal");
-      const dailyLabel = document.getElementById("dailyJournalLabel");
-      if (dailyArea && dailyLabel) {
-        dailyLabel.textContent = "Today’s journal for " + formatDateLabel(date);
-        dailyArea.value = safeGet(dailyJournalKey(dateStr)) || "";
-        dailyArea.oninput = () => {
-          safeSet(dailyJournalKey(dateStr), dailyArea.value);
-        };
-      }
-    }
-
-    function renderCalendarHeader() {
-      const header = document.getElementById("calendarHeader");
-      if (!header) return;
-      header.innerHTML = "";
-      ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d => {
-        const div = document.createElement("div");
-        div.className = "cal-header";
-        div.textContent = d;
-        header.appendChild(div);
-      });
-    }
-
-    function renderCalendar(refDate) {
-      const grid = document.getElementById("calendarGrid");
-      const monthLabel = document.getElementById("monthLabel");
-      const statsRow = document.getElementById("statsRow");
-      const notesArea = document.getElementById("monthNotes");
-      if (!grid || !monthLabel || !statsRow || !notesArea) return;
-
-      grid.innerHTML = "";
-      statsRow.innerHTML = "";
-
-      const year = refDate.getFullYear();
-      const month = refDate.getMonth();
-      const firstDay = new Date(year, month, 1);
-      const lastDay = new Date(year, month + 1, 0);
-      const daysInMonth = lastDay.getDate();
-      const startWeekday = firstDay.getDay();
-
-      monthLabel.textContent = firstDay.toLocaleDateString(undefined, { month: "long", year: "numeric" });
-
-      for (let i = 0; i < startWeekday; i++) {
-        const placeholder = document.createElement("div");
-        grid.appendChild(placeholder);
-      }
-
-      const today = new Date();
-      const sameMonthAsToday = today.getFullYear() === year && today.getMonth() === month;
-
-      let daysWithAnyDone = 0;
-      let totalTasksDone = 0;
-      const totalTasksPossible = daysInMonth * 2;
-
-      for (let day = 1; day <= daysInMonth; day++) {
-        const date = new Date(year, month, day);
-        const dateStr = date.toISOString().slice(0,10);
-        const tasks = getTasksForDate(date);
-
-        const done1 = isTaskDone(dateStr, tasks[0].id);
-        const done2 = isTaskDone(dateStr, tasks[1].id);
-        const bad = isBadDay(dateStr);
-
-        let doneCount = (done1 ? 1 : 0) + (done2 ? 1 : 0);
-        if (bad && doneCount < 2) doneCount = 2;
-
-        if (doneCount > 0) {
-          daysWithAnyDone++;
-          totalTasksDone += doneCount;
-        }
-
-        const cell = document.createElement("div");
-        cell.className = "day-cell";
-        if (sameMonthAsToday && day === today.getDate()) {
-          cell.classList.add("today");
-        }
-
-        const num = document.createElement("div");
-        num.className = "day-cell-number";
-        num.textContent = day;
-        cell.appendChild(num);
-
-        const info = document.createElement("div");
-        info.className = "day-cell-info";
-        const areaShort = a => a.split(" ")[0];
-        info.textContent = areaShort(tasks[0].area) + " + " + areaShort(tasks[1].area);
-        cell.appendChild(info);
-
-        if (doneCount > 0) {
-          const dot = document.createElement("div");
-          dot.className = "day-cell-complete";
-          cell.appendChild(dot);
-        }
-
-        cell.addEventListener("click", () => {
-          renderToday(date);
-        });
-
-        grid.appendChild(cell);
-      }
-
-      const pill1 = document.createElement("div");
-      pill1.className = "stat-pill";
-      pill1.innerHTML = "<strong>" + daysWithAnyDone + "</strong> days with at least one counted win";
-
-      const pill2 = document.createElement("div");
-      pill2.className = "stat-pill";
-      pill2.innerHTML = "<strong>" + totalTasksDone + "</strong> / " + totalTasksPossible + " quests counted this month";
-
-      const pill3 = document.createElement("div");
-      pill3.className = "stat-pill";
-      pill3.textContent = "Goal: two quests a day is enough. Chaos days still count.";
-
-      statsRow.appendChild(pill1);
-      statsRow.appendChild(pill2);
-      statsRow.appendChild(pill3);
-
-      const monthKeyVal = getMonthKey(refDate);
-      notesArea.value = safeGet(monthNotesKey(monthKeyVal)) || "";
-      notesArea.oninput = () => safeSet(monthNotesKey(monthKeyVal), notesArea.value);
-
-      const yearArea = document.getElementById("yearJournal");
-      const yearLabel = document.getElementById("yearJournalLabel");
-      if (yearArea && yearLabel) {
-        yearLabel.textContent = "Year journal for " + year;
-        yearArea.value = safeGet(yearJournalKey(year)) || "";
-        yearArea.oninput = () => safeSet(yearJournalKey(year), yearArea.value);
-      }
-    }
-
-    function initFeelings() {
-      const buttons = document.querySelectorAll(".feeling-btn");
-      const msgEl = document.getElementById("feelingsMsg");
-      if (!buttons || !msgEl) return;
-
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const feeling = btn.getAttribute("data-feeling");
-          const options = FEELING_TEXTS[feeling] || [];
-          if (options.length === 0) return;
-          const text = options[Math.floor(Math.random() * options.length)];
-          msgEl.textContent = text;
-          incStat("feelings", 1);
-
-          let moodType = "neutral";
-          if (["good","happy","peace","ease"].includes(feeling)) moodType = "good";
-          if (["stressed","overwhelmed","depressed","sad","angry","hungry"].includes(feeling)) moodType = "low";
-
-          // mood-based sound
-          if (moodType === "good") {
-            playSound("feelGood");
-          } else if (moodType === "low") {
-            playSound("feelLow");
-          } else {
-            playSound("feelNeutral");
-          }
-
-          const summary = moodType === "good"
-            ? "Gently positive • " + feeling
-            : moodType === "low"
-              ? "Heavy but honest • " + feeling
-              : "Neutral • " + feeling;
-
-          updateCurrentMood(summary, moodType);
-
-          if (moodType === "good") {
-            setMoodletStrip("Moodlet: You’re having a bit of a boost right now.", "good");
-          } else if (moodType === "low") {
-            setMoodletStrip("Moodlet: Heavy feeling acknowledged. That’s valid.", "low");
-          } else {
-            setMoodletStrip("Moodlet: Just existing and checking in.", "neutral");
-          }
-
-          // Adjust needs a little based on feeling
-          if (feeling === "hungry") {
-            adjustNeed("hunger", -20);
-          }
-          if (["stressed","overwhelmed","angry"].includes(feeling)) {
-            adjustNeed("energy", -10);
-            adjustNeed("quiet", -10);
-          }
-          if (["good","happy","peace","ease"].includes(feeling)) {
-            adjustNeed("fun", 10);
-            adjustNeed("social", 5);
-          }
-
-          speak(text);
-          renderStatsPanel();
-        });
-      });
-
-      const lastMood = safeGet(PREFIX + "lastMood");
-      const lastMoodType = safeGet(PREFIX + "lastMoodType") || "neutral";
-      if (lastMood) {
-        updateCurrentMood(lastMood, lastMoodType);
-      } else {
-        updateCurrentMood("Neutral • just existing (which is enough).", "neutral");
-      }
-    }
-
-    function initNav() {
-      const buttons = document.querySelectorAll(".nav-btn[data-view]");
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const viewId = btn.getAttribute("data-view");
-          document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-          const view = document.getElementById(viewId);
-          if (view) view.classList.add("active");
-
-          buttons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          if (viewId === "statsView") {
-            renderStatsPanel();
-            renderNeedsBars();
-          }
-        });
-      });
-    }
-
-    function applySimpleMode(enabled) {
-      const btn = document.getElementById("simpleToggleBtn");
-      if (enabled) {
-        document.body.classList.add("simple-mode");
-        safeSet(PREFIX + "simpleMode", "1");
-        if (btn) btn.textContent = "Simple View: On";
-      } else {
-        document.body.classList.remove("simple-mode");
-        safeRemove(PREFIX + "simpleMode");
-        if (btn) btn.textContent = "Simple View: Off";
-      }
-    }
-
-    function initSimpleAndSave() {
-      const simpleBtn = document.getElementById("simpleToggleBtn");
-      const saveBtn = document.getElementById("saveBtn");
-
-      const storedSimple = safeGet(PREFIX + "simpleMode") === "1";
-      applySimpleMode(storedSimple);
-
-      if (simpleBtn) {
-        simpleBtn.addEventListener("click", () => {
-          const on = !document.body.classList.contains("simple-mode");
-          applySimpleMode(on);
-        });
-      }
-
-      if (saveBtn) {
-        saveBtn.addEventListener("click", () => {
-          const data = {};
-          try {
-            if (window.localStorage) {
-              for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith(PREFIX)) {
-                  data[key] = localStorage.getItem(key);
-                }
-              }
-            }
-          } catch (e) {}
-
-          const json = JSON.stringify(data, null, 2);
-          const blob = new Blob([json], { type: "application/json" });
-          const url = URL.createObjectURL(blob);
-          const todayStr = new Date().toISOString().slice(0,10);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "hearth-home-backup-" + todayStr + ".json";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        });
-      }
-    }
-
-    function renderStatsPanel() {
-      const stats = computeStatsFromStorage();
-      const qEl = document.getElementById("statTotalQuests");
-      const wEl = document.getElementById("statWinDays");
-      const sEl = document.getElementById("statSelfCare");
-      const fEl = document.getElementById("statFeelings");
-
-      if (qEl) qEl.textContent = stats.totalQuests;
-      if (wEl) wEl.textContent = stats.winDays;
-      if (sEl) sEl.textContent = stats.selfCare;
-      if (fEl) fEl.textContent = stats.feelings;
-
-      const levelScore = stats.totalQuests + stats.selfCare * 2;
-      const tag = document.getElementById("simLevelTag");
-      if (tag) {
-        let text = "Level 1 • Solopa Seedling of the North";
-        if (levelScore > 20 && levelScore <= 60) {
-          text = "Level 2 • Hearthstead Shield-Maiden";
-        } else if (levelScore > 60 && levelScore <= 150) {
-          text = "Level 3 • Vorpal Hearth-Warden";
-        } else if (levelScore > 150) {
-          text = "Level 4 • Solopa Hearth Goddess of the North";
-        }
-        tag.textContent = text;
-      }
-    }
-
-    // ---- Timers ----
-    const TIMER_CONFIG = {
-      water:    { minutes: 75,  label: "Hydration reminder: take a sip or a glass of water, goddess." },
-      meal:     { minutes: 240, label: "Meal check-in: have you eaten something real for you, not just leftovers?" },
-      snack:    { minutes: 120, label: "Snack check: a small bite now can keep your energy steadier." },
-      bathroom: { minutes: 150, label: "Bathroom break reminder: you are allowed to pause and go." },
-      shower:   { minutes: 360, label: "Shower reset: is there a window soon for a hot rinse reset?" },
-      skincare: { minutes: 720, label: "Skincare ritual check: even 2 minutes at the sink counts." }
-    };
-
-    const timerState = {};
-
-    function ensureNotificationPermission() {
-      if (!("Notification" in window)) return;
-      if (Notification.permission === "default") {
-        Notification.requestPermission().catch(() => {});
-      }
-    }
-
-    function triggerTimerNotice(id) {
-      const cfg = TIMER_CONFIG[id];
-      if (!cfg) return;
-      const msg = cfg.label;
-
-      alert(msg);
-      speak(msg);
-
-      if ("Notification" in window && Notification.permission === "granted") {
         try {
-          new Notification("Hearth & Home reminder", { body: msg });
-        } catch (e) {}
-      }
-
-      if (id === "water") {
-        adjustNeed("hunger", -5);
-      }
-      if (id === "meal") {
-        adjustNeed("hunger", 20);
-      }
-      if (id === "shower") {
-        adjustNeed("hygiene", 10);
-      }
-      if (id === "skincare") {
-        adjustNeed("hygiene", 5);
-      }
-
-      setMoodletStrip("Reminder: " + msg, "neutral");
-    }
-
-    function startTimer(id) {
-      const cfg = TIMER_CONFIG[id];
-      if (!cfg) return;
-
-      stopTimer(id);
-
-      const statusEl = document.querySelector('[data-timer-status="' + id + '"]');
-      const btn = document.querySelector('.timer-btn[data-timer-id="' + id + '"]');
-      if (statusEl && btn) {
-        btn.classList.add("running");
-        btn.textContent = "Stop";
-        statusEl.textContent = "Next in " + cfg.minutes + " min";
-      }
-
-      const tickMs = 60000; // 1 min
-      let remaining = cfg.minutes;
-
-      const intervalId = setInterval(() => {
-        remaining -= 1;
-        if (remaining <= 0) {
-          triggerTimerNotice(id);
-          remaining = cfg.minutes;
+          const parsed = JSON.parse(raw);
+          return migrateState(parsed);
+        } catch {
+          return createFreshState();
         }
-        if (statusEl) {
-          statusEl.textContent = "Next in " + remaining + " min";
-        }
-      }, tickMs);
-
-      timerState[id] = intervalId;
-      safeSet(PREFIX + "timer_" + id, "on");
-    }
-
-    function stopTimer(id) {
-      if (timerState[id]) {
-        clearInterval(timerState[id]);
-        delete timerState[id];
       }
-      const statusEl = document.querySelector('[data-timer-status="' + id + '"]');
-      const btn = document.querySelector('.timer-btn[data-timer-id="' + id + '"]');
-      if (statusEl && btn) {
-        btn.classList.remove("running");
-        btn.textContent = "Start";
-        statusEl.textContent = "Off";
-      }
-      safeRemove(PREFIX + "timer_" + id);
-    }
 
-    function initTimers() {
-      ensureNotificationPermission();
-
-      const buttons = document.querySelectorAll(".timer-btn[data-timer-id]");
-      buttons.forEach(btn => {
-        const id = btn.getAttribute("data-timer-id");
-        btn.addEventListener("click", () => {
-          if (timerState[id]) {
-            stopTimer(id);
-          } else {
-            startTimer(id);
+      function createFreshState() {
+        const today = todayDateString();
+        return {
+          version: 1,
+          todayDate: today,
+          today: {
+            tasks: [],
+            completedTaskIds: [],
+            badDay: false
+          },
+          winsByDate: {},
+          needs: {
+            hunger: 60,
+            energy: 60,
+            social: 60,
+            fun: 60,
+            hygiene: 60,
+            quiet: 60
+          },
+          stats: {
+            questsCompleted: 0,
+            daysWin: 0,
+            selfCareBonuses: 0,
+            feelingsCheckins: 0
+          },
+          mood: {
+            score: 60,
+            labelMain: "Gently okay",
+            labelSub: "You’re doing more than enough.",
+            tone: "neutral"
+          },
+          timers: initTimersState(),
+          journals: {
+            day: {},   // key: YYYY-MM-DD
+            month: {}, // key: YYYY-MM
+            year: {}   // key: YYYY
           }
+        };
+      }
+
+      function migrateState(state) {
+        // Basic migration scaffolding if we change versions later.
+        if (!state.version) state.version = 1;
+        if (!state.timers) state.timers = initTimersState();
+        if (!state.journals) {
+          state.journals = { day: {}, month: {}, year: {} };
+        }
+        return state;
+      }
+
+      function initTimersState() {
+        const base = {};
+        for (const id in defaultTimersConfig) {
+          base[id] = {
+            durationMinutes: defaultTimersConfig[id].minutes,
+            remainingMs: 0,
+            isRunning: false,
+            lastStart: null,
+            completedCount: 0
+          };
+        }
+        return base;
+      }
+
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function ensureToday() {
+        const todayStr = todayDateString();
+        if (state.todayDate === todayStr && state.today.tasks && state.today.tasks.length) {
+          return;
+        }
+
+        // If date changed, keep stats and winsByDate; refresh today's entry.
+        state.todayDate = todayStr;
+        state.today = {
+          tasks: pickTodayTasks(todayStr),
+          completedTaskIds: [],
+          badDay: false
+        };
+      }
+
+      function pickTodayTasks(dateStr) {
+        // Deterministic pseudo selection based on date
+        const d = new Date(dateStr + "T00:00:00");
+        const seed = d.getDate() + (d.getMonth() + 1) * 13;
+        const index1 = seed % tasksPool.length;
+        const index2 = (seed * 5 + 3) % tasksPool.length;
+        const ids = [index1, index2 === index1 ? (index2 + 1) % tasksPool.length : index2];
+        return ids.map(id => ({ id, text: tasksPool[id] }));
+      }
+
+      function playSound(name) {
+        const audio = document.querySelector(`audio[data-sound="${name}"]`);
+        if (!audio) return;
+        try {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        } catch {}
+      }
+
+      function uiClick() {
+        playSound("ui-click");
+      }
+
+      // --- State + DOM references ---
+      let state = loadState();
+      ensureToday();
+
+      const tabButtons = document.querySelectorAll(".tab-button");
+      const tabPanels = document.querySelectorAll(".tab-panel");
+      const dayChip = document.getElementById("dayChip");
+      const simpleToggle = document.getElementById("simpleToggle");
+
+      const questList = document.getElementById("questList");
+      const questsSummary = document.getElementById("questsSummary");
+      const badDayButton = document.getElementById("badDayButton");
+      const badDayMessage = document.getElementById("badDayMessage");
+
+      const feelingMessage = document.getElementById("feelingMessage");
+
+      const statQuests = document.getElementById("statQuests");
+      const statWins = document.getElementById("statWins");
+      const statSelfCare = document.getElementById("statSelfCare");
+      const statFeelings = document.getElementById("statFeelings");
+      const levelNameEl = document.getElementById("levelName");
+      const levelFill = document.getElementById("levelFill");
+
+      const calendarMonthLabel = document.getElementById("calendarMonthLabel");
+      const calendarGrid = document.getElementById("calendarGrid");
+
+      const journalDay = document.getElementById("journalDay");
+      const journalMonth = document.getElementById("journalMonth");
+      const journalYear = document.getElementById("journalYear");
+
+      const plumbob = document.getElementById("plumbob");
+      const moodLabelMain = document.getElementById("moodLabelMain");
+      const moodLabelSub = document.getElementById("moodLabelSub");
+      const moodGaugeFill = document.getElementById("moodGaugeFill");
+      const hudSubtext = document.getElementById("hudSubtext");
+      const dot1 = document.getElementById("dot1");
+      const dot2 = document.getElementById("dot2");
+      const dot3 = document.getElementById("dot3");
+
+      let timersInterval = null;
+
+      // --- Initial render ---
+      renderDayChip();
+      renderQuests();
+      renderBadDay();
+      renderStats();
+      renderNeeds();
+      renderMood();
+      renderCalendar();
+      renderJournals();
+      startTimersTick();
+
+      // --- Event wiring ---
+
+      // Generic UI click sound for buttons
+      document.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (btn) {
+          uiClick();
+        }
+      });
+
+      // Tabs
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const target = btn.getAttribute("data-tab-target");
+          tabButtons.forEach(b => b.classList.toggle("active", b === btn));
+          tabPanels.forEach(p => p.classList.toggle("active", p.getAttribute("data-tab") === target));
         });
       });
 
-      Object.keys(TIMER_CONFIG).forEach(id => {
-        const stored = safeGet(PREFIX + "timer_" + id);
-        if (stored === "on") {
-          startTimer(id);
+      // Simple view toggle
+      simpleToggle.addEventListener("click", () => {
+        document.body.classList.toggle("simple-mode");
+      });
+
+      // Quests checkbox handling
+      questList.addEventListener("change", (e) => {
+        if (e.target.matches('input[type="checkbox"][data-quest-id]')) {
+          const questId = parseInt(e.target.getAttribute("data-quest-id"), 10);
+          const completed = state.today.completedTaskIds;
+          const already = completed.includes(questId);
+          if (e.target.checked && !already) {
+            completed.push(questId);
+            state.stats.questsCompleted += 1;
+          } else if (!e.target.checked && already) {
+            const idx = completed.indexOf(questId);
+            if (idx >= 0) completed.splice(idx, 1);
+            state.stats.questsCompleted = Math.max(0, state.stats.questsCompleted - 1);
+          }
+          updateWinFlagForToday();
+          renderQuests();
+          renderStats();
+          renderCalendar();
+          saveState();
         }
       });
-    }
 
-    // ---- PWA service worker registration ----
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("service-worker.js").catch(() => {});
+      // Bad day button
+      badDayButton.addEventListener("click", () => {
+        state.today.badDay = !state.today.badDay;
+        updateWinFlagForToday();
+        renderBadDay();
+        renderStats();
+        renderCalendar();
+        saveState();
       });
-    }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const today = new Date();
-
-      const dateLabel = document.querySelector("#todayLabel .date-text");
-      if (dateLabel) {
-        dateLabel.textContent = "• " + formatDateLabel(today);
-      }
-
-      renderToday(today);
-      renderCalendarHeader();
-      renderCalendar(today);
-      initFeelings();
-      initNav();
-      initSimpleAndSave();
-      renderStatsPanel();
-      initNeedsControls();
-      initTimers();
-
-      // Global UI click sound for most buttons (feelings have their own)
-      document.body.addEventListener("click", (event) => {
-        const btn = event.target.closest("button");
+      // Feelings
+      document.getElementById("feelingsCard").addEventListener("click", (e) => {
+        const btn = e.target.closest(".feeling-btn");
         if (!btn) return;
-        if (btn.classList.contains("feeling-btn")) return;
-        playSound("uiClick");
+        const category = btn.getAttribute("data-category");
+        const tone = btn.getAttribute("data-tone");
+        const feelingKey = btn.getAttribute("data-feeling");
+
+        handleFeeling(feelingKey, category, tone);
       });
 
-      // Default mood if nothing stored yet
-      const lastMood = safeGet(PREFIX + "lastMood");
-      const lastMoodType = safeGet(PREFIX + "lastMoodType") || "neutral";
-      if (lastMood) {
-        updateCurrentMood(lastMood, lastMoodType);
-      } else {
-        updateCurrentMood("Neutral • just existing (which is enough).", "neutral");
-        setMoodletStrip("Moodlet: Just existing is allowed today.", "neutral");
+      // Timers
+      document.getElementById("timersCard").addEventListener("click", (e) => {
+        const btn = e.target.closest(".btn-timer");
+        if (!btn) return;
+        const row = btn.closest(".timer-row");
+        const timerId = row.getAttribute("data-timer-id");
+        const action = btn.getAttribute("data-timer-action");
+        if (action === "start") {
+          startTimer(timerId);
+        } else if (action === "stop") {
+          stopTimer(timerId);
+        }
+      });
+
+      // Needs +/- buttons
+      document.querySelectorAll(".need-row").forEach(row => {
+        row.addEventListener("click", (e) => {
+          const btn = e.target.closest(".btn-need");
+          if (!btn) return;
+          const delta = parseInt(btn.getAttribute("data-need-delta"), 10);
+          const needId = row.getAttribute("data-need-id");
+          adjustNeed(needId, delta);
+        });
+      });
+
+      // Journals
+      journalDay.addEventListener("input", () => {
+        const key = state.todayDate;
+        state.journals.day[key] = journalDay.value;
+        saveState();
+      });
+      journalMonth.addEventListener("input", () => {
+        const key = getMonthKey(state.todayDate);
+        state.journals.month[key] = journalMonth.value;
+        saveState();
+      });
+      journalYear.addEventListener("input", () => {
+        const key = getYearKey(state.todayDate);
+        state.journals.year[key] = journalYear.value;
+        saveState();
+      });
+
+      // --- Handlers and render helpers ---
+
+      function renderDayChip() {
+        const d = new Date(state.todayDate + "T00:00:00");
+        const options = { weekday: "short", month: "short", day: "numeric" };
+        const label = d.toLocaleDateString(undefined, options);
+        dayChip.querySelector("span:nth-child(2)").textContent = label;
       }
-    });
+
+      function renderQuests() {
+        ensureToday();
+        questList.innerHTML = "";
+        state.today.tasks.forEach(t => {
+          const li = document.createElement("li");
+          li.className = "quest-item";
+          if (state.today.completedTaskIds.includes(t.id)) {
+            li.classList.add("completed");
+          }
+          li.innerHTML = `
+            <input type="checkbox" data-quest-id="${t.id}" ${state.today.completedTaskIds.includes(t.id) ? "checked" : ""}/>
+            <div class="quest-text">${t.text}</div>
+          `;
+          questList.appendChild(li);
+        });
+        questsSummary.textContent = `${state.today.completedTaskIds.length} / ${state.today.tasks.length} done`;
+      }
+
+      function renderBadDay() {
+        if (state.today.badDay) {
+          badDayButton.classList.add("bad-day-active");
+          badDayButton.textContent = "Bad day logged — you still win 💗";
+          badDayMessage.textContent = "This day is marked as a win because you survived it. That’s enough.";
+        } else {
+          badDayButton.classList.remove("bad-day-active");
+          badDayButton.textContent = "Had a rough day? 💗";
+          badDayMessage.textContent = "Tap if the day just… wasn’t it. It still counts as a win on the calendar.";
+        }
+      }
+
+      function handleFeeling(feelingKey, category, tone) {
+        state.stats.feelingsCheckins += 1;
+
+        let delta = 0;
+        if (category === "good") delta = +8;
+        else if (category === "neutral") delta = 0;
+        else if (category === "low") delta = -8;
+
+        state.mood.score = clamp(state.mood.score + delta, 0, 100);
+
+        let msg = "";
+        let sub = "";
+        switch (feelingKey) {
+          case "stressed":
+            msg = "Stressed & still showing up";
+            sub = "Your brain is juggling a lot. You are not failing — you’re overloaded.";
+            break;
+          case "overwhelmed":
+            msg = "Overwhelmed, not weak";
+            sub = "Too much on one person is a system issue, not a you issue.";
+            break;
+          case "low":
+            msg = "Low battery";
+            sub = "Low mood is a signal, not a verdict on your worth.";
+            break;
+          case "sad":
+            msg = "Heavy heart";
+            sub = "You’re allowed to be soft and sad and still be a powerful mom.";
+            break;
+          case "angry":
+            msg = "Fire in the hearth";
+            sub = "Anger is your body guarding your boundaries, not you being ‘too much’.";
+            break;
+          case "hungry":
+            msg = "Body needs fuel";
+            sub = "Food for you is a family upgrade, not selfish.";
+            break;
+          case "good":
+            msg = "Gently good";
+            sub = "Notice this softness — your nervous system is grateful.";
+            break;
+          case "happy":
+            msg = "Bright & warm";
+            sub = "Let yourself enjoy this without waiting for the other shoe to drop.";
+            break;
+          case "peace":
+            msg = "Tiny pocket of peace";
+            sub = "Even a few quiet breaths count as real rest.";
+            break;
+          case "ease":
+            msg = "Moving with ease";
+            sub = "Momentum plus kindness to yourself is powerful magic.";
+            break;
+          default:
+            msg = "Gently okay";
+            sub = "You’re doing more than enough.";
+        }
+
+        state.mood.labelMain = msg;
+        state.mood.labelSub = sub;
+        state.mood.tone = tone;
+
+        feelingMessage.textContent = sub;
+
+        // Adjust some needs based on feeling (very lightly)
+        if (feelingKey === "hungry") {
+          adjustNeed("hunger", -5, false);
+        }
+        if (["stressed", "overwhelmed", "low", "sad", "angry"].includes(feelingKey)) {
+          adjustNeed("energy", -5, false);
+          adjustNeed("quiet", -5, false);
+        }
+        if (["good", "happy", "peace", "ease"].includes(feelingKey)) {
+          adjustNeed("fun", +5, false);
+        }
+
+        // Sounds
+        if (category === "good") playSound("feel-good");
+        else if (category === "neutral") playSound("feel-neutral");
+        else playSound("feel-low");
+
+        renderStats();
+        renderNeeds();
+        renderMood();
+        saveState();
+      }
+
+      function renderStats() {
+        statQuests.textContent = state.stats.questsCompleted || 0;
+        statWins.textContent = state.stats.daysWin || 0;
+        statSelfCare.textContent = state.stats.selfCareBonuses || 0;
+        statFeelings.textContent = state.stats.feelingsCheckins || 0;
+
+        const points = (state.stats.questsCompleted || 0)
+                     + (state.stats.selfCareBonuses || 0) * 2
+                     + (state.stats.daysWin || 0) * 1.5;
+        const levelIndex = Math.min(levelNames.length - 1, Math.floor(points / 10));
+        levelNameEl.textContent = levelNames[levelIndex];
+        // Fill within this band of 10 points
+        const bandStart = levelIndex * 10;
+        const bandProgress = clamp((points - bandStart) / 10, 0, 1);
+        const fillPercent = ((levelIndex) / (levelNames.length - 1)) * 70 + bandProgress * 30;
+        levelFill.style.width = `${clamp(fillPercent, 5, 100)}%`;
+
+        hudSubtext.textContent = levelNames[levelIndex];
+      }
+
+      function adjustNeed(needId, delta, shouldSave = true) {
+        const current = state.needs[needId] ?? 60;
+        const next = clamp(current + delta, 0, 100);
+        state.needs[needId] = next;
+        renderNeeds();
+        renderMood();
+        if (shouldSave) saveState();
+      }
+
+      function renderNeeds() {
+        document.querySelectorAll(".need-row").forEach(row => {
+          const needId = row.getAttribute("data-need-id");
+          const value = state.needs[needId] ?? 60;
+          const fill = row.querySelector("[data-need-fill]");
+          const label = row.querySelector("[data-need-value]");
+          if (fill) fill.style.width = `${value}%`;
+          if (label) label.textContent = value;
+        });
+
+        // Update HUD dots based on average needs
+        const vals = Object.values(state.needs);
+        const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+        const dotsOn =
+          avg >= 75 ? 3 :
+          avg >= 45 ? 2 :
+          avg >= 20 ? 1 : 0;
+
+        [dot1, dot2, dot3].forEach((dot, i) => {
+          if (!dot) return;
+          dot.classList.toggle("on", i < dotsOn);
+        });
+      }
+
+      function renderMood() {
+        const score = state.mood.score ?? 60;
+        const tone = state.mood.tone || "neutral";
+
+        moodLabelMain.textContent = state.mood.labelMain || "Gently okay";
+        moodLabelSub.textContent = state.mood.labelSub || "You’re doing more than enough.";
+
+        moodGaugeFill.style.width = `${clamp(score, 5, 100)}%`;
+
+        plumbob.classList.remove("low", "neutral", "good");
+        if (score < 35) {
+          plumbob.classList.add("low");
+        } else if (score < 70) {
+          plumbob.classList.add("neutral");
+        } else {
+          plumbob.classList.add("good");
+        }
+
+        if (tone === "good" && score < 60) state.mood.score = 60;
+      }
+
+      function updateWinFlagForToday() {
+        const completed = state.today.completedTaskIds;
+        const isWin = completed.length > 0 || state.today.badDay;
+        const key = state.todayDate;
+        const previous = !!state.winsByDate[key];
+        state.winsByDate[key] = isWin;
+        if (isWin && !previous) {
+          state.stats.daysWin += 1;
+        } else if (!isWin && previous) {
+          state.stats.daysWin = Math.max(0, state.stats.daysWin - 1);
+        }
+      }
+
+      function renderCalendar() {
+        const now = new Date(state.todayDate + "T00:00:00");
+        const year = now.getFullYear();
+        const month = now.getMonth(); // 0-based
+        const first = new Date(year, month, 1);
+        const firstDay = first.getDay(); // 0 = Sun
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        calendarGrid.innerHTML = "";
+        const monthName = now.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+        calendarMonthLabel.textContent = monthName;
+
+        // Leading empty slots
+        for (let i = 0; i < firstDay; i++) {
+          const empty = document.createElement("div");
+          calendarGrid.appendChild(empty);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+          const div = document.createElement("div");
+          div.className = "calendar-day";
+          div.textContent = day;
+          if (state.winsByDate[dateStr]) {
+            div.classList.add("win");
+          }
+          if (dateStr === state.todayDate) {
+            div.classList.add("today");
+          }
+          calendarGrid.appendChild(div);
+        }
+      }
+
+      function renderJournals() {
+        const dKey = state.todayDate;
+        const mKey = getMonthKey(state.todayDate);
+        const yKey = getYearKey(state.todayDate);
+
+        journalDay.value = state.journals.day[dKey] || "";
+        journalMonth.value = state.journals.month[mKey] || "";
+        journalYear.value = state.journals.year[yKey] || "";
+      }
+
+      function startTimersTick() {
+        if (timersInterval) clearInterval(timersInterval);
+        timersInterval = setInterval(() => {
+          tickTimers();
+          renderTimers();
+        }, 1000);
+        renderTimers();
+      }
+
+      function tickTimers() {
+        const now = Date.now();
+        let changed = false;
+        for (const id in state.timers) {
+          const t = state.timers[id];
+          if (!t.isRunning || !t.lastStart) continue;
+          const elapsed = now - t.lastStart;
+          const remaining = t.remainingMs - elapsed;
+          if (remaining <= 0) {
+            t.remainingMs = 0;
+            t.isRunning = false;
+            t.lastStart = null;
+            t.completedCount = (t.completedCount || 0) + 1;
+            // Self-care bonus for shower / skincare completion
+            if (id === "shower" || id === "skincare") {
+              state.stats.selfCareBonuses += 1;
+            }
+            changed = true;
+          } else {
+            t.remainingMs = remaining;
+            t.lastStart = now;
+            changed = true;
+          }
+        }
+        if (changed) {
+          renderStats();
+          saveState();
+        }
+      }
+
+      function renderTimers() {
+        document.querySelectorAll(".timer-row").forEach(row => {
+          const id = row.getAttribute("data-timer-id");
+          const statusEl = row.querySelector("[data-timer-status]");
+          const timer = state.timers[id];
+          if (!timer) return;
+
+          let label = "Off";
+          let due = false;
+          if (timer.isRunning && timer.remainingMs > 0) {
+            const minutes = Math.floor(timer.remainingMs / 60000);
+            const seconds = Math.floor((timer.remainingMs % 60000) / 1000);
+            label = `${minutes}m ${String(seconds).padStart(2, "0")}s`;
+          } else if (!timer.isRunning && timer.remainingMs > 0) {
+            const minutes = Math.ceil(timer.remainingMs / 60000);
+            label = `${minutes}m left`;
+          } else if (!timer.isRunning && timer.remainingMs === 0 && timer.completedCount > 0) {
+            label = "Due";
+            due = true;
+          }
+
+          statusEl.textContent = label;
+          statusEl.classList.toggle("due", due);
+        });
+      }
+
+      function startTimer(id) {
+        const t = state.timers[id];
+        if (!t) return;
+        // If it's off, reset duration; if paused, keep remaining
+        if (t.remainingMs <= 0) {
+          t.remainingMs = (t.durationMinutes || defaultTimersConfig[id].minutes) * 60000;
+        }
+        t.isRunning = true;
+        t.lastStart = Date.now();
+        saveState();
+        renderTimers();
+      }
+
+      function stopTimer(id) {
+        const t = state.timers[id];
+        if (!t) return;
+        t.isRunning = false;
+        t.lastStart = null;
+        saveState();
+        renderTimers();
+      }
+
+      function clamp(val, min, max) {
+        return Math.max(min, Math.min(max, val));
+      }
+
+      // PWA service worker registration
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js").catch(() => {});
+      }
+    })();
   </script>
 </body>
 </html>
