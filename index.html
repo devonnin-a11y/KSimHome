@@ -2,93 +2,665 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KSim Home – Kelly HUD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
       --accent: #00b2c8;
-      --soft-bg: #f7f5f0;
-      --hud-bg: rgba(255,255,255,0.85);
-      --text: #333;
+      --accent-soft: #7edbe4;
+      --leaf: #5da66a;
+      --soft-bg: #f6f3ea;
+      --card-bg: #ffffff;
+      --card-soft: #fbf6ee;
+      --border-soft: #e0d3c2;
+      --text-main: #2b231c;
+      --text-soft: #7a685a;
       --good: #4df18d;
       --neutral: #f5cf52;
       --low: #f1866b;
+      --hud-bg: rgba(23,49,58,0.96);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow-soft: 0 10px 25px rgba(0,0,0,0.08);
     }
 
-    *{box-sizing:border-box;font-family:'Nunito',sans-serif;}
-    body{
-      margin:0;
-      background:var(--soft-bg);
-      color:var(--text);
-      display:flex;
-      flex-direction:column;
-      height:100vh;
-      overflow:hidden;
-    }
-    header{
-      flex-shrink:0;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:8px 14px;
-      background:linear-gradient(90deg,#b9dff0,#e4e1cf);
-      box-shadow:0 2px 6px rgba(0,0,0,0.15);
-    }
-    header h1{font-size:18px;margin:0;font-weight:700;}
-    main{
-      flex:1;
-      overflow-y:auto;
-      padding:12px;
-      scroll-behavior:smooth;
-    }
-    .tab{display:none;}
-    .tab.active{display:block;}
-    .hud{
-      flex-shrink:0;
-      background:var(--hud-bg);
-      backdrop-filter:blur(6px);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:6px 10px;
-      border-top:1px solid rgba(0,0,0,0.1);
-    }
-    .portrait{
-      width:48px;height:48px;
-      border-radius:50%;
-      background:#ddd;
-      display:flex;align-items:center;justify-content:center;
-      font-weight:700;font-size:20px;color:#444;
-      box-shadow:0 0 0 3px var(--accent);
-      flex-shrink:0;
-    }
-    .plumbob{width:22px;height:32px;position:relative;flex-shrink:0;}
-    .plumbob-shape{
-      position:absolute;inset:0;
-      background:linear-gradient(180deg,#4df18d,#178348);
-      clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
-      box-shadow:0 0 10px rgba(154,255,180,0.9);
-    }
-    @media(max-width:380px){.plumbob{width:20px;height:28px;}}
+    * { box-sizing: border-box; }
 
-    .mood-gauge{
-      flex:1;
-      height:8px;
-      background:#ddd;
-      margin:0 10px;
-      border-radius:4px;
-      overflow:hidden;
-      position:relative;
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #ffffff 0, #f3efe4 45%, #e3d5c0 100%);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
     }
-    .mood-fill{
-      height:100%;
-      width:60%;
-      background:var(--good);
-      transition:width 0.5s ease,background 0.5s ease;
+
+    header {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px;
+      background: linear-gradient(90deg,#b9dff0,#e4e1cf);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
-    .needs-dots{display:flex;gap:4px;}
-    .dot{width:8px;height:8px;border-radius:50%;background:#ccc;}
-    .dot.active{background:var(--accent);}
+
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    #todayLabel {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 12px 80px;
+      scroll-behavior: smooth;
+    }
+
+    .tab { display: none; }
+    .tab.active { display: block; }
+
+    h2 {
+      margin: 6px 0 4px;
+      font-size: 16px;
+    }
+
+    p {
+      margin: 4px 0 8px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 10px 10px 8px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border-soft);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title span.icon {
+      font-size: 16px;
+    }
+
+    .badge-soft {
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 10px;
+      background: rgba(0,0,0,0.03);
+      color: var(--text-soft);
+    }
+
+    /* Dashboard: Sim center */
+    .sim-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: var(--card-soft);
+      border-radius: var(--radius-lg);
+      margin-bottom: 10px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .sim-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 25% 20%, #fff6ea, #c68b5a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 26px;
+      color: #fff;
+      box-shadow: 0 0 0 2px #fff, 0 4px 12px rgba(0,0,0,0.35);
+      flex-shrink: 0;
+    }
+
+    .sim-meta-main {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .sim-meta-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .sim-mood-tag {
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.04);
+    }
+
+    .sim-mood-tag span.icon { font-size: 13px; }
+
+    /* Quests */
+    .quest-list {
+      list-style: none;
+      padding: 0;
+      margin: 2px 0 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .quest-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      background: var(--card-soft);
+    }
+
+    .quest-item.completed .quest-text {
+      text-decoration: line-through;
+      color: var(--text-soft);
+    }
+
+    .quest-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .quest-text {
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .muted-text {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+
+    .btn-soft {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: linear-gradient(135deg,#f6d1dc,#e199ac);
+      color: #3b1221;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .btn-soft span.icon { font-size: 14px; }
+
+    .btn-soft.bad-day-active {
+      background: linear-gradient(135deg,#c4e2ff,#9fbfff);
+      color:#10243f;
+    }
+
+    .need-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .btn-soft-alt {
+      flex: 1 0 calc(50% - 4px);
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    /* Feelings */
+    .feelings-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .feeling-btn {
+      flex: 1 0 calc(33.33% - 4px);
+      border: none;
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 6px 8px;
+      cursor: pointer;
+      background: #f3eee8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+    }
+
+    .feeling-btn span.icon { font-size: 13px; }
+    .feeling-btn[data-tone="good"] { background:#e4f5eb; }
+    .feeling-btn[data-tone="neutral"] { background:#fef3dc; }
+    .feeling-btn[data-tone="low"] { background:#fde7e7; }
+
+    .feeling-message {
+      font-size: 12px;
+      margin-top: 5px;
+      color: var(--text-soft);
+    }
+
+    /* Timers (stub visuals, logic later if you want) */
+    .timer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .timer-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      background: #f6f0e7;
+    }
+
+    .timer-label-main { font-size: 12px; font-weight: 500; }
+    .timer-label-sub { font-size: 11px; color: var(--text-soft); }
+
+    .timer-status {
+      margin-left: auto;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.05);
+    }
+
+    /* Needs */
+    .needs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .need-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) 2fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .need-label {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .need-bar-shell {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.07);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .need-bar-fill {
+      height: 100%;
+      width: 60%;
+      background: linear-gradient(90deg,#f6c15b,#3fa76a);
+      transition: width 0.25s ease;
+    }
+
+    .need-value {
+      font-size: 11px;
+      color: var(--text-soft);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    .need-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-need {
+      border-radius: 999px;
+      border: none;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: rgba(255,255,255,0.9);
+    }
+
+    /* Skills / XP */
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .skill-row {
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      background: var(--card-soft);
+    }
+
+    .skill-header-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+
+    .skill-bar-shell {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.07);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg,var(--accent-soft),var(--accent));
+      transition: width 0.25s ease;
+    }
+
+    .skill-meta {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    /* Achievements */
+    .ach-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ach-item {
+      padding: 6px 8px;
+      border-radius: var(--radius-md);
+      background: var(--card-soft);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .ach-item span.icon { font-size: 14px; }
+
+    /* Journals + Calendar */
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      gap: 4px;
+      font-size: 9px;
+      color: var(--text-soft);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7,1fr);
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .calendar-day {
+      position: relative;
+      font-size: 11px;
+      padding: 4px 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(0,0,0,0.04);
+      text-align: center;
+    }
+
+    .calendar-day.today {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(0,178,200,0.6);
+      font-weight: 600;
+    }
+
+    .calendar-day.win-full::after,
+    .calendar-day.win-partial::before,
+    .calendar-day.bad-day::after {
+      position: absolute;
+      font-size: 9px;
+    }
+
+    .calendar-day.win-partial::before {
+      content: "●";
+      top: 1px;
+      right: 4px;
+      color: #3fa76a;
+    }
+
+    .calendar-day.win-full::after {
+      content: "●●";
+      top: 1px;
+      right: 3px;
+      letter-spacing: 1px;
+      color: var(--accent);
+    }
+
+    .calendar-day.bad-day::after {
+      content: "❤";
+      top: 1px;
+      right: 4px;
+      color: #c4475e;
+    }
+
+    .calendar-month-label {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .journal-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .journal-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 2px;
+    }
+
+    .journal-textarea {
+      width: 100%;
+      min-height: 70px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: #fbf6ee;
+      padding: 8px;
+      font-size: 12px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    /* HUD bottom bar */
+    .hud {
+      flex-shrink: 0;
+      background: var(--hud-bg);
+      color: #e7f7ff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-top: 1px solid rgba(0,0,0,0.4);
+    }
+
+    .portrait {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 25% 20%, #fdf7ef, #4b2d1d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 22px;
+      color: #fdf9f2;
+      box-shadow: 0 0 0 2px #fff,0 4px 10px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+
+    .hud-middle {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .hud-top-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .plumbob {
+      width: 22px;
+      height: 32px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .plumbob-shape {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,#4df18d,#178348);
+      clip-path: polygon(50% 0,100% 50%,50% 100%,0 50%);
+      box-shadow: 0 0 10px rgba(154,255,180,0.9);
+    }
+
+    @media(max-width:380px){
+      .plumbob{width:20px;height:28px;}
+    }
+
+    .hud-mood-label-main {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .hud-mood-label-sub {
+      font-size: 11px;
+      color: #bdd5df;
+    }
+
+    .mood-gauge {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+
+    .mood-fill {
+      height: 100%;
+      width: 60%;
+      background: linear-gradient(90deg,#f6c15b,#3fa76a);
+      transition: width 0.3s ease;
+    }
+
+    .hud-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+    }
+
+    .needs-dots {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+    }
+
+    .dot.active {
+      background: #e7f6ff;
+      box-shadow: 0 0 5px rgba(202,246,255,0.9);
+    }
+
+    .hud-hint {
+      font-size: 9px;
+      color: #8ea6b2;
+    }
+
+    /* XP float */
+    .xp-float {
+      position: absolute;
+      transform: translate(-50%,0);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(0,178,200,0.95);
+      color: #ffffff;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 9999;
+      transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+    .xp-float-show{opacity:1;transform:translate(-50%,-10px);}
+    .xp-float-hide{opacity:0;transform:translate(-50%,-30px);}
+
+    /* Side nav menu */
     nav.menu{
       position:fixed;
       left:-200px;top:0;bottom:0;
@@ -109,10 +681,11 @@
       color:#333;
       background:#f2f2f2;
       font-weight:600;
+      font-size:13px;
     }
     .menu-btn{
       position:fixed;
-      bottom:70px;left:15px;
+      bottom:76px;left:15px;
       background:var(--accent);
       border:none;border-radius:50%;
       width:48px;height:48px;
@@ -125,51 +698,384 @@
 <body>
   <header>
     <h1>KSim Home</h1>
-    <div id="todayLabel">🌤️ Good Day</div>
+    <div id="todayLabel">🌤️ Today · Gentle</div>
   </header>
 
   <main id="main">
+    <!-- DASHBOARD -->
     <section id="dashboard" class="tab active">
-      <h2>Dashboard</h2>
-      <p>Welcome home. Your day starts here ☀️</p>
-      <ul id="questList">
-        <li><label><input type="checkbox"> Tidy living room</label></li>
-        <li><label><input type="checkbox"> Start laundry</label></li>
-      </ul>
+      <div class="sim-center">
+        <div class="sim-avatar" id="simAvatar">K</div>
+        <div>
+          <div class="sim-meta-main" id="simMoodTitle">Gently okay</div>
+          <div class="sim-meta-sub" id="simMoodSub">You’re doing more than enough.</div>
+          <div class="sim-mood-tag" id="simMoodTag">
+            <span class="icon">💚</span>
+            <span>Soft & steady</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="card" id="questsCard">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">✨</span>
+            <span>Today’s tiny quests</span>
+          </div>
+          <span class="badge-soft" id="questsSummary">0 / 2 done</span>
+        </div>
+        <p>Two little house quests. If you only tap “Rough day”, it still counts as a win.</p>
+        <ul class="quest-list" id="questList"></ul>
+        <button class="btn-soft" id="badDayButton" type="button">
+          <span class="icon">💗</span><span>Had a rough day?</span>
+        </button>
+        <div class="muted-text" id="badDayMessage">
+          Tap this when the day was too much. Surviving still counts as a win.
+        </div>
+      </section>
+
+      <section class="card" id="needActionsCard">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🍽️</span>
+            <span>Quick Sim actions</span>
+          </div>
+        </div>
+        <p>Tap what you actually did — needs, mood & XP will adjust.</p>
+        <div class="need-actions-row">
+          <button class="btn-soft btn-soft-alt" data-need-action="snack" type="button">
+            <span class="icon">🍎</span><span>Snack</span>
+          </button>
+          <button class="btn-soft btn-soft-alt" data-need-action="meal" type="button">
+            <span class="icon">🍲</span><span>Meal</span>
+          </button>
+          <button class="btn-soft btn-soft-alt" data-need-action="bathroom" type="button">
+            <span class="icon">🚽</span><span>Bathroom</span>
+          </button>
+          <button class="btn-soft btn-soft-alt" data-need-action="quick-shower" type="button">
+            <span class="icon">🚿</span><span>Quick shower</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="card" id="feelingsCard">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🧠</span>
+            <span>How does Kelly feel?</span>
+          </div>
+        </div>
+        <p>Your feelings are information, not a grade. Tap whatever fits.</p>
+        <div class="feelings-strip">
+          <button class="feeling-btn" data-feeling="stressed" data-tone="low" type="button">
+            <span class="icon">⚡</span><span>Stressed</span>
+          </button>
+          <button class="feeling-btn" data-feeling="overwhelmed" data-tone="low" type="button">
+            <span class="icon">🌊</span><span>Overwhelmed</span>
+          </button>
+          <button class="feeling-btn" data-feeling="low" data-tone="low" type="button">
+            <span class="icon">🌧️</span><span>Low</span>
+          </button>
+          <button class="feeling-btn" data-feeling="sad" data-tone="low" type="button">
+            <span class="icon">💧</span><span>Sad</span>
+          </button>
+          <button class="feeling-btn" data-feeling="angry" data-tone="low" type="button">
+            <span class="icon">🔥</span><span>Angry</span>
+          </button>
+          <button class="feeling-btn" data-feeling="hungry" data-tone="neutral" type="button">
+            <span class="icon">🍞</span><span>Hungry</span>
+          </button>
+          <button class="feeling-btn" data-feeling="good" data-tone="good" type="button">
+            <span class="icon">🙂</span><span>Good</span>
+          </button>
+          <button class="feeling-btn" data-feeling="happy" data-tone="good" type="button">
+            <span class="icon">😊</span><span>Happy</span>
+          </button>
+          <button class="feeling-btn" data-feeling="peace" data-tone="good" type="button">
+            <span class="icon">🕊️</span><span>Peace</span>
+          </button>
+          <button class="feeling-btn" data-feeling="ease" data-tone="good" type="button">
+            <span class="icon">🌿</span><span>Ease</span>
+          </button>
+        </div>
+        <div class="feeling-message" id="feelingMessage">
+          Whatever you tapped is allowed to exist without being fixed right away.
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">⏱️</span>
+            <span>Soft timers (visual only)</span>
+          </div>
+        </div>
+        <p>Later we can wire these to real timers. For now, they’re cozy reminders.</p>
+        <div class="timer-list">
+          <div class="timer-row">
+            <div>
+              <div class="timer-label-main">Hydration</div>
+              <div class="timer-label-sub">Sip water / tea</div>
+            </div>
+            <div class="timer-status">Soft reminder</div>
+          </div>
+          <div class="timer-row">
+            <div>
+              <div class="timer-label-main">Meal check-in</div>
+              <div class="timer-label-sub">Real food for you</div>
+            </div>
+            <div class="timer-status">Soft reminder</div>
+          </div>
+        </div>
+      </section>
     </section>
 
+    <!-- NEEDS TAB -->
     <section id="needs" class="tab">
-      <h2>Needs</h2>
-      <p>Sliders and actions will go here.</p>
+      <h2>Needs board</h2>
+      <p>Treat these like soft guides, not demands. Adjust when reality shifts.</p>
+      <section class="card">
+        <div class="needs-list">
+          <div class="need-row" data-need-id="hunger">
+            <div class="need-label">Hunger</div>
+            <div class="need-bar-shell">
+              <div class="need-bar-fill" data-need-fill></div>
+            </div>
+            <div class="need-controls">
+              <button class="btn-need" data-need-delta="-10" type="button">−</button>
+              <span class="need-value" data-need-value>60</span>
+              <button class="btn-need" data-need-delta="10" type="button">+</button>
+            </div>
+          </div>
+          <div class="need-row" data-need-id="energy">
+            <div class="need-label">Energy</div>
+            <div class="need-bar-shell">
+              <div class="need-bar-fill" data-need-fill></div>
+            </div>
+            <div class="need-controls">
+              <button class="btn-need" data-need-delta="-10" type="button">−</button>
+              <span class="need-value" data-need-value>60</span>
+              <button class="btn-need" data-need-delta="10" type="button">+</button>
+            </div>
+          </div>
+          <div class="need-row" data-need-id="social">
+            <div class="need-label">Social</div>
+            <div class="need-bar-shell">
+              <div class="need-bar-fill" data-need-fill></div>
+            </div>
+            <div class="need-controls">
+              <button class="btn-need" data-need-delta="-10" type="button">−</button>
+              <span class="need-value" data-need-value>60</span>
+              <button class="btn-need" data-need-delta="10" type="button">+</button>
+            </div>
+          </div>
+          <div class="need-row" data-need-id="fun">
+            <div class="need-label">Fun</div>
+            <div class="need-bar-shell">
+              <div class="need-bar-fill" data-need-fill></div>
+            </div>
+            <div class="need-controls">
+              <button class="btn-need" data-need-delta="-10" type="button">−</button>
+              <span class="need-value" data-need-value>60</span>
+              <button class="btn-need" data-need-delta="10" type="button">+</button>
+            </div>
+          </div>
+          <div class="need-row" data-need-id="hygiene">
+            <div class="need-label">Hygiene</div>
+            <div class="need-bar-shell">
+              <div class="need-bar-fill" data-need-fill></div>
+            </div>
+            <div class="need-controls">
+              <button class="btn-need" data-need-delta="-10" type="button">−</button>
+              <span class="need-value" data-need-value>60</span>
+              <button class="btn-need" data-need-delta="10" type="button">+</button>
+            </div>
+          </div>
+          <div class="need-row" data-need-id="quiet">
+            <div class="need-label">Quiet / Alone</div>
+            <div class="need-bar-shell">
+              <div class="need-bar-fill" data-need-fill></div>
+            </div>
+            <div class="need-controls">
+              <button class="btn-need" data-need-delta="-10" type="button">−</button>
+              <span class="need-value" data-need-value>60</span>
+              <button class="btn-need" data-need-delta="10" type="button">+</button>
+            </div>
+          </div>
+        </div>
+      </section>
     </section>
 
+    <!-- SKILLS TAB -->
     <section id="skills" class="tab">
-      <h2>Skills / Stats</h2>
-      <p>XP progress bars coming next phase.</p>
+      <h2>Skills & levels</h2>
+      <p>Every little action adds XP, like a cozy save file leveling up.</p>
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🏅</span><span>Overall Solopa level</span>
+          </div>
+          <span class="badge-soft" id="overallLevelLabel">Lv. 1</span>
+        </div>
+        <div class="skill-bar-shell">
+          <div class="skill-bar-fill" id="overallXpFill"></div>
+        </div>
+        <div class="skill-meta" id="overallXpMeta">0 / 100 XP</div>
+      </section>
+
+      <section class="card">
+        <div class="skill-list">
+          <div class="skill-row" data-skill-id="nourish">
+            <div class="skill-header-line">
+              <span>🍽️ Nourish</span>
+              <span id="skillLevel-nourish">Lv. 1</span>
+            </div>
+            <div class="skill-bar-shell">
+              <div class="skill-bar-fill" id="skillFill-nourish"></div>
+            </div>
+            <div class="skill-meta" id="skillMeta-nourish">0 / 100 XP</div>
+          </div>
+          <div class="skill-row" data-skill-id="bodyCare">
+            <div class="skill-header-line">
+              <span>🚽 Body care</span>
+              <span id="skillLevel-bodyCare">Lv. 1</span>
+            </div>
+            <div class="skill-bar-shell">
+              <div class="skill-bar-fill" id="skillFill-bodyCare"></div>
+            </div>
+            <div class="skill-meta" id="skillMeta-bodyCare">0 / 100 XP</div>
+          </div>
+          <div class="skill-row" data-skill-id="selfCare">
+            <div class="skill-header-line">
+              <span>🛁 Self-care</span>
+              <span id="skillLevel-selfCare">Lv. 1</span>
+            </div>
+            <div class="skill-bar-shell">
+              <div class="skill-bar-fill" id="skillFill-selfCare"></div>
+            </div>
+            <div class="skill-meta" id="skillMeta-selfCare">0 / 100 XP</div>
+          </div>
+          <div class="skill-row" data-skill-id="homestead">
+            <div class="skill-header-line">
+              <span>🏡 Homestead</span>
+              <span id="skillLevel-homestead">Lv. 1</span>
+            </div>
+            <div class="skill-bar-shell">
+              <div class="skill-bar-fill" id="skillFill-homestead"></div>
+            </div>
+            <div class="skill-meta" id="skillMeta-homestead">0 / 100 XP</div>
+          </div>
+          <div class="skill-row" data-skill-id="mind">
+            <div class="skill-header-line">
+              <span>🧠 Mind</span>
+              <span id="skillLevel-mind">Lv. 1</span>
+            </div>
+            <div class="skill-bar-shell">
+              <div class="skill-bar-fill" id="skillFill-mind"></div>
+            </div>
+            <div class="skill-meta" id="skillMeta-mind">0 / 100 XP</div>
+          </div>
+          <div class="skill-row" data-skill-id="story">
+            <div class="skill-header-line">
+              <span>📖 Story</span>
+              <span id="skillLevel-story">Lv. 1</span>
+            </div>
+            <div class="skill-bar-shell">
+              <div class="skill-bar-fill" id="skillFill-story"></div>
+            </div>
+            <div class="skill-meta" id="skillMeta-story">0 / 100 XP</div>
+          </div>
+        </div>
+      </section>
     </section>
 
+    <!-- ACHIEVEMENTS TAB -->
     <section id="achievements" class="tab">
-      <h2>Trophies & Achievements</h2>
-      <ul><li>💧 Drank water 5 times in a day</li></ul>
+      <h2>Trophies & tiny wins</h2>
+      <p>Just a few gentle badges to celebrate real life.</p>
+      <section class="card">
+        <ul class="ach-list" id="achList">
+          <li class="ach-item">
+            <span><span class="icon">💧</span> First hydration check</span>
+            <span id="ach-hydration">Locked</span>
+          </li>
+          <li class="ach-item">
+            <span><span class="icon">🧠</span> 3 feelings in one day</span>
+            <span id="ach-feelings">Locked</span>
+          </li>
+          <li class="ach-item">
+            <span><span class="icon">🏡</span> 2 quests done</span>
+            <span id="ach-quests">Locked</span>
+          </li>
+        </ul>
+      </section>
     </section>
 
+    <!-- JOURNALS TAB -->
     <section id="journals" class="tab">
-      <h2>Journals</h2>
-      <p>Daily notes and calendar will appear here.</p>
+      <h2>Journals & win calendar</h2>
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🗓️</span><span>Win-the-day calendar</span>
+          </div>
+          <span class="calendar-month-label" id="calendarMonthLabel"></span>
+        </div>
+        <p>Any quest or rough day button makes this day a win on the map.</p>
+        <div class="calendar-header">
+          <div>Sun</div><div>Mon</div><div>Tue</div>
+          <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </section>
+
+      <section class="card">
+        <div class="journal-group">
+          <div>
+            <div class="journal-label">Today’s little log</div>
+            <textarea class="journal-textarea" id="journalDay" placeholder="A few lines about today is plenty."></textarea>
+          </div>
+          <div>
+            <div class="journal-label">This month’s story</div>
+            <textarea class="journal-textarea" id="journalMonth" placeholder="What this month feels like overall…"></textarea>
+          </div>
+          <div>
+            <div class="journal-label">This year’s chapter</div>
+            <textarea class="journal-textarea" id="journalYear" placeholder="Big picture thoughts future you might smile at."></textarea>
+          </div>
+        </div>
+      </section>
     </section>
   </main>
 
+  <!-- HUD -->
   <div class="hud">
     <div class="portrait">K</div>
-    <div class="plumbob"><div class="plumbob-shape"></div></div>
-    <div class="mood-gauge"><div class="mood-fill" id="moodFill"></div></div>
-    <div class="needs-dots">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+    <div class="hud-middle">
+      <div class="hud-top-line">
+        <div class="plumbob" id="plumbob">
+          <div class="plumbob-shape"></div>
+        </div>
+        <div>
+          <div class="hud-mood-label-main" id="hudMoodMain">Gently okay</div>
+          <div class="hud-mood-label-sub" id="hudMoodSub">You’re doing more than enough.</div>
+        </div>
+      </div>
+      <div class="mood-gauge">
+        <div class="mood-fill" id="moodFill"></div>
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="needs-dots">
+        <div class="dot" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+        <div class="dot" id="dot3"></div>
+      </div>
+      <div class="hud-hint">Nothing here can fail.</div>
     </div>
   </div>
 
+  <!-- Nav button + menu -->
   <button class="menu-btn" id="menuBtn">☰</button>
   <nav class="menu" id="menu">
     <a href="#dashboard" data-tab="dashboard">🏠 Home</a>
@@ -179,43 +1085,667 @@
     <a href="#journals" data-tab="journals">📔 Journals</a>
   </nav>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const tabs = Array.from(document.querySelectorAll(".tab"));
-    const menu = document.getElementById("menu");
-    const btn = document.getElementById("menuBtn");
-    const links = Array.from(document.querySelectorAll("nav.menu a"));
+  <!-- Sounds (hook up your files if you want) -->
+  <audio data-sound="ui-click" src="sounds/ui-click.mp3" preload="auto"></audio>
+  <audio data-sound="feel-good" src="sounds/feel-good.mp3" preload="auto"></audio>
+  <audio data-sound="feel-neutral" src="sounds/feel-neutral.mp3" preload="auto"></audio>
+  <audio data-sound="feel-low" src="sounds/feel-low.mp3" preload="auto"></audio>
 
-    // Helper: show a tab by id
-    function showTab(id) {
-      tabs.forEach(t => {
-        t.classList.toggle("active", t.id === id);
+  <script>
+    (function () {
+      const STORAGE_KEY = "ksim_v5";
+
+      const tasksPool = [
+        "Clear and wipe the kitchen counters",
+        "Sweep the living room floor",
+        "Fold a mini-load of laundry",
+        "Tidy toys from one room",
+        "Reset the bathroom sink area",
+        "Wipe the dining table",
+        "Quick vacuum of main hallway",
+        "Put away clean dishes / run dishwasher",
+        "Declutter one small surface",
+        "Start or switch one load of laundry"
+      ];
+
+      const needsDecayPerMinute = {
+        hunger: 0.6,
+        energy: 0.4,
+        social: 0.25,
+        fun: 0.25,
+        hygiene: 0.2,
+        quiet: 0.2
+      };
+
+      function todayStr() {
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const dd = String(d.getDate()).padStart(2,"0");
+        return `${yyyy}-${mm}-${dd}`;
+      }
+      function monthKey(dateStr){return dateStr.slice(0,7);}
+      function yearKey(dateStr){return dateStr.slice(0,4);}
+
+      function xpForLevel(level){return level*100;}
+      function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+
+      function pickTasks(dateStr){
+        const d = new Date(dateStr+"T00:00:00");
+        const seed = d.getDate()+(d.getMonth()+1)*13;
+        const i1 = seed%tasksPool.length;
+        const i2 = (seed*5+3)%tasksPool.length;
+        const ids = [i1, i2===i1 ? (i2+1)%tasksPool.length : i2];
+        return ids.map(id => ({id,text:tasksPool[id]}));
+      }
+
+      function freshState(){
+        const t = todayStr();
+        return {
+          version: 5,
+          todayDate: t,
+          today: {
+            tasks: pickTasks(t),
+            completedTaskIds: [],
+            badDay: false
+          },
+          winsByDate: {},
+          dayDetails: {},
+          needs: {
+            hunger:60,energy:60,social:60,fun:60,hygiene:60,quiet:60
+          },
+          lastNeedsUpdate: Date.now(),
+          mood: {
+            score:60,
+            labelMain:"Gently okay",
+            labelSub:"You’re doing more than enough.",
+            lastTier:"neutral",
+            lastScore:60
+          },
+          stats: {
+            questsCompleted:0,
+            daysWin:0,
+            feelingsCheckins:0,
+            selfCareBonuses:0
+          },
+          skills: {
+            overallXP:0,
+            overallLevel:1,
+            skills:{
+              nourish:{xp:0,level:1},
+              bodyCare:{xp:0,level:1},
+              selfCare:{xp:0,level:1},
+              homestead:{xp:0,level:1},
+              mind:{xp:0,level:1},
+              story:{xp:0,level:1}
+            }
+          },
+          journals:{
+            day:{},
+            month:{},
+            year:{}
+          }
+        };
+      }
+
+      function loadState(){
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return freshState();
+        try{
+          const parsed = JSON.parse(raw);
+          if(!parsed.version) parsed.version = 5;
+          if(!parsed.todayDate) parsed.todayDate = todayStr();
+          if(!parsed.today) parsed.today = {tasks:pickTasks(parsed.todayDate),completedTaskIds:[],badDay:false};
+          if(!parsed.dayDetails) parsed.dayDetails = {};
+          if(!parsed.needs) parsed.needs = {hunger:60,energy:60,social:60,fun:60,hygiene:60,quiet:60};
+          if(!parsed.lastNeedsUpdate) parsed.lastNeedsUpdate = Date.now();
+          if(!parsed.mood) parsed.mood = {score:60,labelMain:"Gently okay",labelSub:"You’re doing more than enough.",lastTier:"neutral",lastScore:60};
+          if(!parsed.stats) parsed.stats = {questsCompleted:0,daysWin:0,feelingsCheckins:0,selfCareBonuses:0};
+          if(!parsed.skills){
+            parsed.skills = freshState().skills;
+          }
+          if(!parsed.journals) parsed.journals = {day:{},month:{},year:{}};
+          return parsed;
+        }catch{
+          return freshState();
+        }
+      }
+
+      let state = loadState();
+
+      function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+
+      function ensureToday(){
+        const t = todayStr();
+        if(state.todayDate!==t){
+          state.todayDate = t;
+          state.today = {
+            tasks:pickTasks(t),
+            completedTaskIds:[],
+            badDay:false
+          };
+        }
+      }
+      ensureToday();
+
+      // DOM refs
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const menu = document.getElementById("menu");
+      const menuBtn = document.getElementById("menuBtn");
+      const mainEl = document.getElementById("main");
+
+      const questList = document.getElementById("questList");
+      const questsSummary = document.getElementById("questsSummary");
+      const badDayButton = document.getElementById("badDayButton");
+      const badDayMessage = document.getElementById("badDayMessage");
+
+      const simMoodTitle = document.getElementById("simMoodTitle");
+      const simMoodSub = document.getElementById("simMoodSub");
+      const simMoodTag = document.getElementById("simMoodTag");
+      const simAvatar = document.getElementById("simAvatar");
+      const feelingMessage = document.getElementById("feelingMessage");
+
+      const needRows = document.querySelectorAll(".need-row");
+      const moodFill = document.getElementById("moodFill");
+      const hudMoodMain = document.getElementById("hudMoodMain");
+      const hudMoodSub = document.getElementById("hudMoodSub");
+      const dot1 = document.getElementById("dot1");
+      const dot2 = document.getElementById("dot2");
+      const dot3 = document.getElementById("dot3");
+
+      const overallLevelLabel = document.getElementById("overallLevelLabel");
+      const overallXpFill = document.getElementById("overallXpFill");
+      const overallXpMeta = document.getElementById("overallXpMeta");
+
+      const calendarMonthLabel = document.getElementById("calendarMonthLabel");
+      const calendarGrid = document.getElementById("calendarGrid");
+
+      const journalDay = document.getElementById("journalDay");
+      const journalMonth = document.getElementById("journalMonth");
+      const journalYear = document.getElementById("journalYear");
+
+      const todayLabel = document.getElementById("todayLabel");
+
+      const achHydration = document.getElementById("ach-hydration");
+      const achFeelings = document.getElementById("ach-feelings");
+      const achQuests = document.getElementById("ach-quests");
+
+      function uiClick(){
+        playSound("ui-click");
+      }
+      document.addEventListener("click",e=>{
+        if(e.target.closest("button")) uiClick();
       });
-      // Also scroll to top of main content
-      const main = document.getElementById("main");
-      if (main) main.scrollTop = 0;
-    }
 
-    // Open / close side menu
-    if (btn && menu) {
-      btn.addEventListener("click", () => {
-        menu.classList.toggle("open");
+      function playSound(name){
+        const audio = document.querySelector(`audio[data-sound="${name}"]`);
+        if(!audio) return;
+        try{audio.currentTime=0;audio.play().catch(()=>{});}catch{}
+      }
+
+      // XP system
+      function awardXp(skillId, amount, originEl){
+        const s = state.skills;
+        if(!s.skills[skillId]) return;
+        s.overallXP += amount;
+        s.skills[skillId].xp += amount;
+
+        while(s.overallXP >= xpForLevel(s.overallLevel)){
+          s.overallLevel++;
+        }
+        const skill = s.skills[skillId];
+        while(skill.xp >= xpForLevel(skill.level)){
+          skill.level++;
+        }
+        spawnXpFloat("+"+amount+" xp", originEl || document.body);
+        save();
+        renderSkills();
+      }
+
+      function spawnXpFloat(text, originEl){
+        const root = originEl.getBoundingClientRect();
+        const float = document.createElement("div");
+        float.className = "xp-float";
+        float.textContent = text;
+        const top = root.top + window.scrollY - 6;
+        const left = root.left + window.scrollX + root.width/2;
+        float.style.top = top+"px";
+        float.style.left = left+"px";
+        document.body.appendChild(float);
+        setTimeout(()=>float.classList.add("xp-float-show"),10);
+        setTimeout(()=>float.classList.add("xp-float-hide"),1100);
+        setTimeout(()=>float.remove(),1700);
+      }
+
+      // Needs decay
+      function updateNeedsOverTime(){
+        const now = Date.now();
+        const last = state.lastNeedsUpdate || now;
+        const diffMin = Math.floor((now-last)/60000);
+        if(diffMin<=0){state.lastNeedsUpdate = now;return;}
+        state.lastNeedsUpdate = last + diffMin*60000;
+        for(const id in state.needs){
+          const rate = needsDecayPerMinute[id] || 0;
+          if(!rate) continue;
+          const before = state.needs[id];
+          const after = clamp(before - rate*diffMin,0,100);
+          state.needs[id] = after;
+        }
+        recomputeMood(false);
+        renderNeeds();
+        save();
+      }
+
+      // Mood compute & sounds
+      function recomputeMood(shouldPlaySound){
+        const vals = Object.values(state.needs);
+        const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+        const score = clamp(avg,0,100);
+        const prevTier = state.mood.lastTier || "neutral";
+        const prevScore = state.mood.lastScore ?? score;
+
+        state.mood.score = score;
+
+        let tier = "neutral";
+        if(score < 40) tier = "low";
+        else if(score >= 70) tier = "good";
+
+        // Labels if not set by feelings
+        if(!state.mood.labelMain){
+          state.mood.labelMain = "Gently okay";
+          state.mood.labelSub = "You’re doing more than enough.";
+        }
+
+        moodFill.style.width = clamp(score,5,100)+"%";
+        if(tier==="good") moodFill.style.background = "linear-gradient(90deg,#a6f57c,#3fa76a)";
+        else if(tier==="low") moodFill.style.background = "linear-gradient(90deg,#f6a15b,#f1866b)";
+        else moodFill.style.background = "linear-gradient(90deg,#f6c15b,#3fa76a)";
+
+        hudMoodMain.textContent = state.mood.labelMain;
+        hudMoodSub.textContent = state.mood.labelSub;
+        simMoodTitle.textContent = state.mood.labelMain;
+        simMoodSub.textContent = state.mood.labelSub;
+        simMoodTag.querySelector("span:nth-child(2)").textContent =
+          tier==="good" ? "Bright & cozy" :
+          tier==="low" ? "Low battery, still here" :
+          "Soft & steady";
+
+        // needs dots
+        const dotsOn = score>=75 ? 3 : score>=45 ? 2 : score>=20 ? 1 : 0;
+        [dot1,dot2,dot3].forEach((d,i)=>d.classList.toggle("active",i<dotsOn));
+
+        // sounds
+        let soundPlayed = false;
+        if(shouldPlaySound && tier!==prevTier){
+          if(tier==="good") playSound("feel-good");
+          else if(tier==="neutral") playSound("feel-neutral");
+          else playSound("feel-low");
+          soundPlayed = true;
+        }
+
+        if(shouldPlaySound && !soundPlayed){
+          const thresholds=[25,50,75];
+          let crossed=null;
+          for(const t of thresholds){
+            if((prevScore<t && score>=t)||(prevScore>t && score<=t)){crossed=t;break;}
+          }
+          if(crossed!==null){
+            if(score<40) playSound("feel-low");
+            else if(score>=70) playSound("feel-good");
+            else playSound("feel-neutral");
+          }
+        }
+
+        state.mood.lastTier = tier;
+        state.mood.lastScore = score;
+      }
+
+      // Quests
+      function renderQuests(){
+        ensureToday();
+        questList.innerHTML="";
+        state.today.tasks.forEach(t=>{
+          const li = document.createElement("li");
+          li.className="quest-item";
+          if(state.today.completedTaskIds.includes(t.id)) li.classList.add("completed");
+          li.innerHTML = `
+            <input type="checkbox" data-quest-id="${t.id}" ${state.today.completedTaskIds.includes(t.id)?"checked":""}/>
+            <div class="quest-text">${t.text}</div>`;
+          questList.appendChild(li);
+        });
+        questsSummary.textContent = `${state.today.completedTaskIds.length} / ${state.today.tasks.length} done`;
+      }
+
+      function updateWinFlag(){
+        const completed = state.today.completedTaskIds;
+        const total = state.today.tasks.length;
+        const isWin = completed.length>0 || state.today.badDay;
+        const key = state.todayDate;
+        const prev = !!state.winsByDate[key];
+        state.winsByDate[key] = isWin;
+        state.dayDetails[key] = {
+          completed: completed.length,
+          total,
+          badDay: state.today.badDay
+        };
+        if(isWin && !prev) state.stats.daysWin++;
+        if(!isWin && prev) state.stats.daysWin = Math.max(0,state.stats.daysWin-1);
+      }
+
+      function renderBadDay(){
+        if(state.today.badDay){
+          badDayButton.classList.add("bad-day-active");
+          badDayButton.innerHTML = `<span class="icon">💗</span><span>Bad day logged — you still win</span>`;
+          badDayMessage.textContent = "This day is marked as a win because you lived through it. That’s enough.";
+        }else{
+          badDayButton.classList.remove("bad-day-active");
+          badDayButton.innerHTML = `<span class="icon">💗</span><span>Had a rough day?</span>`;
+          badDayMessage.textContent = "Tap this when the day was too much. The calendar will still count it as a win.";
+        }
+      }
+
+      questList.addEventListener("change",(e)=>{
+        const cb = e.target.closest('input[type="checkbox"][data-quest-id]');
+        if(!cb) return;
+        const id = parseInt(cb.dataset.questId,10);
+        const completed = state.today.completedTaskIds;
+        const already = completed.includes(id);
+        if(cb.checked && !already){
+          completed.push(id);
+          state.stats.questsCompleted++;
+          awardXp("homestead",20, cb.closest(".quest-item")||cb);
+        }else if(!cb.checked && already){
+          const idx = completed.indexOf(id);
+          if(idx>=0) completed.splice(idx,1);
+          state.stats.questsCompleted = Math.max(0,state.stats.questsCompleted-1);
+        }
+        updateWinFlag();
+        renderQuests();
+        renderAchievements();
+        renderCalendar();
+        save();
       });
-    }
 
-    // Menu links → switch tabs
-    links.forEach(link => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const id = link.dataset.tab;
-        if (!id) return;
-        showTab(id);
-        menu.classList.remove("open");
+      badDayButton.addEventListener("click",()=>{
+        state.today.badDay = !state.today.badDay;
+        updateWinFlag();
+        renderBadDay();
+        renderCalendar();
+        save();
       });
-    });
 
-    // Default to dashboard
-    showTab("dashboard");
-  });
-</script>
+      // Quick need actions
+      document.getElementById("needActionsCard").addEventListener("click",(e)=>{
+        const btn = e.target.closest("[data-need-action]");
+        if(!btn) return;
+        const act = btn.dataset.needAction;
+        const n = state.needs;
+        if(act==="snack"){
+          n.hunger = clamp(n.hunger+25,0,100);
+          n.energy = clamp(n.energy+25,0,100);
+          state.stats.selfCareBonuses++;
+          awardXp("nourish",10,btn);
+          playSound("feel-good");
+        }else if(act==="meal"){
+          n.hunger = 100;
+          n.energy = clamp(n.energy+75,0,100);
+          state.stats.selfCareBonuses++;
+          awardXp("nourish",20,btn);
+          playSound("feel-good");
+        }else if(act==="bathroom"){
+          n.hygiene = clamp(n.hygiene-10,0,100);
+          n.energy = clamp(n.energy+10,0,100);
+          awardXp("bodyCare",5,btn);
+          playSound("feel-good");
+        }else if(act==="quick-shower"){
+          n.hygiene = clamp(n.hygiene+60,0,100);
+          state.stats.selfCareBonuses++;
+          awardXp("selfCare",15,btn);
+          playSound("feel-good");
+        }
+        recomputeMood(true);
+        renderNeeds();
+        renderAchievements();
+        save();
+      });
 
+      // Feelings
+      document.getElementById("feelingsCard").addEventListener("click",(e)=>{
+        const btn = e.target.closest(".feeling-btn");
+        if(!btn) return;
+        const key = btn.dataset.feeling;
+        const tone = btn.dataset.tone || "neutral";
+
+        state.stats.feelingsCheckins++;
+        awardXp("mind",5,btn);
+
+        let main="Gently okay", sub="You’re doing more than enough.";
+        if(key==="stressed"){
+          main="Stressed & still standing";
+          sub="Your brain is juggling a lot. Overload isn’t a failure; it’s a signal.";
+        }else if(key==="overwhelmed"){
+          main="Overwhelmed, not weak";
+          sub="Too much on one person is a village problem, not a you problem.";
+        }else if(key==="low"){
+          main="Low battery";
+          sub="Low mood is your nervous system asking for gentleness, not proof of failure.";
+        }else if(key==="sad"){
+          main="Soft sadness";
+          sub="Tears and heaviness are allowed here.";
+        }else if(key==="angry"){
+          main="Guarding your fire";
+          sub="Anger is your boundary alarm, not proof you’re too much.";
+        }else if(key==="hungry"){
+          main="Body needs fuel";
+          sub="Feeding yourself is a family buff, not selfish.";
+        }else if(key==="good"){
+          main="Gently good";
+          sub="Let yourself enjoy the softness of this moment.";
+        }else if(key==="happy"){
+          main="Bright & warm";
+          sub="Joy is allowed even when everything isn’t perfect.";
+        }else if(key==="peace"){
+          main="Tiny pocket of peace";
+          sub="Even a quiet breath on the couch counts as rest.";
+        }else if(key==="ease"){
+          main="Moving with ease";
+          sub="Ease plus tiny actions is powerful.";
+        }
+
+        state.mood.labelMain = main;
+        state.mood.labelSub = sub;
+        feelingMessage.textContent = sub;
+
+        if(key==="hungry") state.needs.hunger = clamp(state.needs.hunger-5,0,100);
+        if(["stressed","overwhelmed","low","sad","angry"].includes(key)){
+          state.needs.energy = clamp(state.needs.energy-5,0,100);
+          state.needs.quiet = clamp(state.needs.quiet-5,0,100);
+        }
+        if(["good","happy","peace","ease"].includes(key)){
+          state.needs.fun = clamp(state.needs.fun+5,0,100);
+        }
+
+        if(tone==="good") playSound("feel-good");
+        else if(tone==="low") playSound("feel-low");
+        else playSound("feel-neutral");
+
+        recomputeMood(true);
+        renderNeeds();
+        renderAchievements();
+        save();
+      });
+
+      // Needs UI
+      function renderNeeds(){
+        needRows.forEach(row=>{
+          const id = row.dataset.needId;
+          const val = state.needs[id] ?? 60;
+          const fill = row.querySelector("[data-need-fill]");
+          const label = row.querySelector("[data-need-value]");
+          if(fill) fill.style.width = val+"%";
+          if(label) label.textContent = Math.round(val);
+        });
+      }
+
+      needRows.forEach(row=>{
+        row.addEventListener("click",(e)=>{
+          const btn = e.target.closest(".btn-need");
+          if(!btn) return;
+          const delta = parseInt(btn.dataset.needDelta,10);
+          const id = row.dataset.needId;
+          const current = state.needs[id] ?? 60;
+          state.needs[id] = clamp(current+delta,0,100);
+          recomputeMood(true);
+          renderNeeds();
+          save();
+        });
+      });
+
+      // Skills UI
+      function renderSkills(){
+        const s = state.skills;
+        overallLevelLabel.textContent = "Lv. "+s.overallLevel;
+        const needOverall = xpForLevel(s.overallLevel);
+        const prevOverall = xpForLevel(s.overallLevel-1) || 0;
+        const inBand = s.overallXP - prevOverall;
+        const bandSize = needOverall - prevOverall || 1;
+        const frac = clamp(inBand/bandSize,0,1);
+        overallXpFill.style.width = (frac*100)+"%";
+        overallXpMeta.textContent = `${s.overallXP} / ${needOverall} XP`;
+
+        ["nourish","bodyCare","selfCare","homestead","mind","story"].forEach(id=>{
+          const skill = s.skills[id];
+          const levelSpan = document.getElementById("skillLevel-"+id);
+          const fill = document.getElementById("skillFill-"+id);
+          const meta = document.getElementById("skillMeta-"+id);
+          if(!skill || !levelSpan || !fill || !meta) return;
+          levelSpan.textContent = "Lv. "+skill.level;
+          const need = xpForLevel(skill.level);
+          const prev = xpForLevel(skill.level-1)||0;
+          const band = need-prev||1;
+          const fracSkill = clamp((skill.xp-prev)/band,0,1);
+          fill.style.width = (fracSkill*100)+"%";
+          meta.textContent = `${skill.xp} / ${need} XP`;
+        });
+      }
+
+      // Achievements (simple checks)
+      function renderAchievements(){
+        // hydration -> reuse nourish xp as proxy
+        const nour = state.skills.skills.nourish;
+        achHydration.textContent = nour && nour.xp>=10 ? "Unlocked" : "Locked";
+
+        achFeelings.textContent = state.stats.feelingsCheckins>=3 ? "Unlocked" : "Locked";
+
+        const completed = state.today.completedTaskIds.length;
+        achQuests.textContent = completed>=2 ? "Unlocked" : "Locked";
+      }
+
+      // Calendar
+      function renderCalendar(){
+        const now = new Date(state.todayDate+"T00:00:00");
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const first = new Date(year,month,1);
+        const firstDay = first.getDay();
+        const daysInMonth = new Date(year,month+1,0).getDate();
+
+        calendarGrid.innerHTML="";
+        const label = now.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+        calendarMonthLabel.textContent = label;
+
+        for(let i=0;i<firstDay;i++){
+          const empty = document.createElement("div");
+          calendarGrid.appendChild(empty);
+        }
+
+        for(let day=1;day<=daysInMonth;day++){
+          const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+          const div = document.createElement("div");
+          div.className="calendar-day";
+          div.textContent = day;
+          const info = state.dayDetails[dateStr];
+          if(info){
+            if(info.badDay) div.classList.add("bad-day");
+            else if(info.completed>=info.total && info.total>0) div.classList.add("win-full");
+            else if(info.completed>0) div.classList.add("win-partial");
+          }else if(state.winsByDate[dateStr]){
+            div.classList.add("win-full");
+          }
+          if(dateStr===state.todayDate) div.classList.add("today");
+          calendarGrid.appendChild(div);
+        }
+      }
+
+      // Journals
+      function renderJournals(){
+        const dKey = state.todayDate;
+        const mKey = monthKey(state.todayDate);
+        const yKey = yearKey(state.todayDate);
+        journalDay.value = state.journals.day[dKey] || "";
+        journalMonth.value = state.journals.month[mKey] || "";
+        journalYear.value = state.journals.year[yKey] || "";
+      }
+
+      journalDay.addEventListener("input",()=>{
+        state.journals.day[state.todayDate] = journalDay.value;
+        awardXp("story",5,journalDay);
+        save();
+      });
+      journalMonth.addEventListener("input",()=>{
+        state.journals.month[monthKey(state.todayDate)] = journalMonth.value;
+        save();
+      });
+      journalYear.addEventListener("input",()=>{
+        state.journals.year[yearKey(state.todayDate)] = journalYear.value;
+        save();
+      });
+
+      // Today label (time-of-day color stub)
+      function updateTodayLabel(){
+        const now = new Date();
+        const hour = now.getHours();
+        let icon="🌤️", text="Gentle daytime";
+        if(hour<6){icon="🌙";text="Quiet early"; }
+        else if(hour<11){icon="🌅";text="Soft morning";}
+        else if(hour<17){icon="🌤️";text="Gentle afternoon";}
+        else if(hour<21){icon="🌇";text="Cozy evening";}
+        else {icon="🌙";text="Night reset";}
+        todayLabel.innerHTML = `${icon} Today · ${text}`;
+      }
+
+      // Menu navigation
+      function showTab(id){
+        tabs.forEach(t=>t.classList.toggle("active",t.id===id));
+        if(mainEl) mainEl.scrollTop=0;
+      }
+
+      menuBtn.addEventListener("click",()=>menu.classList.toggle("open"));
+      document.querySelectorAll("nav.menu a").forEach(a=>{
+        a.addEventListener("click",(e)=>{
+          e.preventDefault();
+          const id = a.dataset.tab;
+          if(!id) return;
+          showTab(id);
+          menu.classList.remove("open");
+        });
+      });
+
+      // Initial render
+      updateNeedsOverTime();
+      renderQuests();
+      renderBadDay();
+      renderNeeds();
+      recomputeMood(false);
+      renderSkills();
+      renderAchievements();
+      renderCalendar();
+      renderJournals();
+      updateTodayLabel();
+      setInterval(()=>{updateNeedsOverTime();updateTodayLabel();},60000);
+
+      showTab("dashboard");
+    })();
+  </script>
+</body>
+</html>
