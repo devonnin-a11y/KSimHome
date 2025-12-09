@@ -179,19 +179,43 @@
     <a href="#journals" data-tab="journals">📔 Journals</a>
   </nav>
 
-  <script>
-    const tabs=document.querySelectorAll('.tab');
-    const menu=document.getElementById('menu');
-    const btn=document.getElementById('menuBtn');
-    btn.addEventListener('click',()=>menu.classList.toggle('open'));
-    document.querySelectorAll('nav.menu a').forEach(a=>{
-      a.addEventListener('click',e=>{
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const menu = document.getElementById("menu");
+    const btn = document.getElementById("menuBtn");
+    const links = Array.from(document.querySelectorAll("nav.menu a"));
+
+    // Helper: show a tab by id
+    function showTab(id) {
+      tabs.forEach(t => {
+        t.classList.toggle("active", t.id === id);
+      });
+      // Also scroll to top of main content
+      const main = document.getElementById("main");
+      if (main) main.scrollTop = 0;
+    }
+
+    // Open / close side menu
+    if (btn && menu) {
+      btn.addEventListener("click", () => {
+        menu.classList.toggle("open");
+      });
+    }
+
+    // Menu links → switch tabs
+    links.forEach(link => {
+      link.addEventListener("click", (e) => {
         e.preventDefault();
-        const id=a.dataset.tab;
-        tabs.forEach(t=>t.classList.toggle('active',t.id===id));
-        menu.classList.remove('open');
+        const id = link.dataset.tab;
+        if (!id) return;
+        showTab(id);
+        menu.classList.remove("open");
       });
     });
-  </script>
-</body>
-</html>
+
+    // Default to dashboard
+    showTab("dashboard");
+  });
+</script>
+
