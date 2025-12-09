@@ -1494,6 +1494,7 @@
       }
 
       function migrateState(state) {
+        if (!state.dayDetails) state.dayDetails = {};
         if (!state.version) state.version = 4;
         if (!state.timers) state.timers = initTimersState();
         if (!state.journals) state.journals = { day: {}, month: {}, year: {} };
