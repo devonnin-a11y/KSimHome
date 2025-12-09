@@ -1518,7 +1518,7 @@
 
       function pickTodayTasks(dateStr) {
         const d = new Date(dateStr + "T00:00:00");
-        the seed = d.getDate() + (d.getMonth() + 1) * 13;
+        const seed = d.getDate() + (d.getMonth() + 1) * 13;
         const index1 = seed % tasksPool.length;
         const index2 = (seed * 5 + 3) % tasksPool.length;
         const ids = [index1, index2 === index1 ? (index2 + 1) % tasksPool.length : index2];
@@ -2225,3 +2225,4 @@
   </script>
 </body>
 </html>
+
