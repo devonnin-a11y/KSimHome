@@ -1781,7 +1781,7 @@
 
       let daysWithAnyDone = 0;
       let totalTasksDone = 0;
-      let totalTasksThisMonth = daysInMonth * 2;
+      const totalTasksThisMonth = daysInMonth * 2;
 
       const today = new Date();
       const sameMonthAsToday = (today.getMonth() === month && today.getFullYear() === year);
@@ -2062,13 +2062,17 @@
       const totalQuests = getStat("quests");
       const selfCare = getStat("selfcare");
       const feelings = getStat("feelings");
-
       const winDays = getStat("winDays") || 0;
 
-      document.getElementById("statTotalQuests").textContent = totalQuests;
-      document.getElementById("statSelfCare").textContent = selfCare;
-      document.getElementById("statFeelings").textContent = feelings;
-      document.getElementById("statWinDays").textContent = winDays;
+      const statTotalQuests = document.getElementById("statTotalQuests");
+      const statSelfCare = document.getElementById("statSelfCare");
+      const statFeelings = document.getElementById("statFeelings");
+      const statWinDays = document.getElementById("statWinDays");
+
+      if (statTotalQuests) statTotalQuests.textContent = totalQuests;
+      if (statSelfCare) statSelfCare.textContent = selfCare;
+      if (statFeelings) statFeelings.textContent = feelings;
+      if (statWinDays) statWinDays.textContent = winDays;
 
       const levelScore = totalQuests + selfCare * 2;
       const tag = document.getElementById("simLevelTag");
@@ -2094,7 +2098,8 @@
         btn.addEventListener("click", () => {
           const viewId = btn.getAttribute("data-view");
           document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-          document.getElementById(viewId).classList.add("active");
+          const view = document.getElementById(viewId);
+          if (view) view.classList.add("active");
           buttons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
 
@@ -2134,3 +2139,4 @@
   </script>
 </body>
 </html>
+
