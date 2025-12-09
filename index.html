@@ -6,6 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
+  /* existing vars... */
+  --sky-top: #ffffff;
+  --sky-mid: #f3efe4;
+  --sky-bottom: #e3d5c0;
+}
+    :root {
       --accent: #00b2c8;
       --accent-soft: #7edbe4;
       --leaf: #5da66a;
@@ -29,7 +35,7 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #ffffff 0, #f3efe4 45%, #e3d5c0 100%);
+      background: radial-gradient(circle at top, var(--sky-top) 0, var(--sky-mid) 45%, var(--sky-bottom) 100%);
       color: var(--text-main);
       display: flex;
       flex-direction: column;
@@ -709,6 +715,83 @@
       color:#fff;font-size:22px;
       z-index:250;
     }
+    .mood-wheel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,15,25,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+.mood-wheel-overlay.open {
+  display: flex;
+}
+
+.mood-wheel {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffdf7 0, #fbe3f1 45%, #efd2f0 100%);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.4);
+}
+
+.mood-flower-center {
+  position: absolute;
+  inset: 50%;
+  transform: translate(-50%,-50%);
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #fff7ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  text-align: center;
+  padding: 10px;
+  box-shadow: 0 0 0 3px #f5d0ea;
+}
+
+.mood-petal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center -70px;
+  transform: rotate(var(--angle)) translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: #ffffffcc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.mood-petal:active {
+  transform: rotate(var(--angle)) translate(-50%, -50%) scale(0.9);
+}
+
+.mood-wheel-close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.15);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
   </style>
 </head>
 <body>
@@ -782,6 +865,10 @@
           </div>
         </div>
         <p>Your feelings are information, not a grade. Tap whatever fits.</p>
+        <button class="btn-soft" id="openMoodWheel" type="button" style="margin-top:4px;margin-bottom:6px;">
+  <span class="icon">🌸</span><span>Mood flower wheel</span>
+</button>
+
         <div class="feelings-strip">
           <button class="feeling-btn" data-feeling="stressed" data-tone="low" type="button">
             <span class="icon">⚡</span><span>Stressed</span>
@@ -1228,6 +1315,8 @@
       }
 
       let state = loadState();
+      let lastWeather = null; // { code, temp, description, isDay }
+
 
       function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
 
@@ -1365,6 +1454,18 @@
         let tier = "neutral";
         if(score < 40) tier = "low";
         else if(score >= 70) tier = "good";
+        // Avatar reacts to tier
+simAvatar.classList.remove("good", "neutral", "low");
+simAvatar.classList.add(tier);
+
+if (tier === "good") {
+  simAvatar.textContent = "K"; // keep her initial
+} else if (tier === "low") {
+  simAvatar.textContent = "K"; // you can swap emoji or style later
+} else {
+  simAvatar.textContent = "K";
+}
+
 
         // Labels if not set by feelings
         if(!state.mood.labelMain){
@@ -1524,6 +1625,7 @@
         renderAchievements();
         save();
       });
+      
 
       // Feelings
       document.getElementById("feelingsCard").addEventListener("click",(e)=>{
@@ -1589,6 +1691,20 @@
         renderNeeds();
         renderAchievements();
         save();
+        const moodWheelOverlay = document.getElementById("moodWheelOverlay");
+const openMoodWheelBtn = document.getElementById("openMoodWheel");
+
+if (openMoodWheelBtn && moodWheelOverlay) {
+  openMoodWheelBtn.addEventListener("click", () => {
+    moodWheelOverlay.classList.add("open");
+  });
+  moodWheelOverlay.addEventListener("click", (e) => {
+    if (e.target.classList.contains("mood-wheel-close") || e.target === moodWheelOverlay) {
+      moodWheelOverlay.classList.remove("open");
+    }
+  });
+}
+
       });
 
       // Needs UI
@@ -1716,19 +1832,94 @@
         state.journals.year[yearKey(state.todayDate)] = journalYear.value;
         save();
       });
+function applySkyFromWeather(weather, hour) {
+  // Simple mapping: sunny vs cloudy vs rain/snow
+  const code = weather?.code ?? 0;
+  let top = "#ffffff", mid = "#f3efe4", bottom = "#e3d5c0";
+
+  const isNight = hour < 6 || hour >= 21;
+
+  if (isNight) {
+    top = "#141b2b";
+    mid = "#1f3147";
+    bottom = "#101724";
+  } else if (code >= 80) { // rain/snow
+    top = "#e3edf5";
+    mid = "#bacbdc";
+    bottom = "#8b9ab1";
+  } else if (code >= 45) { // foggy / cloudy
+    top = "#f0f2f4";
+    mid = "#d7dbe0";
+    bottom = "#b8c0cc";
+  } else { // clear / mostly clear
+    top = "#ffffff";
+    mid = "#f3efe4";
+    bottom = "#e3d5c0";
+  }
+
+  const root = document.documentElement;
+  root.style.setProperty("--sky-top", top);
+  root.style.setProperty("--sky-mid", mid);
+  root.style.setProperty("--sky-bottom", bottom);
+}
+
+function fetchWeatherAndUpdateSky() {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+      fetch(url)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.current_weather) return;
+          const cw = data.current_weather;
+          lastWeather = {
+            code: cw.weathercode,
+            temp: cw.temperature,
+            isDay: cw.is_day === 1
+          };
+          const now = new Date();
+          applySkyFromWeather(lastWeather, now.getHours());
+          updateTodayLabel(); // refresh label with weather info
+        })
+        .catch(() => {});
+    },
+    () => {
+      // if user denies location, just keep default sky
+    },
+    { timeout: 10000 }
+  );
+}
 
       // Today label (time-of-day color stub)
-      function updateTodayLabel(){
-        const now = new Date();
-        const hour = now.getHours();
-        let icon="🌤️", text="Gentle daytime";
-        if(hour<6){icon="🌙";text="Quiet early"; }
-        else if(hour<11){icon="🌅";text="Soft morning";}
-        else if(hour<17){icon="🌤️";text="Gentle afternoon";}
-        else if(hour<21){icon="🌇";text="Cozy evening";}
-        else {icon="🌙";text="Night reset";}
-        todayLabel.innerHTML = `${icon} Today · ${text}`;
-      }
+      function updateTodayLabel() {
+  const now = new Date();
+  const hour = now.getHours();
+  let timeIcon = "🌤️", timeText = "Gentle daytime";
+
+  if (hour < 6) { timeIcon = "🌙"; timeText = "Quiet early"; }
+  else if (hour < 11) { timeIcon = "🌅"; timeText = "Soft morning"; }
+  else if (hour < 17) { timeIcon = "🌤️"; timeText = "Gentle afternoon"; }
+  else if (hour < 21) { timeIcon = "🌇"; timeText = "Cozy evening"; }
+  else { timeIcon = "🌙"; timeText = "Night reset"; }
+
+  let weatherIcon = "";
+  if (lastWeather) {
+    const code = lastWeather.code;
+    if (code >= 80) weatherIcon = "🌧️";
+    else if (code >= 45) weatherIcon = "☁️";
+    else weatherIcon = lastWeather.isDay ? "☀️" : "🌙";
+  }
+
+  const pieces = [];
+  if (weatherIcon) pieces.push(weatherIcon);
+  pieces.push(timeIcon);
+  const icons = pieces.join(" ");
+
+  todayLabel.innerHTML = `${icons} Today · ${timeText}`;
+}
+
 
       // Menu navigation
       function showTab(id){
@@ -1758,12 +1949,48 @@
       renderCalendar();
       renderJournals();
       updateTodayLabel();
-      setInterval(()=>{updateNeedsOverTime();updateTodayLabel();},60000);
+fetchWeatherAndUpdateSky();
+setInterval(() => {
+  updateNeedsOverTime();
+  updateTodayLabel();
+}, 60000);
+setInterval(() => {
+  fetchWeatherAndUpdateSky();
+}, 15 * 60 * 1000);
+
 
       showTab("dashboard");
     })();
   </script>
+  <div class="mood-wheel-overlay" id="moodWheelOverlay">
+  <div class="mood-wheel">
+    <button class="mood-wheel-close" type="button">✕</button>
+    <div class="mood-flower-center">How do I feel?</div>
+
+    <!-- Petals use same feeling keys as the buttons -->
+    <button class="mood-petal feeling-btn" data-feeling="happy" data-tone="good" style="--angle:0deg;">
+      😊
+    </button>
+    <button class="mood-petal feeling-btn" data-feeling="peace" data-tone="good" style="--angle:60deg;">
+      🕊️
+    </button>
+    <button class="mood-petal feeling-btn" data-feeling="ease" data-tone="good" style="--angle:120deg;">
+      🌿
+    </button>
+    <button class="mood-petal feeling-btn" data-feeling="stressed" data-tone="low" style="--angle:180deg;">
+      ⚡
+    </button>
+    <button class="mood-petal feeling-btn" data-feeling="overwhelmed" data-tone="low" style="--angle:240deg;">
+      🌊
+    </button>
+    <button class="mood-petal feeling-btn" data-feeling="low" data-tone="low" style="--angle:300deg;">
+      🌧️
+    </button>
+  </div>
+</div>
+
 </body>
 </html>
+
 
 
