@@ -1807,11 +1807,14 @@
           state.stats.selfCareBonuses += 1;
           playSound("feel-good");
         } else if (action === "bathroom") {
-          n.hygiene = clamp(n.hygiene - 15, 0, 100);
-          startTimer("bathroom");
-          label = "Relieved";
-          tone = "neutral";
-          playSound("feel-neutral");
+  // Bathroom break: relieving & good mood
+  n.hygiene = clamp(n.hygiene - 10, 0, 100); // tiny realistic drop
+  n.energy  = clamp(n.energy + 10, 0, 100);  // small relief boost
+  startTimer("bathroom");
+  label = "Relieved & lighter";
+  tone = "good";
+  playSound("feel-good");
+}
         } else if (action === "quick-shower") {
           n.hygiene = clamp(n.hygiene + 60, 0, 100);
           startTimer("shower");
