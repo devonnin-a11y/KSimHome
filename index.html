@@ -137,6 +137,31 @@
       position: relative;
       overflow: hidden;
     }
+    
+        .need-bar-left {
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    .need-dot {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      font-size: 22px;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
 
     .cas-character-area {
       flex: 1;
@@ -833,6 +858,19 @@
     </div>
 
     <div class="cas-main">
+
+      <!-- LEFT NEED QUICK-BAR -->
+      <div class="need-bar-left" id="needBarLeft">
+        <button class="need-dot" type="button" data-action="drink">🥤</button>
+        <button class="need-dot" type="button" data-action="snack">🍫</button>
+        <button class="need-dot" type="button" data-action="meal">🍽</button>
+        <button class="need-dot" type="button" data-action="hygiene">✨</button>
+        <button class="need-dot" type="button" data-action="homeschool">📚</button>
+        <button class="need-dot" type="button" data-action="entertain">📺</button>
+        <button class="need-dot" type="button" data-action="clean">🧽</button>
+        <button class="need-dot" type="button" data-action="exercise">🏋️</button>
+      </div>
+
       <div class="cas-character-area" id="characterArea">
         <div class="sim-room">
           <div class="sim-floor-shadow"></div>
