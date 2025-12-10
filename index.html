@@ -156,7 +156,7 @@
     .sim-room {
       position: relative;
       width: 100%;
-      height: 190px;
+      height: 210px;
       display: flex;
       align-items: flex-end;
       justify-content: center;
@@ -164,49 +164,25 @@
 
     .sim-floor-shadow {
       position: absolute;
-      bottom: 14px;
-      width: 90px;
-      height: 20px;
+      bottom: 8px;
+      width: 110px;
+      height: 24px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,0,0,0.25), transparent 70%);
-      filter: blur(2px);
+      background: radial-gradient(circle, rgba(0,0,0,0.28), transparent 70%);
+      filter: blur(3px);
     }
 
     .sim-avatar {
-      position: relative;
-      width: 90px;
-      height: 135px;
-      border-radius: 32px;
-      background: radial-gradient(circle at 25% 20%, #fff9e8, #4b2d1d);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 28px;
-      color: #fdf9f2;
-      box-shadow: 0 0 0 2px #fff, 0 4px 12px rgba(0,0,0,0.45);
+      width: 190px;
+      height: auto;
       cursor: pointer;
-      overflow: hidden;
-      background-size: cover;
-      background-position: center;
+      object-fit: contain;
+      transition: transform .25s;
+      z-index: 1;
     }
 
-    .sim-avatar.neutral {
-      background-image: none;
-      background: radial-gradient(circle at 25% 20%, #fff6ea, #c68b5a);
-    }
-    .sim-avatar.good {
-      background-image: none;
-      background: radial-gradient(circle at 25% 20%, #fff9e8, #42a35a);
-    }
-    .sim-avatar.low {
-      background-image: none;
-      background: radial-gradient(circle at 25% 20%, #fbe8ff, #6b4ca8);
-    }
-
-    .sim-avatar.has-image {
-      background-image: var(--avatar-img);
-      background-color: #333;
+    .sim-center.nav-open .sim-avatar {
+      transform: scale(1.03);
     }
 
     .sim-meta {
@@ -241,17 +217,6 @@
       color: var(--text-soft);
     }
 
-    .avatar-upload-btn {
-      margin-top: 8px;
-      border: none;
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 11px;
-      cursor: pointer;
-      background: rgba(255,255,255,0.9);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-
     .sim-nav-wheel {
       position: absolute;
       inset: 0;
@@ -269,7 +234,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      transform-origin: center -95px;
+      transform-origin: center -105px;
       transform: rotate(var(--angle)) translate(-50%, -50%);
       width: 46px;
       height: 46px;
@@ -697,13 +662,6 @@
       flex-shrink: 0;
       cursor: pointer;
       overflow: hidden;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .portrait.has-image {
-      background-image: var(--avatar-img);
-      background-color: #333;
     }
 
     .hud-middle {
@@ -825,7 +783,7 @@
         <div class="sim-center" id="simCenter">
           <div class="sim-room">
             <div class="sim-floor-shadow"></div>
-            <div class="sim-avatar neutral" id="simAvatar">K</div>
+            <img id="simAvatar" class="sim-avatar" src="images/kelly-happy.png" alt="Kelly Sim">
           </div>
           <div class="sim-meta">
             <div class="sim-meta-main" id="simMoodTitle">Gently okay</div>
@@ -835,20 +793,16 @@
             </div>
           </div>
           <div class="sim-hint">Tap Kelly to hear her mood and open the bubble menu.</div>
-          <button class="avatar-upload-btn" id="avatarUploadBtn" type="button">
-            Change portrait (use her art)
-          </button>
-          <input type="file" id="avatarFile" accept="image/*" style="display:none" />
 
           <!-- Bubble menu around the Sim -->
           <div class="sim-nav-wheel" id="simNavWheel">
-            <button class="sim-nav-btn" data-tab="quests" style="--angle:-90deg;">🧹</button>
-            <button class="sim-nav-btn" data-tab="feelings" style="--angle:-30deg;">💬</button>
-            <button class="sim-nav-btn" data-tab="needs" style="--angle:30deg;">💚</button>
-            <button class="sim-nav-btn" data-tab="skills" style="--angle:90deg;">🌿</button>
-            <button class="sim-nav-btn" data-tab="achievements" style="--angle:150deg;">🏆</button>
-            <button class="sim-nav-btn" data-tab="journals" style="--angle:210deg;">📔</button>
-            <button class="sim-nav-btn" data-tab="haircare" style="--angle:270deg;">💇‍♀️</button>
+            <button class="sim-nav-btn" data-tab="quests" style="--angle:-80deg;">🧹</button>
+            <button class="sim-nav-btn" data-tab="feelings" style="--angle:-20deg;">💬</button>
+            <button class="sim-nav-btn" data-tab="needs" style="--angle:40deg;">💚</button>
+            <button class="sim-nav-btn" data-tab="skills" style="--angle:100deg;">🌿</button>
+            <button class="sim-nav-btn" data-tab="achievements" style="--angle:160deg;">🏆</button>
+            <button class="sim-nav-btn" data-tab="journals" style="--angle:220deg;">📔</button>
+            <button class="sim-nav-btn" data-tab="haircare" style="--angle:280deg;">💇‍♀️</button>
           </div>
         </div>
       </section>
@@ -948,23 +902,37 @@
           <button class="feeling-btn" data-feeling="overwhelmed" data-tone="low" type="button">
             <span class="icon">🌊</span><span>Overwhelmed</span>
           </button>
-          <button class="feeling-btn" data-feeling="low" data-tone="low" type="button">
-            <span class="icon">🌧️</span><span>Low</span>
-          </button>
           <button class="feeling-btn" data-feeling="sad" data-tone="low" type="button">
             <span class="icon">💧</span><span>Sad</span>
           </button>
           <button class="feeling-btn" data-feeling="angry" data-tone="low" type="button">
             <span class="icon">🔥</span><span>Angry</span>
           </button>
+          <button class="feeling-btn" data-feeling="uncomfortable" data-tone="low" type="button">
+            <span class="icon">😣</span><span>Uncomfortable</span>
+          </button>
+          <button class="feeling-btn" data-feeling="scared" data-tone="low" type="button">
+            <span class="icon">😱</span><span>Scared</span>
+          </button>
+
           <button class="feeling-btn" data-feeling="hungry" data-tone="neutral" type="button">
             <span class="icon">🍞</span><span>Hungry</span>
           </button>
-          <button class="feeling-btn" data-feeling="good" data-tone="good" type="button">
-            <span class="icon">🙂</span><span>Good</span>
+          <button class="feeling-btn" data-feeling="focused" data-tone="neutral" type="button">
+            <span class="icon">🎯</span><span>Focused</span>
           </button>
+          <button class="feeling-btn" data-feeling="inspired" data-tone="neutral" type="button">
+            <span class="icon">💡</span><span>Inspired</span>
+          </button>
+
           <button class="feeling-btn" data-feeling="happy" data-tone="good" type="button">
             <span class="icon">😊</span><span>Happy</span>
+          </button>
+          <button class="feeling-btn" data-feeling="playful" data-tone="good" type="button">
+            <span class="icon">🎈</span><span>Playful</span>
+          </button>
+          <button class="feeling-btn" data-feeling="flirty" data-tone="good" type="button">
+            <span class="icon">💖</span><span>Flirty</span>
           </button>
           <button class="feeling-btn" data-feeling="peace" data-tone="good" type="button">
             <span class="icon">🕊️</span><span>Peace</span>
@@ -1297,7 +1265,7 @@
 
   <script>
     (function () {
-      const STORAGE_KEY = "ksim_v7";
+      const STORAGE_KEY = "ksim_v8";
 
       const tasksPool = [
         "Clear and wipe the kitchen counters",
@@ -1319,6 +1287,22 @@
         fun: 0.25,
         hygiene: 0.2,
         quiet: 0.2
+      };
+
+      // Kelly expression sprites
+      const moodImages = {
+        happy: "images/kelly-happy.png",
+        playful: "images/kelly-playful.png",
+        flirty: "images/kelly-flirty.png",
+        inspired: "images/kelly-inspired.png",
+        focused: "images/kelly-focused.png",
+        fine: "images/kelly-fine.png",
+        sad: "images/kelly-sad.png",
+        upset: "images/kelly-upset.png",
+        embarrassed: "images/kelly-embarrassed.png",
+        uncomfortable: "images/kelly-uncomfortable.png",
+        scared: "images/kelly-scared.png",
+        aspired: "images/kelly-aspired.png" // placeholder for later
       };
 
       function todayStr() {
@@ -1345,7 +1329,7 @@
       function freshState(){
         const t = todayStr();
         return {
-          version: 7,
+          version: 8,
           todayDate: t,
           today: {
             tasks: pickTasks(t),
@@ -1389,7 +1373,7 @@
             year:{},
             hairNotes:{}
           },
-          avatarDataUrl: null
+          _lastFeeling: null
         };
       }
 
@@ -1398,7 +1382,7 @@
         if(!raw) return freshState();
         try{
           const parsed = JSON.parse(raw);
-          if(!parsed.version) parsed.version = 7;
+          if(!parsed.version) parsed.version = 8;
           if(!parsed.todayDate) parsed.todayDate = todayStr();
           if(!parsed.today) parsed.today = {tasks:pickTasks(parsed.todayDate),completedTaskIds:[],badDay:false};
           if(!parsed.dayDetails) parsed.dayDetails = {};
@@ -1409,7 +1393,7 @@
           if(!parsed.skills) parsed.skills = freshState().skills;
           if(!parsed.journals) parsed.journals = freshState().journals;
           if(!parsed.journals.hairNotes) parsed.journals.hairNotes = {};
-          if(!Object.prototype.hasOwnProperty.call(parsed,"avatarDataUrl")) parsed.avatarDataUrl = null;
+          if(!("_lastFeeling" in parsed)) parsed._lastFeeling = null;
           return parsed;
         }catch{
           return freshState();
@@ -1445,8 +1429,6 @@
       const simMoodSub = document.getElementById("simMoodSub");
       const simMoodTag = document.getElementById("simMoodTag");
       const simNavWheel = document.getElementById("simNavWheel");
-      const avatarUploadBtn = document.getElementById("avatarUploadBtn");
-      const avatarFile = document.getElementById("avatarFile");
 
       const questList = document.getElementById("questList");
       const questsSummary = document.getElementById("questsSummary");
@@ -1493,39 +1475,6 @@
         const audio = document.querySelector(`audio[data-sound="${name}"]`);
         if(!audio) return;
         try{audio.currentTime=0;audio.play().catch(()=>{});}catch{}
-      }
-
-      // Avatar image
-      function applyAvatarImage(){
-        if(state.avatarDataUrl){
-          const url = `url(${state.avatarDataUrl})`;
-          document.documentElement.style.setProperty("--avatar-img", url);
-          simAvatar.classList.add("has-image");
-          hudPortrait.classList.add("has-image");
-          simAvatar.textContent = "";
-          hudPortrait.textContent = "";
-        }else{
-          simAvatar.classList.remove("has-image");
-          hudPortrait.classList.remove("has-image");
-          document.documentElement.style.removeProperty("--avatar-img");
-          simAvatar.textContent = "K";
-          hudPortrait.textContent = "K";
-        }
-      }
-
-      if(avatarUploadBtn && avatarFile){
-        avatarUploadBtn.addEventListener("click",()=>avatarFile.click());
-        avatarFile.addEventListener("change",()=>{
-          const file = avatarFile.files && avatarFile.files[0];
-          if(!file) return;
-          const reader = new FileReader();
-          reader.onload = function(ev){
-            state.avatarDataUrl = ev.target.result;
-            applyAvatarImage();
-            save();
-          };
-          reader.readAsDataURL(file);
-        });
       }
 
       // XP
@@ -1662,6 +1611,34 @@
         todayLabel.innerHTML = `${icons} Today · ${timeText}`;
       }
 
+      // Kelly expression based on mood + last feeling
+      function applySimExpression(){
+        const tier = state.mood.lastTier || "neutral";
+        const last = state._lastFeeling || "";
+
+        let img = moodImages.fine || moodImages.happy;
+
+        if(tier === "good") img = moodImages.happy;
+        if(tier === "low") img = moodImages.sad;
+
+        // override with specific feelings when present
+        if(last==="happy") img = moodImages.happy;
+        if(last==="playful") img = moodImages.playful;
+        if(last==="flirty") img = moodImages.flirty;
+        if(last==="inspired") img = moodImages.inspired;
+        if(last==="focused") img = moodImages.focused;
+        if(last==="sad") img = moodImages.sad;
+        if(last==="angry") img = moodImages.angry || moodImages.upset;
+        if(last==="uncomfortable") img = moodImages.uncomfortable;
+        if(last==="scared") img = moodImages.scared;
+        if(last==="stressed" || last==="overwhelmed") img = moodImages.upset || moodImages.uncomfortable;
+
+        const el = simAvatar;
+        if(el && img){
+          el.src = img;
+        }
+      }
+
       // Mood
       function recomputeMood(shouldPlaySound){
         const vals = Object.values(state.needs);
@@ -1695,9 +1672,6 @@
           tier==="low" ? "Low battery, still here" :
           "Soft & steady";
 
-        simAvatar.classList.remove("good","neutral","low");
-        simAvatar.classList.add(tier);
-
         const dotsOn = score>=75 ? 3 : score>=45 ? 2 : score>=20 ? 1 : 0;
         [dot1,dot2,dot3].forEach((d,i)=>d.classList.toggle("active",i<dotsOn));
 
@@ -1724,6 +1698,8 @@
 
         state.mood.lastTier = tier;
         state.mood.lastScore = score;
+
+        applySimExpression();
       }
 
       // Quests
@@ -1844,6 +1820,7 @@
 
         state.stats.feelingsCheckins++;
         awardXp("mind",5,btn);
+        state._lastFeeling = key;
 
         let main="Gently okay", sub="You’re doing more than enough.";
         if(key==="stressed"){
@@ -1852,24 +1829,36 @@
         }else if(key==="overwhelmed"){
           main="Overwhelmed, not weak";
           sub="Too much on one person is a village problem, not a you problem.";
-        }else if(key==="low"){
-          main="Low battery";
-          sub="Low mood is your nervous system asking for gentleness, not proof of failure.";
         }else if(key==="sad"){
           main="Soft sadness";
           sub="Tears and heaviness are allowed here.";
         }else if(key==="angry"){
           main="Guarding your fire";
           sub="Anger is your boundary alarm, not proof you’re too much.";
+        }else if(key==="uncomfortable"){
+          main="A bit uncomfy";
+          sub="Your body is telling you something doesn’t feel right. You’re allowed to listen.";
+        }else if(key==="scared"){
+          main="A little scared";
+          sub="Fear is your nervous system looking for safety, not proof you’re weak.";
         }else if(key==="hungry"){
           main="Body needs fuel";
           sub="Feeding yourself is a family buff, not selfish.";
-        }else if(key==="good"){
-          main="Gently good";
-          sub="Let yourself enjoy the softness of this moment.";
+        }else if(key==="focused"){
+          main="Dialed in";
+          sub="You’re carrying a lot of tabs in your brain. One tiny step at a time.";
+        }else if(key==="inspired"){
+          main="Inspired spark";
+          sub="That little idea is worth keeping — even if today is chaotic.";
         }else if(key==="happy"){
           main="Bright & warm";
           sub="Joy is allowed even when everything isn’t perfect.";
+        }else if(key==="playful"){
+          main="Playful energy";
+          sub="It’s okay to be a little silly and let yourself enjoy things.";
+        }else if(key==="flirty"){
+          main="Soft flirty mood";
+          sub="You’re still a whole person, not just ‘mom’. That glow matters.";
         }else if(key==="peace"){
           main="Tiny pocket of peace";
           sub="Even a quiet breath on the couch counts as rest.";
@@ -1883,11 +1872,11 @@
         feelingMessage.textContent = sub;
 
         if(key==="hungry") state.needs.hunger = clamp(state.needs.hunger-5,0,100);
-        if(["stressed","overwhelmed","low","sad","angry"].includes(key)){
+        if(["stressed","overwhelmed","sad","angry","uncomfortable","scared"].includes(key)){
           state.needs.energy = clamp(state.needs.energy-5,0,100);
           state.needs.quiet = clamp(state.needs.quiet-5,0,100);
         }
-        if(["good","happy","peace","ease"].includes(key)){
+        if(["happy","playful","flirty","peace","ease","inspired"].includes(key)){
           state.needs.fun = clamp(state.needs.fun+5,0,100);
         }
 
@@ -2083,7 +2072,6 @@
       renderAchievements();
       renderCalendar();
       renderJournals();
-      applyAvatarImage();
       updateTodayLabel();
       fetchWeatherAndUpdateSky();
 
