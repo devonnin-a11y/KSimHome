@@ -1285,7 +1285,7 @@
     <audio data-sound="feel-playful" src="sounds/feel-playful.mp3" preload="auto"></audio>
     <audio data-sound="feel-flirty" src="sounds/feel-flirty.mp3" preload="auto"></audio>
     <audio data-sound="timer-alarm" src="sounds/timer-alarm.mp3" preload="auto"></audio>
-
+    <audio data-sound="feel-energized" src="sounds/feel-energized.mp3" preload="auto"></audio>
     <!-- Background music -->
     <audio id="bgMusic" src="sounds/bg-music.mp3" preload="auto" loop></audio>
   </div>
@@ -1446,7 +1446,8 @@
       const hairFilterInput = document.getElementById("hairFilter");
 
       const timerList = document.getElementById("timerList");
-
+      const needBarLeft = document.getElementById("needBarLeft");
+      
       const overallLevelLabel = document.getElementById("overallLevelLabel");
       const overallXpFill = document.getElementById("overallXpFill");
       const overallXpMeta = document.getElementById("overallXpMeta");
@@ -1909,6 +1910,142 @@
           save();
         });
       });
+
+      // -----------------------
+      // Left NEED BAR actions
+      // -----------------------
+      if (needBarLeft) {
+        needBarLeft.addEventListener("click", (e) => {
+          const btn = e.target.closest(".need-dot");
+          if (!btn) return;
+          const action = btn.dataset.action;
+          if (!action) return;
+          handleNeedAction(action, btn);
+        });
+      }
+
+      function handleNeedAction(action, originEl) {
+        switch (action) {
+          case "drink":
+            actDrink(originEl);
+            break;
+          case "snack":
+            actSnack(originEl);
+            break;
+          case "meal":
+            actMeal(originEl);
+            break;
+          case "hygiene":
+            actHygiene(originEl);
+            break;
+          case "homeschool":
+            actHomeschool(originEl);
+            break;
+          case "entertain":
+            actEntertain(originEl);
+            break;
+          case "clean":
+            actClean(originEl);
+            break;
+          case "exercise":
+            actExercise(originEl);
+            break;
+        }
+      }
+
+      function actDrink(originEl) {
+        // Gentle boost; "drink is for thirsty"
+        const n = state.needs;
+        n.energy = clamp((n.energy ?? 60) + 5, 0, 100);
+        n.fun = clamp((n.fun ?? 60) + 2, 0, 100);
+        // Try energized sound, fallback to feel-good
+        if (document.querySelector('audio[data-sound="feel-energized"]')) {
+          playSound("feel-energized");
+        } else {
+          playSound("feel-good");
+        }
+        // Map to existing skill bucket for now
+        awardXp("nourish", 4, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function actSnack(originEl) {
+        const n = state.needs;
+        const current = n.hunger ?? 60;
+        const missing = 100 - current;
+        // Snack restores 25% of missing hunger
+        n.hunger = clamp(current + missing * 0.25, 0, 100);
+        n.energy = clamp((n.energy ?? 60) - 2, 0, 100);
+        awardXp("nourish", 6, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function actMeal(originEl) {
+        const n = state.needs;
+        n.hunger = 100;
+        n.energy = clamp((n.energy ?? 60) + 8, 0, 100);
+        n.fun = clamp((n.fun ?? 60) + 3, 0, 100);
+        if (document.querySelector('audio[data-sound="feel-energized"]')) {
+          playSound("feel-energized");
+        } else {
+          playSound("feel-good");
+        }
+        // Cooking-ish XP until we split skills UI later
+        awardXp("nourish", 10, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function actHygiene(originEl) {
+        const n = state.needs;
+        n.hygiene = clamp((n.hygiene ?? 70) + 15, 0, 100);
+        n.energy = clamp((n.energy ?? 60) - 3, 0, 100);
+        // Treat as self-care
+        awardXp("selfCare", 8, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function actHomeschool(originEl) {
+        const n = state.needs;
+        n.energy = clamp((n.energy ?? 60) - 10, 0, 100);
+        n.social = clamp((n.social ?? 55) + 10, 0, 100);
+        n.fun = clamp((n.fun ?? 60) - 4, 0, 100);
+        // Map to "mind" skill for now (Teacher skill later)
+        awardXp("mind", 12, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function actEntertain(originEl) {
+        const n = state.needs;
+        n.fun = clamp((n.fun ?? 60) + 20, 0, 100);
+        n.energy = clamp((n.energy ?? 60) - 5, 0, 100);
+        // Map to "story" skill for now
+        awardXp("story", 8, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function actClean(originEl) {
+        const n = state.needs;
+        n.energy = clamp((n.energy ?? 60) - 8, 0, 100);
+        // Cleaning can feel satisfying; tiny fun bump
+        n.fun = clamp((n.fun ?? 60) + 3, 0, 100);
+        // Homestead skill bucket
+        awardXp("homestead", 10, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function actExercise(originEl) {
+        const n = state.needs;
+        n.energy = clamp((n.energy ?? 60) - 15, 0, 100);
+        n.fun = clamp((n.fun ?? 60) + 8, 0, 100);
+        awardXp("selfCare", 12, originEl || needBarLeft);
+        finalizeNeedAction();
+      }
+
+      function finalizeNeedAction() {
+        save();
+        renderNeeds();
+        recomputeMood(true);
+      }
 
       // Feelings
       feelingGrid.addEventListener("click", (e) => {
