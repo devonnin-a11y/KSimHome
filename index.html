@@ -1212,7 +1212,8 @@
     <!-- HUD -->
     <div class="hud">
       <div class="portrait" id="hudPortrait">
-        <img id="hudPortraitImg" src="images/kelly-fine.png" alt="Kelly headshot" />
+        <img id="hudPortraitImg" src="images/kelly-fine-home.png" alt="Kelly headshot" />
+
       </div>
       <div class="hud-middle">
         <div class="hud-top-line">
@@ -1657,12 +1658,43 @@
         weatherChip.textContent = `${icon} ${timeLabel}`;
       }
 
+            function getBaseMoodKeyword() {
+        const f = state._lastFeeling;
+        const tier = state.mood.lastTier || "neutral";
+
+        // Very good / playful states → "happy"
+        if (["happy", "playful", "flirty", "peace", "ease", "inspired"].includes(f)) {
+          return "happy";
+        }
+
+        // Low / heavy states → "sad"
+        if (
+          ["sad", "angry", "uncomfortable", "scared", "stressed", "overwhelmed"].includes(
+            f
+          )
+        ) {
+          return "sad";
+        }
+
+        // Neutral utility feelings → "fine"
+        if (["hungry", "focused"].includes(f)) {
+          return "fine";
+        }
+
+        // Fallback based on tier
+        if (tier === "good") return "happy";
+        if (tier === "low") return "sad";
+        return "fine";
+      }
+
+      
       // Mood + theme + avatar
-      function applySimExpression() {
+            function applySimExpression() {
         const tier = state.mood.lastTier || "neutral";
         const last = state._lastFeeling || "";
         let img = moodImages.fine || moodImages.happy;
 
+        // Main full-body Sim expression (uses detailed sprites)
         if (tier === "good") img = moodImages.happy;
         if (tier === "low") img = moodImages.sad;
 
@@ -1678,23 +1710,33 @@
         if (last === "stressed" || last === "overwhelmed")
           img = moodImages.upset || moodImages.uncomfortable;
 
-        const el = simAvatar;
-        const portrait = hudPortraitImg;
-        if (el && img) {
-          el.onerror = () => {
-            el.onerror = null;
-            if (moodImages.fine) el.src = moodImages.fine;
+        const avatarEl = simAvatar;
+        if (avatarEl && img) {
+          avatarEl.onerror = () => {
+            avatarEl.onerror = null;
+            if (moodImages.fine) avatarEl.src = moodImages.fine;
           };
-          el.src = img;
+          avatarEl.src = img;
         }
-        if (portrait && img) {
-          portrait.onerror = () => {
-            portrait.onerror = null;
-            if (moodImages.fine) portrait.src = moodImages.fine;
+
+        // HUD headshot uses the base mood keyword + "-home"
+        const baseKey = getBaseMoodKeyword(); // "fine", "happy", "sad", etc.
+        const portraitPath = `images/kelly-${baseKey}-home.png`;
+
+        if (hudPortraitImg) {
+          hudPortraitImg.onerror = () => {
+            hudPortraitImg.onerror = null;
+            // fallback to fine-home if present, otherwise fine full-body
+            if (baseKey !== "fine") {
+              hudPortraitImg.src = "images/kelly-fine-home.png";
+            } else if (moodImages.fine) {
+              hudPortraitImg.src = moodImages.fine;
+            }
           };
-          portrait.src = img;
+          hudPortraitImg.src = portraitPath;
         }
       }
+
 
       function updateMoodTheme(tier) {
         casShell.classList.remove("mood-good", "mood-neutral", "mood-low");
@@ -2241,3 +2283,4 @@
   </script>
 </body>
 </html>
+
