@@ -895,11 +895,11 @@
     <div class="cas-topbar">
       <button id="backHomeBtn" class="top-back hidden" type="button">←</button>
       <div class="top-title">KSim CAS</div>
-      <div class="top-right">
+            <div class="top-right">
         <button class="music-toggle" id="musicToggle" type="button">♫ Off</button>
+        <button class="music-toggle" id="musicSkip" type="button">↻</button>
         <div id="weatherChip" class="top-weather">…</div>
       </div>
-    </div>
 
     <div class="cas-main">
 
@@ -1427,7 +1427,7 @@
           recipes: [],
           haircare: [],
           timers: timersState,
-          bgMusicOn: false,
+          bgMusicOn: true,
           _lastFeeling: null
         };
       }
@@ -1478,6 +1478,7 @@
       const backHomeBtn = document.getElementById("backHomeBtn");
       const weatherChip = document.getElementById("weatherChip");
       const musicToggle = document.getElementById("musicToggle");
+      const musicSkip = document.getElementById("musicSkip");
       const bgMusic = document.getElementById("bgMusic");
 
       const feelingGrid = document.getElementById("feelingGrid");
@@ -1519,6 +1520,30 @@
           audio.currentTime = 0;
           audio.play().catch(() => {});
         } catch {}
+      }
+      
+            const bgTracks = [
+        "sounds/bg-1.mp3",
+        "sounds/bg-2.mp3",
+        "sounds/bg-3.mp3"
+      ];
+      let currentBgIndex = Math.floor(Math.random() * bgTracks.length) || 0;
+
+      function setBgTrack(index) {
+        if (!bgMusic) return;
+        currentBgIndex = index % bgTracks.length;
+        bgMusic.src = bgTracks[currentBgIndex];
+        bgMusic.load();
+        if (state.bgMusicOn && hasUserInteractedForMusic) {
+          tryPlayBgMusic();
+        }
+      }
+
+      if (musicSkip) {
+        musicSkip.addEventListener("click", () => {
+          const next = (currentBgIndex + 1) % bgTracks.length;
+          setBgTrack(next);
+        });
       }
 
       document.addEventListener("click", (e) => {
@@ -2563,8 +2588,16 @@
         fetchWeatherAndUpdateSky();
         setInterval(updateNeedsOverTime, 60000);
         setInterval(fetchWeatherAndUpdateSky, 15 * 60 * 1000);
-        updateWeatherChip();
+                updateWeatherChip();
+        // pick a random track on load
+        if (bgTracks.length && bgMusic) {
+          setBgTrack(currentBgIndex);
+        }
         updateMusicToggle();
+        // attempt autoplay (will be blocked on some browsers, but harmless)
+        if (state.bgMusicOn) {
+          tryPlayBgMusic();
+        }
       }
 
       init();
