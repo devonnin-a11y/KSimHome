@@ -150,18 +150,26 @@
     }
 
     .need-dot {
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      font-size: 22px;
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: radial-gradient(circle at top, #6fe7ff 0, #11a7c8 45%, #06465d 100%);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #f8feff;
+  font-size: 18px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+.need-dot:active {
+  transform: translateY(1px) scale(0.96);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  filter: brightness(0.95);
+}
 
     .cas-character-area {
       flex: 1;
@@ -844,6 +852,42 @@
     }
     .xp-float-show { opacity: 1; transform: translate(-50%, -10px); }
     .xp-float-hide { opacity: 0; transform: translate(-50%, -30px); }
+    .hygiene-menu {
+  position: absolute;
+  left: 60px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 14px;
+  background: radial-gradient(circle at top, #173b4c 0, #050f15 70%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+  z-index: 3;
+}
+
+.hygiene-menu.open {
+  display: flex;
+}
+
+.hygiene-menu button {
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 5px 10px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(22,88,109,0.95), rgba(11,39,51,0.95));
+  color: #eaf8ff;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+}
+.hygiene-menu button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.6);
+}
   </style>
 </head>
 <body>
@@ -869,6 +913,15 @@
         <button class="need-dot" type="button" data-action="entertain">📺</button>
         <button class="need-dot" type="button" data-action="clean">🧽</button>
         <button class="need-dot" type="button" data-action="exercise">🏋️</button>
+      </div>
+      
+            <!-- Hygiene sub menu -->
+      <div class="hygiene-menu" id="hygieneMenu">
+        <button type="button" data-hygiene="toilet">🚽 Toilet</button>
+        <button type="button" data-hygiene="shower">🚿 Shower</button>
+        <button type="button" data-hygiene="teeth">🪥 Teeth</button>
+        <button type="button" data-hygiene="haircare">💇‍♀️ Hair</button>
+        <button type="button" data-hygiene="skincare">🧴 Skin</button>
       </div>
 
       <div class="cas-character-area" id="characterArea">
