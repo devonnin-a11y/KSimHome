@@ -1528,6 +1528,16 @@
             tryPlayBgMusic();
           }
         }
+        
+              // close hygiene menu on outside tap
+      document.addEventListener("click", (e) => {
+        if (!hygieneMenu) return;
+        const isHygBtn = e.target.closest('.need-dot[data-action="hygiene"]');
+        const inMenu = e.target.closest("#hygieneMenu");
+        if (!isHygBtn && !inMenu) {
+          hygieneMenu.classList.remove("open");
+        }
+      });
 
         if (e.target.closest("button")) playSound("ui-click");
       });
@@ -1978,7 +1988,7 @@
         });
       }
 
-      function handleNeedAction(action, originEl) {
+            function handleNeedAction(action, originEl) {
         switch (action) {
           case "drink":
             actDrink(originEl);
@@ -1990,7 +2000,7 @@
             actMeal(originEl);
             break;
           case "hygiene":
-            actHygiene(originEl);
+            toggleHygieneMenu();
             break;
           case "homeschool":
             actHomeschool(originEl);
@@ -2005,6 +2015,56 @@
             actExercise(originEl);
             break;
         }
+      }
+            function toggleHygieneMenu() {
+        if (!hygieneMenu) return;
+        hygieneMenu.classList.toggle("open");
+      }
+
+      if (hygieneMenu) {
+        hygieneMenu.addEventListener("click", (e) => {
+          const btn = e.target.closest("button[data-hygiene]");
+          if (!btn) return;
+          const type = btn.dataset.hygiene;
+          actHygieneType(type, btn);
+          hygieneMenu.classList.remove("open");
+        });
+      }
+
+      function actHygieneType(type, originEl) {
+        const n = state.needs;
+        let hygieneDelta = 0;
+        let energyDelta = 0;
+        let xp = 0;
+
+        if (type === "toilet") {
+          hygieneDelta = -5;   // bathroom use lowers hygiene a bit
+          energyDelta = +1;
+          xp = 4;
+        } else if (type === "shower") {
+          hygieneDelta = +25;
+          energyDelta = -3;
+          xp = 10;
+          if (document.querySelector('audio[data-sound="feel-energized"]')) {
+            playSound("feel-energized");
+          } else {
+            playSound("feel-good");
+          }
+        } else if (type === "teeth") {
+          hygieneDelta = +10;
+          xp = 6;
+        } else if (type === "haircare") {
+          hygieneDelta = +8;
+          xp = 8;
+        } else if (type === "skincare") {
+          hygieneDelta = +8;
+          xp = 8;
+        }
+
+        n.hygiene = clamp((n.hygiene ?? 70) + hygieneDelta, 0, 100);
+        n.energy = clamp((n.energy ?? 60) + energyDelta, 0, 100);
+        awardXp("selfCare", xp, originEl || hygieneMenu);
+        finalizeNeedAction();
       }
 
       function actDrink(originEl) {
