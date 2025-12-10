@@ -644,6 +644,68 @@
       color: var(--text-soft);
       margin-bottom: 4px;
     }
+    /* Behavior / CAK & YAK */
+    .behavior-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 11px;
+    }
+
+    .behavior-card {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(135deg, rgba(15, 51, 66, 0.95), rgba(7, 23, 31, 0.96));
+      padding: 7px 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .behavior-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .behavior-title {
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .behavior-sub {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .behavior-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px;
+      font-size: 10px;
+    }
+
+    .behavior-metrics .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .behavior-metrics .label {
+      color: var(--text-soft);
+    }
+
+    .behavior-metrics .value {
+      font-weight: 600;
+    }
+
+    .behavior-last {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
 
     /* Timers */
     .timer-list {
@@ -960,6 +1022,9 @@
           <button class="cas-tab-btn" data-category="timers" type="button">
             <span class="icon">⏰</span><span>Timers</span>
           </button>
+                    <button class="cas-tab-btn" data-category="behavior" type="button">
+            <span class="icon">🧭</span><span>Reactions</span>
+          </button>
           <button class="cas-tab-btn" data-category="skills" type="button">
             <span class="icon">⭐</span><span>Skills</span>
           </button>
@@ -1220,6 +1285,17 @@
               <!-- Timers are rendered from JS -->
             </div>
           </div>
+          
+                    <!-- Behavior / Reactions view -->
+          <div class="category-view" data-category-view="behavior">
+            <div class="cas-section-title">
+              <span>Reactions log</span>
+              <span class="sub">Awareness, not shame. You’re learning.</span>
+            </div>
+            <div class="behavior-list" id="behaviorList">
+              <!-- CAK / YAK cards rendered from JS -->
+            </div>
+          </div>
 
           <!-- Skills view -->
           <div class="category-view" data-category-view="skills">
@@ -1390,7 +1466,7 @@
       return level * 100;
     }
 
-    function freshState() {
+        function freshState() {
       const timersState = {};
       Object.keys(timersConfig).forEach((id) => {
         timersState[id] = { active: false, endAt: null };
@@ -1428,12 +1504,17 @@
         recipes: [],
         haircare: [],
         timers: timersState,
+        // NEW: behavior awareness logs
+        behavior: {
+          cak: { events: [] }, // Curse At Kid
+          yak: { events: [] }  // Yelled At Kid
+        },
         bgMusicOn: true,
         _lastFeeling: null
       };
     }
 
-    function loadState() {
+        function loadState() {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return freshState();
       try {
@@ -1443,6 +1524,7 @@
           skills: Object.assign(base.skills, parsed.skills || {}),
           needs: Object.assign(base.needs, parsed.needs || {}),
           timers: Object.assign(base.timers, parsed.timers || {}),
+          behavior: Object.assign(base.behavior, parsed.behavior || {}),
           recipes: parsed.recipes || [],
           haircare: parsed.haircare || []
         });
@@ -1499,6 +1581,7 @@
     const hairList = document.getElementById("hairList");
     const hairFilterInput = document.getElementById("hairFilter");
 
+    const behaviorList = document.getElementById("behaviorList");
     const timerList = document.getElementById("timerList");
     const needBarLeft = document.getElementById("needBarLeft");
     const hygieneMenu = document.getElementById("hygieneMenu");
@@ -2437,6 +2520,171 @@
       renderHaircare();
     });
 
+    if (behaviorList) {
+      behaviorList.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-behavior-log]");
+        if (!btn) return;
+        const type = btn.dataset.behaviorLog;
+        if (!type) return;
+        logBehavior(type, btn);
+      });
+    }
+
+            // --- Behavior helpers (CAK / YAK) ---
+
+    function getBehaviorCounts(events) {
+      const list = events || [];
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const day = now.getDate();
+
+      const startDay = new Date(year, month, day).getTime();
+      const startWeek = new Date(year, month, day - now.getDay()).getTime(); // week from Sunday
+      const startMonth = new Date(year, month, 1).getTime();
+      const startYear = new Date(year, 0, 1).getTime();
+
+      let today = 0, week = 0, monthCount = 0, yearCount = 0;
+      for (const ts of list) {
+        if (ts >= startYear) {
+          yearCount++;
+          if (ts >= startMonth) {
+            monthCount++;
+            if (ts >= startWeek) {
+              week++;
+              if (ts >= startDay) {
+                today++;
+              }
+            }
+          }
+        }
+      }
+      return { today, week, month: monthCount, year: yearCount };
+    }
+
+    function formatSinceTimestamp(ts) {
+      if (!ts) return "No logs yet (new streak 🌿)";
+      const diff = Date.now() - ts;
+      if (diff < 60_000) return "Just now";
+
+      const totalMinutes = Math.floor(diff / 60000);
+      const days = Math.floor(totalMinutes / (60 * 24));
+      const hours = Math.floor((totalMinutes - days * 60 * 24) / 60);
+      const minutes = totalMinutes % 60;
+
+      const parts = [];
+      if (days) parts.push(days + "d");
+      if (hours) parts.push(hours + "h");
+      if (!days && minutes) parts.push(minutes + "m");
+      if (!parts.length) return "Just now";
+
+      return parts.slice(0, 2).join(" ") + " ago";
+    }
+
+    function logBehavior(type, originEl) {
+      if (!state.behavior) state.behavior = {};
+      if (!state.behavior[type]) state.behavior[type] = { events: [] };
+
+      const bucket = state.behavior[type];
+      bucket.events = bucket.events || [];
+      bucket.events.push(Date.now());
+
+      // keep only the last 500 entries so storage doesn't grow forever
+      if (bucket.events.length > 500) {
+        bucket.events = bucket.events.slice(-500);
+      }
+
+      // gentle impact on needs to reflect the tough moment,
+      // not a permanent punishment
+      state.needs.energy = clamp((state.needs.energy ?? 60) - 2, 0, 100);
+      state.needs.quiet  = clamp((state.needs.quiet  ?? 55) - 3, 0, 100);
+
+      // XP for awareness + choosing to track it
+      awardXp("mind", 4, originEl || document.body);
+
+      save();
+      renderBehavior();
+      recomputeMood(true);
+    }
+
+    function renderBehavior() {
+      if (!behaviorList) return;
+      behaviorList.innerHTML = "";
+
+      const config = {
+        cak: {
+          title: "CAK – Cursed at child",
+          sub: "Logging is awareness, not proof you’re a bad mom."
+        },
+        yak: {
+          title: "YAK – Yelled at child",
+          sub: "This helps you notice patterns and repair softer next time."
+        }
+      };
+
+      ["cak", "yak"].forEach((type) => {
+        const bucket = (state.behavior && state.behavior[type]) || { events: [] };
+        const events = bucket.events || [];
+        const counts = getBehaviorCounts(events);
+        const last = events.length ? events[events.length - 1] : null;
+
+        const card = document.createElement("div");
+        card.className = "behavior-card";
+        card.dataset.behavior = type;
+
+        const labelCfg = config[type];
+
+        card.innerHTML = `
+          <div class="behavior-header">
+            <div>
+              <div class="behavior-title">${labelCfg.title}</div>
+              <div class="behavior-sub">${labelCfg.sub}</div>
+            </div>
+            <button class="btn-primary behavior-log-btn" type="button" data-behavior-log="${type}">
+              <span class="icon">➕</span><span>Log ${type.toUpperCase()}</span>
+            </button>
+          </div>
+          <div class="behavior-metrics">
+            <div class="metric">
+              <span class="label">Today</span>
+              <span class="value">${counts.today}</span>
+            </div>
+            <div class="metric">
+              <span class="label">This week</span>
+              <span class="value">${counts.week}</span>
+            </div>
+            <div class="metric">
+              <span class="label">This month</span>
+              <span class="value">${counts.month}</span>
+            </div>
+            <div class="metric">
+              <span class="label">This year</span>
+              <span class="value">${counts.year}</span>
+            </div>
+          </div>
+          <div class="behavior-last">
+            Last time: <span data-behavior-last="${type}">${formatSinceTimestamp(last)}</span>
+          </div>
+        `;
+
+        behaviorList.appendChild(card);
+      });
+    }
+
+    function updateBehaviorSinceDisplay() {
+      if (!state.behavior) return;
+
+      ["cak", "yak"].forEach((type) => {
+        const bucket = state.behavior[type];
+        const events = bucket && bucket.events ? bucket.events : [];
+        const last = events.length ? events[events.length - 1] : null;
+        const span = document.querySelector(`[data-behavior-last="${type}"]`);
+        if (span) {
+          span.textContent = formatSinceTimestamp(last);
+        }
+      });
+    }
+
     // Timers
     function renderTimers() {
       timerList.innerHTML = "";
@@ -2550,8 +2798,140 @@
       if (timersInterval) clearInterval(timersInterval);
       timersInterval = setInterval(() => {
         updateTimersDisplay();
+        updateBehaviorSinceDisplay(); // keep CAK/YAK "last time" fresh
       }, 1000);
     }
+
+    // Timers
+    function renderTimers() {
+      timerList.innerHTML = "";
+      Object.entries(timersConfig).forEach(([id, cfg]) => {
+        const timerState = state.timers[id] || { active: false, endAt: null };
+        const row = document.createElement("div");
+        row.className = "timer-row";
+        row.dataset.timerId = id;
+
+        const nameEl = document.createElement("div");
+        nameEl.innerHTML = `<div class="timer-name">${cfg.label}</div><div class="timer-status">${timerState.active ? "Counting down" : "Off"}</div>`;
+
+        const timeEl = document.createElement("div");
+        timeEl.className = "timer-time";
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "timer-btn";
+        btn.textContent = timerState.active ? "Stop" : "Start";
+        if (timerState.active) btn.classList.add("active");
+
+        row.appendChild(nameEl);
+        row.appendChild(timeEl);
+        row.appendChild(btn);
+        timerList.appendChild(row);
+
+        btn.addEventListener("click", () => {
+          toggleTimer(id, row);
+        });
+      });
+
+      updateTimersDisplay();
+    }
+
+    function toggleTimer(id, row) {
+      const cfg = timersConfig[id];
+      if (!cfg) return;
+      const t = state.timers[id];
+      if (!t) return;
+
+      const btn = row.querySelector(".timer-btn");
+      const status = row.querySelector(".timer-status");
+
+      if (t.active) {
+        t.active = false;
+        t.endAt = null;
+        btn.textContent = "Start";
+        btn.classList.remove("active");
+        status.textContent = "Off";
+      } else {
+        const now = Date.now();
+        t.active = true;
+        t.endAt = now + cfg.minutes * 60000;
+        btn.textContent = "Stop";
+        btn.classList.add("active");
+        status.textContent = "Counting down";
+        awardXp(cfg.skill, 4, row);
+      }
+      save();
+      updateTimersDisplay();
+    }
+
+    function formatRemaining(ms) {
+      if (ms <= 0) return "0:00";
+      const totalSeconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const m = minutes.toString();
+      const s = seconds.toString().padStart(2, "0");
+      return `${m}:${s}`;
+    }
+
+    function updateTimersDisplay() {
+      const now = Date.now();
+      document.querySelectorAll(".timer-row").forEach((row) => {
+        const id = row.dataset.timerId;
+        const cfg = timersConfig[id];
+        const t = state.timers[id];
+        const timeEl = row.querySelector(".timer-time");
+        const status = row.querySelector(".timer-status");
+        const btn = row.querySelector(".timer-btn");
+        if (!cfg || !t) return;
+
+        if (!t.active || !t.endAt) {
+          timeEl.textContent = "Off";
+          status.textContent = "Off";
+          btn.textContent = "Start";
+          btn.classList.remove("active");
+          return;
+        }
+
+        const remaining = t.endAt - now;
+        if (remaining <= 0) {
+          t.active = false;
+          t.endAt = null;
+          timeEl.textContent = "Time!";
+          status.textContent = "Done";
+          btn.textContent = "Start";
+          btn.classList.remove("active");
+          playSound("timer-alarm");
+          awardXp(cfg.skill, 8, row);
+          save();
+        } else {
+          timeEl.textContent = formatRemaining(remaining);
+          status.textContent = "Counting down";
+        }
+      });
+    }
+
+        function startTimersLoop() {
+      if (timersInterval) clearInterval(timersInterval);
+      timersInterval = setInterval(() => {
+     function updateBehaviorSinceDisplay() {
+      if (!state.behavior) return;
+
+      ["cak", "yak"].forEach((type) => {
+        const bucket = state.behavior[type];
+        const events = bucket && bucket.events ? bucket.events : [];
+        const last = events.length ? events[events.length - 1] : null;
+        const span = document.querySelector(`[data-behavior-last="${type}"]`);
+        if (span) {
+          span.textContent = formatSinceTimestamp(last);
+        }
+      });
+    }       updateTimersDisplay();
+        updateBehaviorSinceDisplay(); // keep CAK/YAK "last time" fresh
+      }, 1000);
+    }
+    
+    
 
     // Initial render + intervals
     function init() {
@@ -2561,6 +2941,7 @@
       renderSkills();
       renderRecipes();
       renderHaircare();
+      renderBehavior();
       renderTimers();
       updateTimersDisplay();
       startTimersLoop();
