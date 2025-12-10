@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>KSim Home – Kelly HUD</title>
+  <title>KSim Home – CAS Style</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
@@ -10,18 +10,18 @@
       --accent-soft: #7edbe4;
       --leaf: #5da66a;
       --soft-bg: #f6f3ea;
-      --card-bg: #ffffff;
-      --card-soft: #fbf6ee;
-      --border-soft: #e0d3c2;
-      --text-main: #2b231c;
-      --text-soft: #7a685a;
-      --hud-bg: rgba(23,49,58,0.96);
-      --radius-lg: 16px;
+      --card-bg: rgba(11, 31, 38, 0.95);
+      --card-soft: rgba(255, 255, 255, 0.06);
+      --border-soft: rgba(255, 255, 255, 0.14);
+      --text-main: #e9f9ff;
+      --text-soft: #c2d8e4;
+      --hud-bg: rgba(8, 22, 29, 0.98);
+      --sky-top: #a9e4ff;
+      --sky-mid: #63b1ff;
+      --sky-bottom: #20539b;
+      --radius-lg: 18px;
       --radius-md: 12px;
-      --shadow-soft: 0 10px 25px rgba(0,0,0,0.08);
-      --sky-top: #ffffff;
-      --sky-mid: #f3efe4;
-      --sky-bottom: #e3d5c0;
+      --shadow-soft: 0 14px 35px rgba(0, 0, 0, 0.35);
     }
 
     * { box-sizing: border-box; }
@@ -29,134 +29,96 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, var(--sky-top) 0, var(--sky-mid) 45%, var(--sky-bottom) 100%);
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
       height: 100vh;
+      background: radial-gradient(circle at top, var(--sky-top) 0, var(--sky-mid) 40%, var(--sky-bottom) 100%);
+      color: var(--text-main);
       overflow: hidden;
     }
 
-    header {
+    .cas-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: relative;
+    }
+
+    .cas-topbar {
       flex-shrink: 0;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 14px;
-      background: linear-gradient(90deg,#b9dff0,#e4e1cf);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-
-    header h1 {
-      font-size: 18px;
-      margin: 0;
-      font-weight: 700;
-    }
-
-    #todayLabel {
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.8);
-      border: 1px solid rgba(255,255,255,0.9);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px 12px 80px;
-      scroll-behavior: smooth;
-    }
-
-    .tab { display: none; }
-    .tab.active { display: block; }
-
-    h2 {
-      margin: 6px 0 4px;
-      font-size: 16px;
-    }
-
-    p {
-      margin: 4px 0 8px;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius-lg);
-      padding: 10px 10px 8px;
-      margin-bottom: 10px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid var(--border-soft);
-    }
-
-    .card-header {
-      display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 6px;
-      margin-bottom: 4px;
+      padding: 6px 10px;
+      background: linear-gradient(90deg, rgba(12, 38, 50, 0.9), rgba(19, 73, 96, 0.9));
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      z-index: 5;
     }
 
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .card-title span.icon {
-      font-size: 16px;
-    }
-
-    .badge-soft {
+    .top-back {
+      border: none;
       border-radius: 999px;
-      padding: 2px 7px;
-      font-size: 10px;
-      background: rgba(0,0,0,0.03);
-      color: var(--text-soft);
-    }
-
-    .back-home {
+      padding: 6px 9px;
+      font-size: 16px;
+      background: rgba(0, 0, 0, 0.2);
+      color: #e9f9ff;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      margin-bottom: 6px;
-      background: rgba(255,255,255,0.8);
-      border: 1px solid rgba(0,0,0,0.05);
       cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    /* Sim center / CAS-style */
-    .sim-card {
-      padding: 10px;
+    .top-back.hidden { visibility: hidden; opacity: 0; }
+
+    .top-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #dff6ff;
     }
 
-    .sim-center {
+    .top-weather {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-soft);
+    }
+
+    .cas-main {
+      flex: 1;
+      display: flex;
       position: relative;
-      width: 100%;
-      max-width: 280px;
-      margin: 20px auto 10px;
-      padding: 12px;
-      border-radius: 20px;
-      background: radial-gradient(circle at top, #fdfcf7 0, #f3e3d2 45%, #dcc5ab 100%);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.26);
-      text-align: center;
-      overflow: visible;
+      overflow: hidden;
+    }
+
+    .cas-character-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 90px;
+      transition: transform 0.4s ease, filter 0.3s ease, opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .cas-shell.panel-open .cas-character-area {
+      align-items: flex-start;
+      transform: translateX(-17%);
+      filter: brightness(0.9);
+    }
+
+    @media (min-width: 480px) {
+      .cas-shell.panel-open .cas-character-area {
+        transform: translateX(-20%);
+      }
     }
 
     .sim-room {
       position: relative;
       width: 100%;
-      height: 210px;
+      max-width: 280px;
+      height: 260px;
       display: flex;
       align-items: flex-end;
       justify-content: center;
@@ -164,35 +126,43 @@
 
     .sim-floor-shadow {
       position: absolute;
-      bottom: 8px;
-      width: 110px;
-      height: 24px;
+      bottom: 14px;
+      width: 120px;
+      height: 26px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,0,0,0.28), transparent 70%);
-      filter: blur(3px);
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.6), transparent 70%);
+      filter: blur(4px);
+      z-index: 0;
     }
 
     .sim-avatar {
-      width: 190px;
+      position: relative;
+      z-index: 1;
+      width: 210px;
       height: auto;
       cursor: pointer;
       object-fit: contain;
-      transition: transform .25s;
-      z-index: 1;
+      transition: transform 0.25s ease;
+      image-rendering: auto;
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0.2) 100%);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0.2) 100%);
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
     }
 
-    .sim-center.nav-open .sim-avatar {
-      transform: scale(1.03);
+    .cas-shell.panel-open .sim-avatar {
+      transform: scale(1.02);
     }
 
     .sim-meta {
       margin-top: 4px;
+      text-align: center;
+      color: #eaf8ff;
     }
 
     .sim-meta-main {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
-      margin-bottom: 2px;
     }
 
     .sim-meta-sub {
@@ -206,203 +176,174 @@
       align-items: center;
       gap: 4px;
       font-size: 11px;
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.04);
+      background: rgba(0, 0, 0, 0.35);
+      box-shadow: 0 0 0 1px rgba(154, 255, 193, 0.35);
     }
 
     .sim-hint {
+      font-size: 11px;
+      color: var(--text-soft);
       margin-top: 6px;
-      font-size: 11px;
-      color: var(--text-soft);
+      text-align: center;
     }
 
-    .sim-nav-wheel {
+    /* RIGHT PANEL */
+    .cas-panel {
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .sim-center.nav-open .sim-nav-wheel {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .sim-nav-btn {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform-origin: center -105px;
-      transform: rotate(var(--angle)) translate(-50%, -50%);
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      border: none;
-      background: #ffffffee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      cursor: pointer;
-    }
-
-    .sim-nav-btn:active {
-      transform: rotate(var(--angle)) translate(-50%, -50%) scale(0.9);
-    }
-
-    .muted-text {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-top: 3px;
-    }
-
-    .btn-soft {
-      border-radius: 999px;
-      border: none;
-      padding: 6px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      background: linear-gradient(135deg,#f6d1dc,#e199ac);
-      color: #3b1221;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
-
-    .btn-soft span.icon { font-size: 14px; }
-
-    .btn-soft.bad-day-active {
-      background: linear-gradient(135deg,#c4e2ff,#9fbfff);
-      color:#10243f;
-    }
-
-    .quest-list {
-      list-style: none;
-      padding: 0;
-      margin: 2px 0 4px;
+      top: 0;
+      right: 0;
+      width: 76%;
+      max-width: 380px;
+      height: 100%;
+      background: radial-gradient(circle at top, #1d4e70 0, #0b1e26 55%, #061116 100%);
+      border-radius: 20px 0 0 0;
+      box-shadow: -12px 0 28px rgba(0, 0, 0, 0.7);
+      transform: translateX(100%);
+      transition: transform 0.38s ease;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      padding: 8px 8px 10px;
+      z-index: 3;
     }
 
-    .quest-item {
+    .cas-shell.panel-open .cas-panel {
+      transform: translateX(0);
+    }
+
+    .cas-tabs {
       display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .cas-tab-btn {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 5px 9px;
+      font-size: 11px;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: var(--radius-md);
-      background: var(--card-soft);
-    }
-
-    .quest-item.completed .quest-text {
-      text-decoration: line-through;
+      gap: 5px;
+      cursor: pointer;
+      background: linear-gradient(135deg, rgba(13, 51, 68, 0.95), rgba(21, 97, 130, 0.95));
       color: var(--text-soft);
-    }
-
-    .quest-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-    }
-
-    .quest-text {
-      font-size: 13px;
-      flex: 1;
-    }
-
-    .need-actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .btn-soft-alt {
-      flex: 1 0 calc(50% - 4px);
-      justify-content: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
       white-space: nowrap;
     }
 
-    .feelings-strip {
+    .cas-tab-btn span.icon {
+      font-size: 15px;
+    }
+
+    .cas-tab-btn.active {
+      background: radial-gradient(circle at top, #42f5c5 0, #1eb1c8 45%, #0e5d7a 100%);
+      color: #042026;
+      border-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 0 2px rgba(212, 255, 248, 0.65), 0 8px 18px rgba(0, 0, 0, 0.65);
+    }
+
+    .cas-panel-body {
+      flex: 1;
+      border-radius: 14px;
+      background: rgba(3, 9, 13, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px;
+      overflow-y: auto;
+    }
+
+    .cas-section-title {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .feeling-btn {
-      flex: 1 0 calc(33.33% - 4px);
-      border: none;
-      border-radius: 999px;
-      font-size: 11px;
-      padding: 6px 8px;
-      cursor: pointer;
-      background: #f3eee8;
-      display: inline-flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      gap: 4px;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+      font-size: 12px;
+      margin-bottom: 4px;
+      color: #eaf8ff;
     }
 
-    .feeling-btn span.icon { font-size: 13px; }
-    .feeling-btn[data-tone="good"] { background:#e4f5eb; }
-    .feeling-btn[data-tone="neutral"] { background:#fef3dc; }
-    .feeling-btn[data-tone="low"] { background:#fde7e7; }
-
-    .feeling-message {
-      font-size: 12px;
-      margin-top: 5px;
+    .cas-section-title span.sub {
+      font-size: 10px;
       color: var(--text-soft);
     }
 
-    .timer-list {
-      display: flex;
-      flex-direction: column;
+    .category-view {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .category-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Emotions list */
+    .feeling-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 6px;
       margin-top: 4px;
     }
 
-    .timer-row {
+    .feeling-card {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(135deg, rgba(22, 62, 82, 0.9), rgba(17, 78, 110, 0.9));
+      padding: 6px 7px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .feeling-card-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: var(--radius-md);
-      background: #f6f0e7;
+      gap: 4px;
     }
 
-    .timer-label-main { font-size: 12px; font-weight: 500; }
-    .timer-label-sub { font-size: 11px; color: var(--text-soft); }
-
-    .timer-status {
-      margin-left: auto;
-      font-size: 11px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.05);
+    .feeling-card span.icon {
+      font-size: 14px;
     }
 
+    .feeling-tone-good { border-color: rgba(157, 255, 204, 0.75); }
+    .feeling-tone-low { border-color: rgba(255, 160, 160, 0.75); }
+    .feeling-tone-neutral { border-color: rgba(255, 229, 170, 0.7); }
+
+    .feeling-card.active {
+      box-shadow: 0 0 0 2px rgba(212, 255, 248, 0.9);
+    }
+
+    .feeling-card-sub {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    /* Needs list */
     .needs-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
+      margin-top: 4px;
     }
 
     .need-row {
       display: grid;
-      grid-template-columns: minmax(0, 1.3fr) 2fr auto;
+      grid-template-columns: minmax(0, 1.5fr) 2fr auto;
       gap: 8px;
       align-items: center;
+      font-size: 11px;
     }
 
     .need-label {
-      font-size: 12px;
       font-weight: 500;
     }
 
@@ -410,7 +351,7 @@
       width: 100%;
       height: 8px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.07);
+      background: rgba(0, 0, 0, 0.4);
       overflow: hidden;
       position: relative;
     }
@@ -418,222 +359,197 @@
     .need-bar-fill {
       height: 100%;
       width: 60%;
-      background: linear-gradient(90deg,#f6c15b,#3fa76a);
+      background: linear-gradient(90deg, #f6c15b, #3fa76a);
       transition: width 0.25s ease;
-    }
-
-    .need-value {
-      font-size: 11px;
-      color: var(--text-soft);
-      min-width: 32px;
-      text-align: right;
     }
 
     .need-controls {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
     .btn-need {
       border-radius: 999px;
       border: none;
       padding: 2px 7px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.12);
+      color: #eaf8ff;
     }
 
+    .need-value {
+      min-width: 26px;
+      text-align: right;
+      color: var(--text-soft);
+    }
+
+    /* Recipes */
+    .recipe-form {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+
+    .recipe-row {
+      display: flex;
+      gap: 4px;
+    }
+
+    .recipe-row input {
+      flex: 1;
+    }
+
+    .recipe-form input,
+    .recipe-form textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(4, 14, 18, 0.8);
+      padding: 5px 7px;
+      color: #eaf8ff;
+      font-size: 11px;
+      font-family: inherit;
+    }
+
+    .recipe-form textarea {
+      min-height: 46px;
+      resize: vertical;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: none;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      background: radial-gradient(circle at top, #42f5c5 0, #1eb1c8 45%, #0e5d7a 100%);
+      color: #021014;
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.55);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .recipe-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .recipe-card {
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(15, 51, 66, 0.95), rgba(10, 31, 40, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      cursor: pointer;
+    }
+
+    .recipe-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .recipe-card-title {
+      font-weight: 600;
+    }
+
+    .recipe-card-cat {
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-size: 9px;
+      background: rgba(5, 170, 220, 0.18);
+      color: var(--accent-soft);
+    }
+
+    .recipe-card-notes {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .recipe-card.active {
+      box-shadow: 0 0 0 2px rgba(212, 255, 248, 0.9);
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 6px;
+      font-size: 11px;
+    }
+
+    .filter-row input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(4, 14, 18, 0.8);
+      padding: 4px 7px;
+      color: #eaf8ff;
+    }
+
+    .filter-row span {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    /* Skills */
     .skill-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      margin-top: 4px;
     }
 
     .skill-row {
-      padding: 6px 8px;
-      border-radius: var(--radius-md);
-      background: var(--card-soft);
+      padding: 6px 7px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(17, 60, 79, 0.96), rgba(8, 30, 40, 0.96));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 11px;
     }
 
     .skill-header-line {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
       margin-bottom: 3px;
     }
 
     .skill-bar-shell {
       width: 100%;
-      height: 8px;
+      height: 7px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.07);
+      background: rgba(0, 0, 0, 0.45);
       overflow: hidden;
-      position: relative;
     }
 
     .skill-bar-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg,var(--accent-soft),var(--accent));
+      background: linear-gradient(90deg, var(--accent-soft), var(--accent));
       transition: width 0.25s ease;
     }
 
     .skill-meta {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-soft);
       margin-top: 2px;
     }
 
-    .ach-list {
-      list-style: none;
-      padding: 0;
-      margin: 4px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .ach-item {
-      padding: 6px 8px;
-      border-radius: var(--radius-md);
-      background: var(--card-soft);
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .ach-item span.icon { font-size: 14px; }
-
-    .calendar-header {
-      display: grid;
-      grid-template-columns: repeat(7,1fr);
-      gap: 4px;
-      font-size: 9px;
+    /* Baking */
+    .baking-note {
+      font-size: 10px;
       color: var(--text-soft);
-      text-align: center;
-      margin-top: 4px;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7,1fr);
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .calendar-day {
-      position: relative;
-      font-size: 11px;
-      padding: 4px 0;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(0,0,0,0.04);
-      text-align: center;
-    }
-
-    .calendar-day.today {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(0,178,200,0.6);
-      font-weight: 600;
-    }
-
-    .calendar-day.win-full::after,
-    .calendar-day.win-partial::before,
-    .calendar-day.bad-day::after {
-      position: absolute;
-      font-size: 9px;
-    }
-
-    .calendar-day.win-partial::before {
-      content: "●";
-      top: 1px;
-      right: 4px;
-      color: #3fa76a;
-    }
-
-    .calendar-day.win-full::after {
-      content: "●●";
-      top: 1px;
-      right: 3px;
-      letter-spacing: 1px;
-      color: var(--accent);
-    }
-
-    .calendar-day.bad-day::after {
-      content: "❤";
-      top: 1px;
-      right: 4px;
-      color: #c4475e;
-    }
-
-    .calendar-month-label {
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .journal-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .journal-label {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-bottom: 2px;
-    }
-
-    .journal-textarea {
-      width: 100%;
-      min-height: 70px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-soft);
-      background: #fbf6ee;
-      padding: 8px;
-      font-size: 12px;
-      resize: vertical;
-      font-family: inherit;
-    }
-
-    .hair-steps {
-      list-style: none;
-      padding: 0;
-      margin: 4px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .hair-step {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      background: var(--card-soft);
-      border-radius: var(--radius-md);
-      font-size: 12px;
-    }
-
-    .hair-step label {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .hair-step input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--accent);
-    }
-
-    .hair-note {
-      font-size: 11px;
-      color: var(--text-soft);
+      margin-bottom: 4px;
     }
 
     .hud {
@@ -643,13 +559,14 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 10px;
-      border-top: 1px solid rgba(0,0,0,0.4);
+      padding: 7px 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.6);
+      z-index: 4;
     }
 
     .portrait {
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: radial-gradient(circle at 25% 20%, #fdf7ef, #4b2d1d);
       display: flex;
@@ -658,7 +575,7 @@
       font-weight: 700;
       font-size: 22px;
       color: #fdf9f2;
-      box-shadow: 0 0 0 2px #fff,0 4px 10px rgba(0,0,0,0.6);
+      box-shadow: 0 0 0 2px #fff, 0 4px 10px rgba(0, 0, 0, 0.6);
       flex-shrink: 0;
       cursor: pointer;
       overflow: hidden;
@@ -687,13 +604,13 @@
     .plumbob-shape {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg,#4df18d,#178348);
-      clip-path: polygon(50% 0,100% 50%,50% 100%,0 50%);
-      box-shadow: 0 0 10px rgba(154,255,180,0.9);
+      background: linear-gradient(180deg, #4df18d, #178348);
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      box-shadow: 0 0 10px rgba(154, 255, 180, 0.9);
     }
 
-    @media(max-width:380px){
-      .plumbob{width:20px;height:28px;}
+    @media (max-width: 380px) {
+      .plumbob { width: 20px; height: 28px; }
     }
 
     .hud-mood-label-main {
@@ -710,14 +627,14 @@
       width: 100%;
       height: 8px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0, 0, 0, 0.6);
       overflow: hidden;
     }
 
     .mood-fill {
       height: 100%;
       width: 60%;
-      background: linear-gradient(90deg,#f6c15b,#3fa76a);
+      background: linear-gradient(90deg, #f6c15b, #3fa76a);
       transition: width 0.3s ease;
     }
 
@@ -738,12 +655,12 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.25);
+      background: rgba(255, 255, 255, 0.25);
     }
 
     .dot.active {
       background: #e7f6ff;
-      box-shadow: 0 0 5px rgba(202,246,255,0.9);
+      box-shadow: 0 0 5px rgba(202, 246, 255, 0.9);
     }
 
     .hud-hint {
@@ -751,537 +668,422 @@
       color: #8ea6b2;
     }
 
+    /* Overlay when panel open */
+    .cas-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(0,0,0,0.15) 0, rgba(0,0,0,0.65) 70%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      z-index: 2;
+    }
+
+    .cas-shell.panel-open .cas-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* XP float */
     .xp-float {
       position: absolute;
-      transform: translate(-50%,0);
+      transform: translate(-50%, 0);
       font-size: 12px;
       font-weight: 600;
       padding: 3px 8px;
       border-radius: 999px;
-      background: rgba(0,178,200,0.95);
+      background: rgba(0, 178, 200, 0.96);
       color: #ffffff;
       pointer-events: none;
       opacity: 0;
       z-index: 9999;
       transition: transform 0.6s ease-out, opacity 0.6s ease-out;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     }
-    .xp-float-show{opacity:1;transform:translate(-50%,-10px);}
-    .xp-float-hide{opacity:0;transform:translate(-50%,-30px);}
+    .xp-float-show { opacity: 1; transform: translate(-50%, -10px); }
+    .xp-float-hide { opacity: 0; transform: translate(-50%, -30px); }
   </style>
 </head>
 <body>
-  <header>
-    <h1>KSim Home</h1>
-    <div id="todayLabel">🌤️ Today · Gentle</div>
-  </header>
+  <div class="cas-shell" id="casShell">
+    <div class="cas-topbar">
+      <button id="backHomeBtn" class="top-back hidden" type="button">←</button>
+      <div class="top-title">KSim CAS</div>
+      <div id="weatherChip" class="top-weather">…</div>
+    </div>
 
-  <main id="main">
-    <!-- HOME / CAS-STYLE SCREEN -->
-    <section id="dashboard" class="tab active">
-      <section class="card sim-card">
-        <div class="sim-center" id="simCenter">
-          <div class="sim-room">
-            <div class="sim-floor-shadow"></div>
-            <img id="simAvatar" class="sim-avatar" src="images/kelly-happy.png" alt="Kelly Sim">
-          </div>
-          <div class="sim-meta">
-            <div class="sim-meta-main" id="simMoodTitle">Gently okay</div>
-            <div class="sim-meta-sub" id="simMoodSub">You’re doing more than enough.</div>
-            <div class="sim-mood-tag" id="simMoodTag">
-              <span class="icon">💚</span><span>Soft & steady</span>
-            </div>
-          </div>
-          <div class="sim-hint">Tap Kelly to hear her mood and open the bubble menu.</div>
-
-          <!-- Bubble menu around the Sim -->
-          <div class="sim-nav-wheel" id="simNavWheel">
-            <button class="sim-nav-btn" data-tab="quests" style="--angle:-80deg;">🧹</button>
-            <button class="sim-nav-btn" data-tab="feelings" style="--angle:-20deg;">💬</button>
-            <button class="sim-nav-btn" data-tab="needs" style="--angle:40deg;">💚</button>
-            <button class="sim-nav-btn" data-tab="skills" style="--angle:100deg;">🌿</button>
-            <button class="sim-nav-btn" data-tab="achievements" style="--angle:160deg;">🏆</button>
-            <button class="sim-nav-btn" data-tab="journals" style="--angle:220deg;">📔</button>
-            <button class="sim-nav-btn" data-tab="haircare" style="--angle:280deg;">💇‍♀️</button>
+    <div class="cas-main">
+      <div class="cas-character-area" id="characterArea">
+        <div class="sim-room">
+          <div class="sim-floor-shadow"></div>
+          <img id="simAvatar" class="sim-avatar" src="images/kelly-fine.png" alt="Kelly Sim" />
+        </div>
+        <div class="sim-meta">
+          <div class="sim-meta-main" id="simMoodTitle">Gently okay</div>
+          <div class="sim-meta-sub" id="simMoodSub">You’re doing more than enough.</div>
+          <div class="sim-mood-tag" id="simMoodTag">
+            <span>💚</span><span>Soft & steady</span>
           </div>
         </div>
-      </section>
-    </section>
+        <div class="sim-hint">Tap Kelly to open her Sims-style menu.</div>
+      </div>
 
-    <!-- QUESTS / ACTIONS PAGE -->
-    <section id="quests" class="tab">
-      <div class="back-home" data-go-home>← Back to Sim</div>
-      <h2>House quests & quick actions</h2>
-      <p>These are tiny wins, not a to-do list that judges you.</p>
+      <aside class="cas-panel" id="casPanel">
+        <div class="cas-tabs">
+          <button class="cas-tab-btn active" data-category="emotions" type="button">
+            <span class="icon">💬</span><span>Emotions</span>
+          </button>
+          <button class="cas-tab-btn" data-category="needs" type="button">
+            <span class="icon">💚</span><span>Needs</span>
+          </button>
+          <button class="cas-tab-btn" data-category="recipes" type="button">
+            <span class="icon">📚</span><span>Recipes</span>
+          </button>
+          <button class="cas-tab-btn" data-category="baking" type="button">
+            <span class="icon">🧁</span><span>Baking</span>
+          </button>
+          <button class="cas-tab-btn" data-category="skills" type="button">
+            <span class="icon">⭐</span><span>Skills</span>
+          </button>
+        </div>
 
-      <section class="card" id="questsCard">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">✨</span>
-            <span>Today’s tiny quests</span>
-          </div>
-          <span class="badge-soft" id="questsSummary">0 / 2 done</span>
-        </div>
-        <p>Two little house quests. If you only tap “Rough day”, it still counts as a win.</p>
-        <ul class="quest-list" id="questList"></ul>
-        <button class="btn-soft" id="badDayButton" type="button">
-          <span class="icon">💗</span><span>Had a rough day?</span>
-        </button>
-        <div class="muted-text" id="badDayMessage">
-          Tap this when the day was too much. Surviving still counts as a win.
-        </div>
-      </section>
+        <div class="cas-panel-body">
+          <!-- Emotions view -->
+          <div class="category-view active" data-category-view="emotions">
+            <div class="cas-section-title">
+              <span>Emotional state</span>
+              <span class="sub">Tap whatever feels closest.</span>
+            </div>
+            <div class="feeling-grid" id="feelingGrid">
+              <!-- low -->
+              <div class="feeling-card feeling-tone-low" data-feeling="stressed" data-tone="low">
+                <div class="feeling-card-header">
+                  <span class="icon">⚡</span><span>Stressed</span>
+                </div>
+                <div class="feeling-card-sub">Brain juggling a lot.</div>
+              </div>
+              <div class="feeling-card feeling-tone-low" data-feeling="overwhelmed" data-tone="low">
+                <div class="feeling-card-header">
+                  <span class="icon">🌊</span><span>Overwhelmed</span>
+                </div>
+                <div class="feeling-card-sub">Too much on one person.</div>
+              </div>
+              <div class="feeling-card feeling-tone-low" data-feeling="sad" data-tone="low">
+                <div class="feeling-card-header">
+                  <span class="icon">💧</span><span>Sad</span>
+                </div>
+                <div class="feeling-card-sub">Soft heaviness allowed.</div>
+              </div>
+              <div class="feeling-card feeling-tone-low" data-feeling="angry" data-tone="low">
+                <div class="feeling-card-header">
+                  <span class="icon">🔥</span><span>Angry</span>
+                </div>
+                <div class="feeling-card-sub">Boundary alarm, not failure.</div>
+              </div>
+              <div class="feeling-card feeling-tone-low" data-feeling="uncomfortable" data-tone="low">
+                <div class="feeling-card-header">
+                  <span class="icon">😣</span><span>Uncomfortable</span>
+                </div>
+                <div class="feeling-card-sub">Body saying “something’s off”.</div>
+              </div>
+              <div class="feeling-card feeling-tone-low" data-feeling="scared" data-tone="low">
+                <div class="feeling-card-header">
+                  <span class="icon">😱</span><span>Scared</span>
+                </div>
+                <div class="feeling-card-sub">Nervous system on alert.</div>
+              </div>
 
-      <section class="card" id="needActionsCard">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">🍽️</span>
-            <span>Quick Sim actions</span>
-          </div>
-        </div>
-        <p>Tap what you actually did — needs, mood & XP will adjust.</p>
-        <div class="need-actions-row">
-          <button class="btn-soft btn-soft-alt" data-need-action="snack" type="button">
-            <span class="icon">🍎</span><span>Snack</span>
-          </button>
-          <button class="btn-soft btn-soft-alt" data-need-action="meal" type="button">
-            <span class="icon">🍲</span><span>Meal</span>
-          </button>
-          <button class="btn-soft btn-soft-alt" data-need-action="bathroom" type="button">
-            <span class="icon">🚽</span><span>Bathroom</span>
-          </button>
-          <button class="btn-soft btn-soft-alt" data-need-action="quick-shower" type="button">
-            <span class="icon">🚿</span><span>Quick shower</span>
-          </button>
-        </div>
-      </section>
+              <!-- neutral -->
+              <div class="feeling-card feeling-tone-neutral" data-feeling="hungry" data-tone="neutral">
+                <div class="feeling-card-header">
+                  <span class="icon">🍞</span><span>Hungry</span>
+                </div>
+                <div class="feeling-card-sub">Body asking for fuel.</div>
+              </div>
+              <div class="feeling-card feeling-tone-neutral" data-feeling="focused" data-tone="neutral">
+                <div class="feeling-card-header">
+                  <span class="icon">🎯</span><span>Focused</span>
+                </div>
+                <div class="feeling-card-sub">Dialed in on tasks.</div>
+              </div>
+              <div class="feeling-card feeling-tone-neutral" data-feeling="inspired" data-tone="neutral">
+                <div class="feeling-card-header">
+                  <span class="icon">💡</span><span>Inspired</span>
+                </div>
+                <div class="feeling-card-sub">Little spark worth keeping.</div>
+              </div>
 
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">⏱️</span>
-            <span>Soft timers (visual only)</span>
-          </div>
-        </div>
-        <p>Later we can wire these to real timers. For now, they’re cozy reminders.</p>
-        <div class="timer-list">
-          <div class="timer-row">
-            <div>
-              <div class="timer-label-main">Hydration</div>
-              <div class="timer-label-sub">Sip water / tea</div>
+              <!-- good -->
+              <div class="feeling-card feeling-tone-good" data-feeling="happy" data-tone="good">
+                <div class="feeling-card-header">
+                  <span class="icon">😊</span><span>Happy</span>
+                </div>
+                <div class="feeling-card-sub">Joy is allowed here.</div>
+              </div>
+              <div class="feeling-card feeling-tone-good" data-feeling="playful" data-tone="good">
+                <div class="feeling-card-header">
+                  <span class="icon">🎈</span><span>Playful</span>
+                </div>
+                <div class="feeling-card-sub">A little silly is medicine.</div>
+              </div>
+              <div class="feeling-card feeling-tone-good" data-feeling="flirty" data-tone="good">
+                <div class="feeling-card-header">
+                  <span class="icon">💖</span><span>Flirty</span>
+                </div>
+                <div class="feeling-card-sub">Still a whole person, not just “mom”.</div>
+              </div>
+              <div class="feeling-card feeling-tone-good" data-feeling="peace" data-tone="good">
+                <div class="feeling-card-header">
+                  <span class="icon">🕊️</span><span>Peace</span>
+                </div>
+                <div class="feeling-card-sub">Tiny pocket of calm.</div>
+              </div>
+              <div class="feeling-card feeling-tone-good" data-feeling="ease" data-tone="good">
+                <div class="feeling-card-header">
+                  <span class="icon">🌿</span><span>Ease</span>
+                </div>
+                <div class="feeling-card-sub">Moving softer, still worthy.</div>
+              </div>
             </div>
-            <div class="timer-status">Soft reminder</div>
           </div>
-          <div class="timer-row">
-            <div>
-              <div class="timer-label-main">Meal check-in</div>
-              <div class="timer-label-sub">Real food for you</div>
-            </div>
-            <div class="timer-status">Soft reminder</div>
-          </div>
-        </div>
-      </section>
-    </section>
 
-    <!-- FEELINGS PAGE -->
-    <section id="feelings" class="tab">
-      <div class="back-home" data-go-home>← Back to Sim</div>
-      <h2>Feelings & nervous system</h2>
-      <p>Your feelings are information, not a grade. Tap whatever fits.</p>
-      <section class="card" id="feelingsCard">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">🧠</span>
-            <span>How does Kelly feel?</span>
+          <!-- Needs view -->
+          <div class="category-view" data-category-view="needs">
+            <div class="cas-section-title">
+              <span>Needs board</span>
+              <span class="sub">Gauges, not grades.</span>
+            </div>
+            <div class="needs-list">
+              <div class="need-row" data-need-id="hunger">
+                <div class="need-label">Hunger</div>
+                <div class="need-bar-shell">
+                  <div class="need-bar-fill" data-need-fill></div>
+                </div>
+                <div class="need-controls">
+                  <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                  <span class="need-value" data-need-value>60</span>
+                  <button class="btn-need" data-need-delta="10" type="button">+</button>
+                </div>
+              </div>
+              <div class="need-row" data-need-id="energy">
+                <div class="need-label">Energy</div>
+                <div class="need-bar-shell">
+                  <div class="need-bar-fill" data-need-fill></div>
+                </div>
+                <div class="need-controls">
+                  <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                  <span class="need-value" data-need-value>60</span>
+                  <button class="btn-need" data-need-delta="10" type="button">+</button>
+                </div>
+              </div>
+              <div class="need-row" data-need-id="social">
+                <div class="need-label">Social</div>
+                <div class="need-bar-shell">
+                  <div class="need-bar-fill" data-need-fill></div>
+                </div>
+                <div class="need-controls">
+                  <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                  <span class="need-value" data-need-value>60</span>
+                  <button class="btn-need" data-need-delta="10" type="button">+</button>
+                </div>
+              </div>
+              <div class="need-row" data-need-id="fun">
+                <div class="need-label">Fun</div>
+                <div class="need-bar-shell">
+                  <div class="need-bar-fill" data-need-fill></div>
+                </div>
+                <div class="need-controls">
+                  <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                  <span class="need-value" data-need-value>60</span>
+                  <button class="btn-need" data-need-delta="10" type="button">+</button>
+                </div>
+              </div>
+              <div class="need-row" data-need-id="hygiene">
+                <div class="need-label">Hygiene</div>
+                <div class="need-bar-shell">
+                  <div class="need-bar-fill" data-need-fill></div>
+                </div>
+                <div class="need-controls">
+                  <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                  <span class="need-value" data-need-value>60</span>
+                  <button class="btn-need" data-need-delta="10" type="button">+</button>
+                </div>
+              </div>
+              <div class="need-row" data-need-id="quiet">
+                <div class="need-label">Quiet / Alone</div>
+                <div class="need-bar-shell">
+                  <div class="need-bar-fill" data-need-fill></div>
+                </div>
+                <div class="need-controls">
+                  <button class="btn-need" data-need-delta="-10" type="button">−</button>
+                  <span class="need-value" data-need-value>60</span>
+                  <button class="btn-need" data-need-delta="10" type="button">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recipes view -->
+          <div class="category-view" data-category-view="recipes">
+            <div class="cas-section-title">
+              <span>Recipe tracker</span>
+              <span class="sub">Tiny Solopa cookbook.</span>
+            </div>
+
+            <form class="recipe-form" id="recipeForm">
+              <div class="recipe-row">
+                <input type="text" id="recipeName" placeholder="Recipe name (e.g. Sunshine Juice)" />
+              </div>
+              <div class="recipe-row">
+                <input type="text" id="recipeCategory" placeholder="Category tag (e.g. Juice, Soup, Baking)" />
+              </div>
+              <textarea id="recipeNotes" placeholder="Short notes: key ingredients, steps, or when to make it."></textarea>
+              <button class="btn-primary" type="submit">
+                <span class="icon">➕</span><span>Add recipe</span>
+              </button>
+            </form>
+
+            <div class="filter-row">
+              <input type="text" id="recipeFilter" placeholder="Filter by category (e.g. Juice)" />
+              <span>Tap a card to highlight.</span>
+            </div>
+
+            <div class="recipe-list" id="recipeList"></div>
+          </div>
+
+          <!-- Baking view -->
+          <div class="category-view" data-category-view="baking">
+            <div class="cas-section-title">
+              <span>Baking regime</span>
+              <span class="sub">Pulls from recipes tagged “Baking”.</span>
+            </div>
+            <div class="baking-note">
+              Any recipe with category “Baking” (any case) will show here. Perfect for cookies, breads, muffins,
+              and homestead treats.
+            </div>
+            <div class="recipe-list" id="bakingList"></div>
+          </div>
+
+          <!-- Skills view -->
+          <div class="category-view" data-category-view="skills">
+            <div class="cas-section-title">
+              <span>Skills & levels</span>
+              <span class="sub">Every tap is XP, not pressure.</span>
+            </div>
+            <div class="skill-row">
+              <div class="skill-header-line">
+                <span>Overall Solopa level</span>
+                <span id="overallLevelLabel">Lv. 1</span>
+              </div>
+              <div class="skill-bar-shell">
+                <div class="skill-bar-fill" id="overallXpFill"></div>
+              </div>
+              <div class="skill-meta" id="overallXpMeta">0 / 100 XP</div>
+            </div>
+
+            <div class="skill-list">
+              <div class="skill-row" data-skill-id="nourish">
+                <div class="skill-header-line">
+                  <span>🍽️ Nourish</span>
+                  <span id="skillLevel-nourish">Lv. 1</span>
+                </div>
+                <div class="skill-bar-shell">
+                  <div class="skill-bar-fill" id="skillFill-nourish"></div>
+                </div>
+                <div class="skill-meta" id="skillMeta-nourish">0 / 100 XP</div>
+              </div>
+
+              <div class="skill-row" data-skill-id="selfCare">
+                <div class="skill-header-line">
+                  <span>🛁 Self-care</span>
+                  <span id="skillLevel-selfCare">Lv. 1</span>
+                </div>
+                <div class="skill-bar-shell">
+                  <div class="skill-bar-fill" id="skillFill-selfCare"></div>
+                </div>
+                <div class="skill-meta" id="skillMeta-selfCare">0 / 100 XP</div>
+              </div>
+
+              <div class="skill-row" data-skill-id="homestead">
+                <div class="skill-header-line">
+                  <span>🏡 Homestead</span>
+                  <span id="skillLevel-homestead">Lv. 1</span>
+                </div>
+                <div class="skill-bar-shell">
+                  <div class="skill-bar-fill" id="skillFill-homestead"></div>
+                </div>
+                <div class="skill-meta" id="skillMeta-homestead">0 / 100 XP</div>
+              </div>
+
+              <div class="skill-row" data-skill-id="mind">
+                <div class="skill-header-line">
+                  <span>🧠 Mind</span>
+                  <span id="skillLevel-mind">Lv. 1</span>
+                </div>
+                <div class="skill-bar-shell">
+                  <div class="skill-bar-fill" id="skillFill-mind"></div>
+                </div>
+                <div class="skill-meta" id="skillMeta-mind">0 / 100 XP</div>
+              </div>
+
+              <div class="skill-row" data-skill-id="story">
+                <div class="skill-header-line">
+                  <span>📖 Story</span>
+                  <span id="skillLevel-story">Lv. 1</span>
+                </div>
+                <div class="skill-bar-shell">
+                  <div class="skill-bar-fill" id="skillFill-story"></div>
+                </div>
+                <div class="skill-meta" id="skillMeta-story">0 / 100 XP</div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="feelings-strip">
-          <button class="feeling-btn" data-feeling="stressed" data-tone="low" type="button">
-            <span class="icon">⚡</span><span>Stressed</span>
-          </button>
-          <button class="feeling-btn" data-feeling="overwhelmed" data-tone="low" type="button">
-            <span class="icon">🌊</span><span>Overwhelmed</span>
-          </button>
-          <button class="feeling-btn" data-feeling="sad" data-tone="low" type="button">
-            <span class="icon">💧</span><span>Sad</span>
-          </button>
-          <button class="feeling-btn" data-feeling="angry" data-tone="low" type="button">
-            <span class="icon">🔥</span><span>Angry</span>
-          </button>
-          <button class="feeling-btn" data-feeling="uncomfortable" data-tone="low" type="button">
-            <span class="icon">😣</span><span>Uncomfortable</span>
-          </button>
-          <button class="feeling-btn" data-feeling="scared" data-tone="low" type="button">
-            <span class="icon">😱</span><span>Scared</span>
-          </button>
+      </aside>
 
-          <button class="feeling-btn" data-feeling="hungry" data-tone="neutral" type="button">
-            <span class="icon">🍞</span><span>Hungry</span>
-          </button>
-          <button class="feeling-btn" data-feeling="focused" data-tone="neutral" type="button">
-            <span class="icon">🎯</span><span>Focused</span>
-          </button>
-          <button class="feeling-btn" data-feeling="inspired" data-tone="neutral" type="button">
-            <span class="icon">💡</span><span>Inspired</span>
-          </button>
+      <div class="cas-overlay" id="casOverlay"></div>
+    </div>
 
-          <button class="feeling-btn" data-feeling="happy" data-tone="good" type="button">
-            <span class="icon">😊</span><span>Happy</span>
-          </button>
-          <button class="feeling-btn" data-feeling="playful" data-tone="good" type="button">
-            <span class="icon">🎈</span><span>Playful</span>
-          </button>
-          <button class="feeling-btn" data-feeling="flirty" data-tone="good" type="button">
-            <span class="icon">💖</span><span>Flirty</span>
-          </button>
-          <button class="feeling-btn" data-feeling="peace" data-tone="good" type="button">
-            <span class="icon">🕊️</span><span>Peace</span>
-          </button>
-          <button class="feeling-btn" data-feeling="ease" data-tone="good" type="button">
-            <span class="icon">🌿</span><span>Ease</span>
-          </button>
-        </div>
-        <div class="feeling-message" id="feelingMessage">
-          Whatever you tapped is allowed to exist without being fixed right away.
-        </div>
-      </section>
-    </section>
-
-    <!-- NEEDS PAGE -->
-    <section id="needs" class="tab">
-      <div class="back-home" data-go-home>← Back to Sim</div>
-      <h2>Needs board</h2>
-      <p>Treat these like soft guides, not demands. Adjust when reality shifts.</p>
-      <section class="card">
-        <div class="needs-list">
-          <div class="need-row" data-need-id="hunger">
-            <div class="need-label">Hunger</div>
-            <div class="need-bar-shell">
-              <div class="need-bar-fill" data-need-fill></div>
-            </div>
-            <div class="need-controls">
-              <button class="btn-need" data-need-delta="-10" type="button">−</button>
-              <span class="need-value" data-need-value>60</span>
-              <button class="btn-need" data-need-delta="10" type="button">+</button>
-            </div>
-          </div>
-          <div class="need-row" data-need-id="energy">
-            <div class="need-label">Energy</div>
-            <div class="need-bar-shell">
-              <div class="need-bar-fill" data-need-fill></div>
-            </div>
-            <div class="need-controls">
-              <button class="btn-need" data-need-delta="-10" type="button">−</button>
-              <span class="need-value" data-need-value>60</span>
-              <button class="btn-need" data-need-delta="10" type="button">+</button>
-            </div>
-          </div>
-          <div class="need-row" data-need-id="social">
-            <div class="need-label">Social</div>
-            <div class="need-bar-shell">
-              <div class="need-bar-fill" data-need-fill></div>
-            </div>
-            <div class="need-controls">
-              <button class="btn-need" data-need-delta="-10" type="button">−</button>
-              <span class="need-value" data-need-value>60</span>
-              <button class="btn-need" data-need-delta="10" type="button">+</button>
-            </div>
-          </div>
-          <div class="need-row" data-need-id="fun">
-            <div class="need-label">Fun</div>
-            <div class="need-bar-shell">
-              <div class="need-bar-fill" data-need-fill></div>
-            </div>
-            <div class="need-controls">
-              <button class="btn-need" data-need-delta="-10" type="button">−</button>
-              <span class="need-value" data-need-value>60</span>
-              <button class="btn-need" data-need-delta="10" type="button">+</button>
-            </div>
-          </div>
-          <div class="need-row" data-need-id="hygiene">
-            <div class="need-label">Hygiene</div>
-            <div class="need-bar-shell">
-              <div class="need-bar-fill" data-need-fill></div>
-            </div>
-            <div class="need-controls">
-              <button class="btn-need" data-need-delta="-10" type="button">−</button>
-              <span class="need-value" data-need-value>60</span>
-              <button class="btn-need" data-need-delta="10" type="button">+</button>
-            </div>
-          </div>
-          <div class="need-row" data-need-id="quiet">
-            <div class="need-label">Quiet / Alone</div>
-            <div class="need-bar-shell">
-              <div class="need-bar-fill" data-need-fill></div>
-            </div>
-            <div class="need-controls">
-              <button class="btn-need" data-need-delta="-10" type="button">−</button>
-              <span class="need-value" data-need-value>60</span>
-              <button class="btn-need" data-need-delta="10" type="button">+</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </section>
-
-    <!-- SKILLS PAGE -->
-    <section id="skills" class="tab">
-      <div class="back-home" data-go-home>← Back to Sim</div>
-      <h2>Skills & levels</h2>
-      <p>Every little action adds XP, like a cozy save file leveling up.</p>
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">🏅</span><span>Overall Solopa level</span>
-          </div>
-          <span class="badge-soft" id="overallLevelLabel">Lv. 1</span>
-        </div>
-        <div class="skill-bar-shell">
-          <div class="skill-bar-fill" id="overallXpFill"></div>
-        </div>
-        <div class="skill-meta" id="overallXpMeta">0 / 100 XP</div>
-      </section>
-
-      <section class="card">
-        <div class="skill-list">
-          <div class="skill-row" data-skill-id="nourish">
-            <div class="skill-header-line">
-              <span>🍽️ Nourish</span>
-              <span id="skillLevel-nourish">Lv. 1</span>
-            </div>
-            <div class="skill-bar-shell">
-              <div class="skill-bar-fill" id="skillFill-nourish"></div>
-            </div>
-            <div class="skill-meta" id="skillMeta-nourish">0 / 100 XP</div>
-          </div>
-          <div class="skill-row" data-skill-id="bodyCare">
-            <div class="skill-header-line">
-              <span>🚽 Body care</span>
-              <span id="skillLevel-bodyCare">Lv. 1</span>
-            </div>
-            <div class="skill-bar-shell">
-              <div class="skill-bar-fill" id="skillFill-bodyCare"></div>
-            </div>
-            <div class="skill-meta" id="skillMeta-bodyCare">0 / 100 XP</div>
-          </div>
-          <div class="skill-row" data-skill-id="selfCare">
-            <div class="skill-header-line">
-              <span>🛁 Self-care</span>
-              <span id="skillLevel-selfCare">Lv. 1</span>
-            </div>
-            <div class="skill-bar-shell">
-              <div class="skill-bar-fill" id="skillFill-selfCare"></div>
-            </div>
-            <div class="skill-meta" id="skillMeta-selfCare">0 / 100 XP</div>
-          </div>
-          <div class="skill-row" data-skill-id="homestead">
-            <div class="skill-header-line">
-              <span>🏡 Homestead</span>
-              <span id="skillLevel-homestead">Lv. 1</span>
-            </div>
-            <div class="skill-bar-shell">
-              <div class="skill-bar-fill" id="skillFill-homestead"></div>
-            </div>
-            <div class="skill-meta" id="skillMeta-homestead">0 / 100 XP</div>
-          </div>
-          <div class="skill-row" data-skill-id="mind">
-            <div class="skill-header-line">
-              <span>🧠 Mind</span>
-              <span id="skillLevel-mind">Lv. 1</span>
-            </div>
-            <div class="skill-bar-shell">
-              <div class="skill-bar-fill" id="skillFill-mind"></div>
-            </div>
-            <div class="skill-meta" id="skillMeta-mind">0 / 100 XP</div>
-          </div>
-          <div class="skill-row" data-skill-id="story">
-            <div class="skill-header-line">
-              <span>📖 Story</span>
-              <span id="skillLevel-story">Lv. 1</span>
-            </div>
-            <div class="skill-bar-shell">
-              <div class="skill-bar-fill" id="skillFill-story"></div>
-            </div>
-            <div class="skill-meta" id="skillMeta-story">0 / 100 XP</div>
-          </div>
-        </div>
-      </section>
-    </section>
-
-    <!-- ACHIEVEMENTS PAGE -->
-    <section id="achievements" class="tab">
-      <div class="back-home" data-go-home>← Back to Sim</div>
-      <h2>Trophies & tiny wins</h2>
-      <p>Just a few gentle badges to celebrate real life.</p>
-      <section class="card">
-        <ul class="ach-list" id="achList">
-          <li class="ach-item">
-            <span><span class="icon">💧</span> First hydration check</span>
-            <span id="ach-hydration">Locked</span>
-          </li>
-          <li class="ach-item">
-            <span><span class="icon">🧠</span> 3 feelings in one day</span>
-            <span id="ach-feelings">Locked</span>
-          </li>
-          <li class="ach-item">
-            <span><span class="icon">🏡</span> 2 quests done</span>
-            <span id="ach-quests">Locked</span>
-          </li>
-        </ul>
-      </section>
-    </section>
-
-    <!-- JOURNALS PAGE -->
-    <section id="journals" class="tab">
-      <div class="back-home" data-go-home>← Back to Sim</div>
-      <h2>Journals & win calendar</h2>
-
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">🗓️</span><span>Win-the-day calendar</span>
-          </div>
-          <span class="calendar-month-label" id="calendarMonthLabel"></span>
-        </div>
-        <p>Any quest or rough day button makes this day a win on the map.</p>
-        <div class="calendar-header">
-          <div>Sun</div><div>Mon</div><div>Tue</div>
-          <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-        </div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-      </section>
-
-      <section class="card">
-        <div class="journal-group">
-          <div>
-            <div class="journal-label">Today’s little log</div>
-            <textarea class="journal-textarea" id="journalDay" placeholder="A few lines about today is plenty."></textarea>
+    <!-- HUD -->
+    <div class="hud">
+      <div class="portrait" id="hudPortrait">K</div>
+      <div class="hud-middle">
+        <div class="hud-top-line">
+          <div class="plumbob">
+            <div class="plumbob-shape" id="plumbobShape"></div>
           </div>
           <div>
-            <div class="journal-label">This month’s story</div>
-            <textarea class="journal-textarea" id="journalMonth" placeholder="What this month feels like overall…"></textarea>
-          </div>
-          <div>
-            <div class="journal-label">This year’s chapter</div>
-            <textarea class="journal-textarea" id="journalYear" placeholder="Big picture thoughts future you might smile at."></textarea>
+            <div class="hud-mood-label-main" id="hudMoodMain">Gently okay</div>
+            <div class="hud-mood-label-sub" id="hudMoodSub">You’re doing more than enough.</div>
           </div>
         </div>
-      </section>
-    </section>
-
-    <!-- HAIR CARE PAGE -->
-    <section id="haircare" class="tab">
-      <div class="back-home" data-go-home>← Back to Sim</div>
-      <h2>Hair care ritual</h2>
-      <p>A cozy place to track wash days, treatments, and little hair rituals.</p>
-      <section class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span class="icon">💇‍♀️</span><span>Routine steps</span>
-          </div>
-        </div>
-        <ul class="hair-steps" id="hairSteps">
-          <li class="hair-step">
-            <label>
-              <input type="checkbox" data-hair-step="wash-day" />
-              <span>Wash day (cleanse & condition)</span>
-            </label>
-            <span class="hair-note">1–2× per week</span>
-          </li>
-          <li class="hair-step">
-            <label>
-              <input type="checkbox" data-hair-step="deep-condition" />
-              <span>Deep condition / mask</span>
-            </label>
-            <span class="hair-note">Weekly or when needed</span>
-          </li>
-          <li class="hair-step">
-            <label>
-              <input type="checkbox" data-hair-step="oil-scalp" />
-              <span>Scalp oil massage</span>
-            </label>
-            <span class="hair-note">Short, gentle massage</span>
-          </li>
-          <li class="hair-step">
-            <label>
-              <input type="checkbox" data-hair-step="leave-in" />
-              <span>Leave-in / styling cream</span>
-            </label>
-            <span class="hair-note">After wash or refresh</span>
-          </li>
-          <li class="hair-step">
-            <label>
-              <input type="checkbox" data-hair-step="protective-style" />
-              <span>Protective style / bonnet</span>
-            </label>
-            <span class="hair-note">Before bed or busy days</span>
-          </li>
-        </ul>
-      </section>
-
-      <section class="card">
-        <div class="journal-group">
-          <div>
-            <div class="journal-label">Notes for today’s hair</div>
-            <textarea class="journal-textarea" id="hairNotes" placeholder="What you used, how it felt, anything to remember."></textarea>
-          </div>
-        </div>
-      </section>
-    </section>
-  </main>
-
-  <!-- HUD -->
-  <div class="hud">
-    <div class="portrait" id="hudPortrait">K</div>
-    <div class="hud-middle">
-      <div class="hud-top-line">
-        <div class="plumbob" id="plumbob">
-          <div class="plumbob-shape"></div>
-        </div>
-        <div>
-          <div class="hud-mood-label-main" id="hudMoodMain">Gently okay</div>
-          <div class="hud-mood-label-sub" id="hudMoodSub">You’re doing more than enough.</div>
+        <div class="mood-gauge">
+          <div class="mood-fill" id="moodFill"></div>
         </div>
       </div>
-      <div class="mood-gauge">
-        <div class="mood-fill" id="moodFill"></div>
+      <div class="hud-right">
+        <div class="needs-dots">
+          <div class="dot" id="dot1"></div>
+          <div class="dot" id="dot2"></div>
+          <div class="dot" id="dot3"></div>
+        </div>
+        <div class="hud-hint">Tap K to recenter.</div>
       </div>
     </div>
-    <div class="hud-right">
-      <div class="needs-dots">
-        <div class="dot" id="dot1"></div>
-        <div class="dot" id="dot2"></div>
-        <div class="dot" id="dot3"></div>
-      </div>
-      <div class="hud-hint">Tap K to go home.</div>
-    </div>
+
+    <!-- Sounds -->
+    <audio data-sound="ui-click" src="sounds/ui-click.mp3" preload="auto"></audio>
+    <audio data-sound="feel-good" src="sounds/feel-good.mp3" preload="auto"></audio>
+    <audio data-sound="feel-neutral" src="sounds/feel-neutral.mp3" preload="auto"></audio>
+    <audio data-sound="feel-low" src="sounds/feel-low.mp3" preload="auto"></audio>
   </div>
-
-  <!-- Sounds -->
-  <audio data-sound="ui-click" src="sounds/ui-click.mp3" preload="auto"></audio>
-  <audio data-sound="feel-good" src="sounds/feel-good.mp3" preload="auto"></audio>
-  <audio data-sound="feel-neutral" src="sounds/feel-neutral.mp3" preload="auto"></audio>
-  <audio data-sound="feel-low" src="sounds/feel-low.mp3" preload="auto"></audio>
 
   <script>
     (function () {
-      const STORAGE_KEY = "ksim_v8";
-
-      const tasksPool = [
-        "Clear and wipe the kitchen counters",
-        "Sweep the living room floor",
-        "Fold a mini-load of laundry",
-        "Tidy toys from one room",
-        "Reset the bathroom sink area",
-        "Wipe the dining table",
-        "Quick vacuum of main hallway",
-        "Put away clean dishes / run dishwasher",
-        "Declutter one small surface",
-        "Start or switch one load of laundry"
-      ];
+      const STORAGE_KEY = "ksim_cas_v1";
 
       const needsDecayPerMinute = {
-        hunger: 0.6,
+        hunger: 0.5,
         energy: 0.4,
         social: 0.25,
         fun: 0.25,
@@ -1302,227 +1104,223 @@
         embarrassed: "images/kelly-embarrassed.png",
         uncomfortable: "images/kelly-uncomfortable.png",
         scared: "images/kelly-scared.png",
-        aspired: "images/kelly-aspired.png" // placeholder for later
+        aspired: "images/kelly-aspired.png"
       };
 
-      function todayStr() {
-        const d = new Date();
-        const yyyy = d.getFullYear();
-        const mm = String(d.getMonth()+1).padStart(2,"0");
-        const dd = String(d.getDate()).padStart(2,"0");
-        return `${yyyy}-${mm}-${dd}`;
-      }
-      function monthKey(dateStr){return dateStr.slice(0,7);}
-      function yearKey(dateStr){return dateStr.slice(0,4);}
-      function xpForLevel(level){return level*100;}
-      function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
-
-      function pickTasks(dateStr){
-        const d = new Date(dateStr+"T00:00:00");
-        const seed = d.getDate()+(d.getMonth()+1)*13;
-        const i1 = seed%tasksPool.length;
-        const i2 = (seed*5+3)%tasksPool.length;
-        const ids = [i1, i2===i1 ? (i2+1)%tasksPool.length : i2];
-        return ids.map(id => ({id,text:tasksPool[id]}));
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
       }
 
-      function freshState(){
-        const t = todayStr();
+      function xpForLevel(level) {
+        return level * 100;
+      }
+
+      function freshState() {
         return {
-          version: 8,
-          todayDate: t,
-          today: {
-            tasks: pickTasks(t),
-            completedTaskIds: [],
-            badDay: false
-          },
-          winsByDate: {},
-          dayDetails: {},
+          version: 1,
           needs: {
-            hunger:60,energy:60,social:60,fun:60,hygiene:60,quiet:60
+            hunger: 65,
+            energy: 60,
+            social: 55,
+            fun: 60,
+            hygiene: 70,
+            quiet: 55
           },
           lastNeedsUpdate: Date.now(),
           mood: {
-            score:60,
-            labelMain:"Gently okay",
-            labelSub:"You’re doing more than enough.",
-            lastTier:"neutral",
-            lastScore:60
-          },
-          stats: {
-            questsCompleted:0,
-            daysWin:0,
-            feelingsCheckins:0,
-            selfCareBonuses:0
+            score: 62,
+            labelMain: "Gently okay",
+            labelSub: "You’re doing more than enough.",
+            lastTier: "neutral",
+            lastScore: 62
           },
           skills: {
-            overallXP:0,
-            overallLevel:1,
-            skills:{
-              nourish:{xp:0,level:1},
-              bodyCare:{xp:0,level:1},
-              selfCare:{xp:0,level:1},
-              homestead:{xp:0,level:1},
-              mind:{xp:0,level:1},
-              story:{xp:0,level:1}
+            overallXP: 0,
+            overallLevel: 1,
+            skills: {
+              nourish: { xp: 0, level: 1 },
+              selfCare: { xp: 0, level: 1 },
+              homestead: { xp: 0, level: 1 },
+              mind: { xp: 0, level: 1 },
+              story: { xp: 0, level: 1 }
             }
           },
-          journals:{
-            day:{},
-            month:{},
-            year:{},
-            hairNotes:{}
-          },
+          recipes: [],
           _lastFeeling: null
         };
       }
 
-      function loadState(){
+      function loadState() {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if(!raw) return freshState();
-        try{
+        if (!raw) return freshState();
+        try {
           const parsed = JSON.parse(raw);
-          if(!parsed.version) parsed.version = 8;
-          if(!parsed.todayDate) parsed.todayDate = todayStr();
-          if(!parsed.today) parsed.today = {tasks:pickTasks(parsed.todayDate),completedTaskIds:[],badDay:false};
-          if(!parsed.dayDetails) parsed.dayDetails = {};
-          if(!parsed.needs) parsed.needs = {hunger:60,energy:60,social:60,fun:60,hygiene:60,quiet:60};
-          if(!parsed.lastNeedsUpdate) parsed.lastNeedsUpdate = Date.now();
-          if(!parsed.mood) parsed.mood = {score:60,labelMain:"Gently okay",labelSub:"You’re doing more than enough.",lastTier:"neutral",lastScore:60};
-          if(!parsed.stats) parsed.stats = {questsCompleted:0,daysWin:0,feelingsCheckins:0,selfCareBonuses:0};
-          if(!parsed.skills) parsed.skills = freshState().skills;
-          if(!parsed.journals) parsed.journals = freshState().journals;
-          if(!parsed.journals.hairNotes) parsed.journals.hairNotes = {};
-          if(!("_lastFeeling" in parsed)) parsed._lastFeeling = null;
-          return parsed;
-        }catch{
+          return Object.assign(freshState(), parsed);
+        } catch {
           return freshState();
         }
       }
 
       let state = loadState();
-      function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
-
-      function ensureToday(){
-        const t = todayStr();
-        if(state.todayDate!==t){
-          state.todayDate = t;
-          state.today = {
-            tasks:pickTasks(t),
-            completedTaskIds:[],
-            badDay:false
-          };
-        }
+      function save() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       }
-      ensureToday();
 
-      let lastWeather = null;
-
-      // DOM
-      const tabs = Array.from(document.querySelectorAll(".tab"));
-      const mainEl = document.getElementById("main");
-      const todayLabel = document.getElementById("todayLabel");
-
-      const simCenter = document.getElementById("simCenter");
+      // DOM references
+      const casShell = document.getElementById("casShell");
       const simAvatar = document.getElementById("simAvatar");
       const simMoodTitle = document.getElementById("simMoodTitle");
       const simMoodSub = document.getElementById("simMoodSub");
       const simMoodTag = document.getElementById("simMoodTag");
-      const simNavWheel = document.getElementById("simNavWheel");
 
-      const questList = document.getElementById("questList");
-      const questsSummary = document.getElementById("questsSummary");
-      const badDayButton = document.getElementById("badDayButton");
-      const badDayMessage = document.getElementById("badDayMessage");
-
-      const needRows = document.querySelectorAll(".need-row");
-      const moodFill = document.getElementById("moodFill");
       const hudMoodMain = document.getElementById("hudMoodMain");
       const hudMoodSub = document.getElementById("hudMoodSub");
+      const moodFill = document.getElementById("moodFill");
       const dot1 = document.getElementById("dot1");
       const dot2 = document.getElementById("dot2");
       const dot3 = document.getElementById("dot3");
+      const plumbobShape = document.getElementById("plumbobShape");
+
+      const casPanel = document.getElementById("casPanel");
+      const casOverlay = document.getElementById("casOverlay");
+      const backHomeBtn = document.getElementById("backHomeBtn");
       const hudPortrait = document.getElementById("hudPortrait");
+      const weatherChip = document.getElementById("weatherChip");
+
+      const feelingGrid = document.getElementById("feelingGrid");
+      const needRows = document.querySelectorAll(".need-row");
+      const recipeForm = document.getElementById("recipeForm");
+      const recipeNameInput = document.getElementById("recipeName");
+      const recipeCategoryInput = document.getElementById("recipeCategory");
+      const recipeNotesInput = document.getElementById("recipeNotes");
+      const recipeList = document.getElementById("recipeList");
+      const recipeFilterInput = document.getElementById("recipeFilter");
+      const bakingList = document.getElementById("bakingList");
 
       const overallLevelLabel = document.getElementById("overallLevelLabel");
       const overallXpFill = document.getElementById("overallXpFill");
       const overallXpMeta = document.getElementById("overallXpMeta");
+      const casTabButtons = document.querySelectorAll(".cas-tab-btn");
+      const categoryViews = document.querySelectorAll(".category-view");
 
-      const calendarMonthLabel = document.getElementById("calendarMonthLabel");
-      const calendarGrid = document.getElementById("calendarGrid");
+      let lastWeather = null;
 
-      const journalDay = document.getElementById("journalDay");
-      const journalMonth = document.getElementById("journalMonth");
-      const journalYear = document.getElementById("journalYear");
-      const hairNotes = document.getElementById("hairNotes");
-
-      const feelingMessage = document.getElementById("feelingMessage");
-
-      const achHydration = document.getElementById("ach-hydration");
-      const achFeelings = document.getElementById("ach-feelings");
-      const achQuests = document.getElementById("ach-quests");
-
-      const hairStepsContainer = document.getElementById("hairSteps");
-
-      function uiClick(){
-        playSound("ui-click");
+      function playSound(name) {
+        const audio = document.querySelector(`audio[data-sound="${name}"]`);
+        if (!audio) return;
+        try {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        } catch {}
       }
-      document.addEventListener("click",e=>{
-        if(e.target.closest("button")) uiClick();
+
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("button")) playSound("ui-click");
       });
 
-      function playSound(name){
-        const audio = document.querySelector(`audio[data-sound="${name}"]`);
-        if(!audio) return;
-        try{audio.currentTime=0;audio.play().catch(()=>{});}catch{}
+      function openPanel(initialCategory) {
+        casShell.classList.add("panel-open");
+        backHomeBtn.classList.remove("hidden");
+        if (initialCategory) activateCategory(initialCategory);
       }
 
-      // XP
-      function awardXp(skillId, amount, originEl){
+      function closePanel() {
+        casShell.classList.remove("panel-open");
+        backHomeBtn.classList.add("hidden");
+      }
+
+      simAvatar.addEventListener("click", () => {
+        if (casShell.classList.contains("panel-open")) return;
+        openPanel("emotions");
+        // Play mood-appropriate sound when opening
+        if (state.mood.lastTier === "good") playSound("feel-good");
+        else if (state.mood.lastTier === "low") playSound("feel-low");
+        else playSound("feel-neutral");
+      });
+
+      hudPortrait.addEventListener("click", () => {
+        closePanel();
+      });
+
+      backHomeBtn.addEventListener("click", () => {
+        closePanel();
+      });
+
+      casOverlay.addEventListener("click", () => {
+        closePanel();
+      });
+
+      function activateCategory(cat) {
+        casTabButtons.forEach((btn) =>
+          btn.classList.toggle("active", btn.dataset.category === cat)
+        );
+        categoryViews.forEach((view) =>
+          view.classList.toggle(
+            "active",
+            view.dataset.categoryView === cat
+          )
+        );
+      }
+
+      casTabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const cat = btn.dataset.category;
+          if (!cat) return;
+          activateCategory(cat);
+          if (!casShell.classList.contains("panel-open")) {
+            openPanel(cat);
+          }
+        });
+      });
+
+      function awardXp(skillId, amount, originEl) {
         const s = state.skills;
-        if(!s.skills[skillId]) return;
+        if (!s.skills[skillId]) return;
         s.overallXP += amount;
         s.skills[skillId].xp += amount;
 
-        while(s.overallXP >= xpForLevel(s.overallLevel)){
+        while (s.overallXP >= xpForLevel(s.overallLevel)) {
           s.overallLevel++;
         }
         const skill = s.skills[skillId];
-        while(skill.xp >= xpForLevel(skill.level)){
+        while (skill.xp >= xpForLevel(skill.level)) {
           skill.level++;
         }
-        spawnXpFloat("+"+amount+" xp", originEl || document.body);
+        spawnXpFloat("+" + amount + " xp", originEl || document.body);
         save();
         renderSkills();
       }
 
-      function spawnXpFloat(text, originEl){
+      function spawnXpFloat(text, originEl) {
         const root = originEl.getBoundingClientRect();
         const float = document.createElement("div");
         float.className = "xp-float";
         float.textContent = text;
         const top = root.top + window.scrollY - 6;
-        const left = root.left + window.scrollX + root.width/2;
-        float.style.top = top+"px";
-        float.style.left = left+"px";
+        const left = root.left + window.scrollX + root.width / 2;
+        float.style.top = top + "px";
+        float.style.left = left + "px";
         document.body.appendChild(float);
-        setTimeout(()=>float.classList.add("xp-float-show"),10);
-        setTimeout(()=>float.classList.add("xp-float-hide"),1100);
-        setTimeout(()=>float.remove(),1700);
+        setTimeout(() => float.classList.add("xp-float-show"), 10);
+        setTimeout(() => float.classList.add("xp-float-hide"), 1100);
+        setTimeout(() => float.remove(), 1700);
       }
 
-      // Needs decay
-      function updateNeedsOverTime(){
+      // Needs decay every minute (when app is open)
+      function updateNeedsOverTime() {
         const now = Date.now();
         const last = state.lastNeedsUpdate || now;
-        const diffMin = Math.floor((now-last)/60000);
-        if(diffMin<=0){state.lastNeedsUpdate = now;return;}
-        state.lastNeedsUpdate = last + diffMin*60000;
-        for(const id in state.needs){
+        const diffMin = Math.floor((now - last) / 60000);
+        if (diffMin <= 0) {
+          state.lastNeedsUpdate = now;
+          return;
+        }
+        state.lastNeedsUpdate = last + diffMin * 60000;
+
+        for (const id in state.needs) {
           const rate = needsDecayPerMinute[id] || 0;
-          if(!rate) continue;
           const before = state.needs[id];
-          const after = clamp(before - rate*diffMin,0,100);
+          const after = clamp(before - rate * diffMin, 0, 100);
           state.needs[id] = after;
         }
         recomputeMood(false);
@@ -1530,27 +1328,29 @@
         save();
       }
 
-      // Weather / sky
+      // Weather integration for sky + chip
       function applySkyFromWeather(weather, hour) {
         const code = weather?.code ?? 0;
-        let top = "#ffffff", mid = "#f3efe4", bottom = "#e3d5c0";
+        let top = "#a9e4ff",
+          mid = "#63b1ff",
+          bottom = "#20539b";
         const isNight = hour < 6 || hour >= 21;
         if (isNight) {
-          top = "#141b2b";
-          mid = "#1f3147";
-          bottom = "#101724";
+          top = "#101624";
+          mid = "#071225";
+          bottom = "#020813";
         } else if (code >= 80) {
-          top = "#e3edf5";
-          mid = "#bacbdc";
-          bottom = "#8b9ab1";
+          top = "#deeaf4";
+          mid = "#869eb8";
+          bottom = "#344a67";
         } else if (code >= 45) {
-          top = "#f0f2f4";
-          mid = "#d7dbe0";
-          bottom = "#b8c0cc";
+          top = "#dfe4ea";
+          mid = "#a3b0c0";
+          bottom = "#4c5c72";
         } else {
-          top = "#ffffff";
-          mid = "#f3efe4";
-          bottom = "#e3d5c0";
+          top = "#a9e4ff";
+          mid = "#63b1ff";
+          bottom = "#20539b";
         }
         const root = document.documentElement;
         root.style.setProperty("--sky-top", top);
@@ -1559,14 +1359,17 @@
       }
 
       function fetchWeatherAndUpdateSky() {
-        if (!navigator.geolocation) return;
+        if (!navigator.geolocation) {
+          updateWeatherChip();
+          return;
+        }
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             const { latitude, longitude } = pos.coords;
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
             fetch(url)
-              .then(r => r.json())
-              .then(data => {
+              .then((r) => r.json())
+              .then((data) => {
                 if (!data.current_weather) return;
                 const cw = data.current_weather;
                 lastWeather = {
@@ -1576,122 +1379,159 @@
                 };
                 const now = new Date();
                 applySkyFromWeather(lastWeather, now.getHours());
-                updateTodayLabel();
+                updateWeatherChip();
               })
-              .catch(() => {});
+              .catch(() => {
+                updateWeatherChip();
+              });
           },
-          () => {},
+          () => {
+            updateWeatherChip();
+          },
           { timeout: 10000 }
         );
       }
 
-      function updateTodayLabel() {
+      function updateWeatherChip() {
         const now = new Date();
         const hour = now.getHours();
-        let timeIcon = "🌤️", timeText = "Gentle daytime";
-        if (hour < 6) { timeIcon = "🌙"; timeText = "Quiet early"; }
-        else if (hour < 11) { timeIcon = "🌅"; timeText = "Soft morning"; }
-        else if (hour < 17) { timeIcon = "🌤️"; timeText = "Gentle afternoon"; }
-        else if (hour < 21) { timeIcon = "🌇"; timeText = "Cozy evening"; }
-        else { timeIcon = "🌙"; timeText = "Night reset"; }
+        let timeLabel = "Daytime";
+        if (hour < 6) timeLabel = "Early";
+        else if (hour < 11) timeLabel = "Morning";
+        else if (hour < 17) timeLabel = "Afternoon";
+        else if (hour < 21) timeLabel = "Evening";
+        else timeLabel = "Night";
 
-        let weatherIcon = "";
+        let icon = "🌤️";
         if (lastWeather) {
           const code = lastWeather.code;
-          if (code >= 80) weatherIcon = "🌧️";
-          else if (code >= 45) weatherIcon = "☁️";
-          else weatherIcon = lastWeather.isDay ? "☀️" : "🌙";
+          if (code >= 80) icon = "🌧️";
+          else if (code >= 45) icon = "☁️";
+          else icon = lastWeather.isDay ? "☀️" : "🌙";
         }
-
-        const pieces = [];
-        if (weatherIcon) pieces.push(weatherIcon);
-        pieces.push(timeIcon);
-        const icons = pieces.join(" ");
-
-        todayLabel.innerHTML = `${icons} Today · ${timeText}`;
+        weatherChip.textContent = `${icon} ${timeLabel}`;
       }
 
-      // Kelly expression based on mood + last feeling
-      function applySimExpression(){
+      // Mood recompute + avatar
+      function applySimExpression() {
         const tier = state.mood.lastTier || "neutral";
         const last = state._lastFeeling || "";
-
         let img = moodImages.fine || moodImages.happy;
 
-        if(tier === "good") img = moodImages.happy;
-        if(tier === "low") img = moodImages.sad;
+        if (tier === "good") img = moodImages.happy;
+        if (tier === "low") img = moodImages.sad;
 
-        // override with specific feelings when present
-        if(last==="happy") img = moodImages.happy;
-        if(last==="playful") img = moodImages.playful;
-        if(last==="flirty") img = moodImages.flirty;
-        if(last==="inspired") img = moodImages.inspired;
-        if(last==="focused") img = moodImages.focused;
-        if(last==="sad") img = moodImages.sad;
-        if(last==="angry") img = moodImages.angry || moodImages.upset;
-        if(last==="uncomfortable") img = moodImages.uncomfortable;
-        if(last==="scared") img = moodImages.scared;
-        if(last==="stressed" || last==="overwhelmed") img = moodImages.upset || moodImages.uncomfortable;
+        if (last === "happy") img = moodImages.happy;
+        if (last === "playful") img = moodImages.playful;
+        if (last === "flirty") img = moodImages.flirty;
+        if (last === "inspired") img = moodImages.inspired;
+        if (last === "focused") img = moodImages.focused;
+        if (last === "sad") img = moodImages.sad;
+        if (last === "angry") img = moodImages.upset || moodImages.sad;
+        if (last === "uncomfortable") img = moodImages.uncomfortable;
+        if (last === "scared") img = moodImages.scared;
+        if (last === "stressed" || last === "overwhelmed")
+          img = moodImages.upset || moodImages.uncomfortable;
 
         const el = simAvatar;
-        if(el && img){
+        if (el && img) {
+          el.onerror = () => {
+            el.onerror = null;
+            if (moodImages.fine) el.src = moodImages.fine;
+          };
           el.src = img;
         }
       }
 
-      // Mood
-      function recomputeMood(shouldPlaySound){
+      function recomputeMood(shouldPlaySound) {
         const vals = Object.values(state.needs);
-        const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
-        const score = clamp(avg,0,100);
+        const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+        const score = clamp(avg, 0, 100);
         const prevTier = state.mood.lastTier || "neutral";
         const prevScore = state.mood.lastScore ?? score;
 
         state.mood.score = score;
 
         let tier = "neutral";
-        if(score < 40) tier = "low";
-        else if(score >= 70) tier = "good";
+        if (score < 40) tier = "low";
+        else if (score >= 70) tier = "good";
 
-        if(!state.mood.labelMain){
-          state.mood.labelMain = "Gently okay";
-          state.mood.labelSub = "You’re doing more than enough.";
+        let main = state.mood.labelMain;
+        let sub = state.mood.labelSub;
+        if (!main) {
+          main = "Gently okay";
+          sub = "You’re doing more than enough.";
         }
 
-        moodFill.style.width = clamp(score,5,100)+"%";
-        if(tier==="good") moodFill.style.background = "linear-gradient(90deg,#a6f57c,#3fa76a)";
-        else if(tier==="low") moodFill.style.background = "linear-gradient(90deg,#f6a15b,#f1866b)";
-        else moodFill.style.background = "linear-gradient(90deg,#f6c15b,#3fa76a)";
+        moodFill.style.width = clamp(score, 5, 100) + "%";
+        if (tier === "good")
+          moodFill.style.background =
+            "linear-gradient(90deg,#a6f57c,#3fa76a)";
+        else if (tier === "low")
+          moodFill.style.background =
+            "linear-gradient(90deg,#f6a15b,#f1866b)";
+        else
+          moodFill.style.background =
+            "linear-gradient(90deg,#f6c15b,#3fa76a)";
 
-        hudMoodMain.textContent = state.mood.labelMain;
-        hudMoodSub.textContent = state.mood.labelSub;
-        simMoodTitle.textContent = state.mood.labelMain;
-        simMoodSub.textContent = state.mood.labelSub;
+        // plumbob color
+        if (tier === "good") {
+          plumbobShape.style.background =
+            "linear-gradient(180deg,#4df18d,#178348)";
+          plumbobShape.style.boxShadow =
+            "0 0 10px rgba(154,255,180,0.9)";
+        } else if (tier === "low") {
+          plumbobShape.style.background =
+            "linear-gradient(180deg,#ff9b6b,#b32828)";
+          plumbobShape.style.boxShadow =
+            "0 0 10px rgba(255,180,164,0.9)";
+        } else {
+          plumbobShape.style.background =
+            "linear-gradient(180deg,#f6d85b,#c97b26)";
+          plumbobShape.style.boxShadow =
+            "0 0 10px rgba(255,233,164,0.8)";
+        }
+
+        hudMoodMain.textContent = main;
+        hudMoodSub.textContent = sub;
+        simMoodTitle.textContent = main;
+        simMoodSub.textContent = sub;
         simMoodTag.querySelector("span:nth-child(2)").textContent =
-          tier==="good" ? "Bright & cozy" :
-          tier==="low" ? "Low battery, still here" :
-          "Soft & steady";
+          tier === "good"
+            ? "Bright & cozy"
+            : tier === "low"
+            ? "Low battery, still here"
+            : "Soft & steady";
 
-        const dotsOn = score>=75 ? 3 : score>=45 ? 2 : score>=20 ? 1 : 0;
-        [dot1,dot2,dot3].forEach((d,i)=>d.classList.toggle("active",i<dotsOn));
+        const dotsOn =
+          score >= 75 ? 3 : score >= 45 ? 2 : score >= 20 ? 1 : 0;
+        [dot1, dot2, dot3].forEach((d, i) =>
+          d.classList.toggle("active", i < dotsOn)
+        );
 
         let soundPlayed = false;
-        if(shouldPlaySound && tier!==prevTier){
-          if(tier==="good") playSound("feel-good");
-          else if(tier==="neutral") playSound("feel-neutral");
-          else playSound("feel-low");
+        if (shouldPlaySound && tier !== prevTier) {
+          if (tier === "good") playSound("feel-good");
+          else if (tier === "low") playSound("feel-low");
+          else playSound("feel-neutral");
           soundPlayed = true;
         }
 
-        if(shouldPlaySound && !soundPlayed){
-          const thresholds=[25,50,75];
-          let crossed=null;
-          for(const t of thresholds){
-            if((prevScore<t && score>=t)||(prevScore>t && score<=t)){crossed=t;break;}
+        if (shouldPlaySound && !soundPlayed) {
+          const thresholds = [25, 50, 75];
+          let crossed = null;
+          for (const t of thresholds) {
+            if (
+              (prevScore < t && score >= t) ||
+              (prevScore > t && score <= t)
+            ) {
+              crossed = t;
+              break;
+            }
           }
-          if(crossed!==null){
-            if(score<40) playSound("feel-low");
-            else if(score>=70) playSound("feel-good");
+          if (crossed !== null) {
+            if (score < 40) playSound("feel-low");
+            else if (score >= 70) playSound("feel-good");
             else playSound("feel-neutral");
           }
         }
@@ -1702,388 +1542,252 @@
         applySimExpression();
       }
 
-      // Quests
-      function renderQuests(){
-        ensureToday();
-        questList.innerHTML="";
-        state.today.tasks.forEach(t=>{
-          const li = document.createElement("li");
-          li.className="quest-item";
-          if(state.today.completedTaskIds.includes(t.id)) li.classList.add("completed");
-          li.innerHTML = `
-            <input type="checkbox" data-quest-id="${t.id}" ${state.today.completedTaskIds.includes(t.id)?"checked":""}/>
-            <div class="quest-text">${t.text}</div>`;
-          questList.appendChild(li);
-        });
-        questsSummary.textContent = `${state.today.completedTaskIds.length} / ${state.today.tasks.length} done`;
-      }
-
-      function updateWinFlag(){
-        const completed = state.today.completedTaskIds;
-        const total = state.today.tasks.length;
-        const isWin = completed.length>0 || state.today.badDay;
-        const key = state.todayDate;
-        const prev = !!state.winsByDate[key];
-        state.winsByDate[key] = isWin;
-        state.dayDetails[key] = {
-          completed: completed.length,
-          total,
-          badDay: state.today.badDay
-        };
-        if(isWin && !prev) state.stats.daysWin++;
-        if(!isWin && prev) state.stats.daysWin = Math.max(0,state.stats.daysWin-1);
-      }
-
-      function renderBadDay(){
-        if(state.today.badDay){
-          badDayButton.classList.add("bad-day-active");
-          badDayButton.innerHTML = `<span class="icon">💗</span><span>Bad day logged — you still win</span>`;
-          badDayMessage.textContent = "This day is marked as a win because you lived through it. That’s enough.";
-        }else{
-          badDayButton.classList.remove("bad-day-active");
-          badDayButton.innerHTML = `<span class="icon">💗</span><span>Had a rough day?</span>`;
-          badDayMessage.textContent = "Tap this when the day was too much. The calendar will still count it as a win.";
-        }
-      }
-
-      questList.addEventListener("change",(e)=>{
-        const cb = e.target.closest('input[type="checkbox"][data-quest-id]');
-        if(!cb) return;
-        const id = parseInt(cb.dataset.questId,10);
-        const completed = state.today.completedTaskIds;
-        const already = completed.includes(id);
-        if(cb.checked && !already){
-          completed.push(id);
-          state.stats.questsCompleted++;
-          awardXp("homestead",20, cb.closest(".quest-item")||cb);
-        }else if(!cb.checked && already){
-          const idx = completed.indexOf(id);
-          if(idx>=0) completed.splice(idx,1);
-          state.stats.questsCompleted = Math.max(0,state.stats.questsCompleted-1);
-        }
-        updateWinFlag();
-        renderQuests();
-        renderAchievements();
-        renderCalendar();
-        save();
-      });
-
-      badDayButton.addEventListener("click",()=>{
-        state.today.badDay = !state.today.badDay;
-        updateWinFlag();
-        renderBadDay();
-        renderCalendar();
-        save();
-      });
-
-      // Quick need actions
-      document.getElementById("needActionsCard").addEventListener("click",(e)=>{
-        const btn = e.target.closest("[data-need-action]");
-        if(!btn) return;
-        const act = btn.dataset.needAction;
-        const n = state.needs;
-        if(act==="snack"){
-          n.hunger = clamp(n.hunger+25,0,100);
-          n.energy = clamp(n.energy+25,0,100);
-          state.stats.selfCareBonuses++;
-          awardXp("nourish",10,btn);
-          playSound("feel-good");
-        }else if(act==="meal"){
-          n.hunger = 100;
-          n.energy = clamp(n.energy+75,0,100);
-          state.stats.selfCareBonuses++;
-          awardXp("nourish",20,btn);
-          playSound("feel-good");
-        }else if(act==="bathroom"){
-          n.hygiene = clamp(n.hygiene-10,0,100);
-          n.energy = clamp(n.energy+10,0,100);
-          awardXp("bodyCare",5,btn);
-          playSound("feel-good");
-        }else if(act==="quick-shower"){
-          n.hygiene = clamp(n.hygiene+60,0,100);
-          state.stats.selfCareBonuses++;
-          awardXp("selfCare",15,btn);
-          playSound("feel-good");
-        }
-        recomputeMood(true);
-        renderNeeds();
-        renderAchievements();
-        save();
-      });
-
-      // Feelings
-      document.getElementById("feelingsCard").addEventListener("click",(e)=>{
-        const btn = e.target.closest(".feeling-btn");
-        if(!btn) return;
-        const key = btn.dataset.feeling;
-        const tone = btn.dataset.tone || "neutral";
-
-        state.stats.feelingsCheckins++;
-        awardXp("mind",5,btn);
-        state._lastFeeling = key;
-
-        let main="Gently okay", sub="You’re doing more than enough.";
-        if(key==="stressed"){
-          main="Stressed & still standing";
-          sub="Your brain is juggling a lot. Overload isn’t a failure; it’s a signal.";
-        }else if(key==="overwhelmed"){
-          main="Overwhelmed, not weak";
-          sub="Too much on one person is a village problem, not a you problem.";
-        }else if(key==="sad"){
-          main="Soft sadness";
-          sub="Tears and heaviness are allowed here.";
-        }else if(key==="angry"){
-          main="Guarding your fire";
-          sub="Anger is your boundary alarm, not proof you’re too much.";
-        }else if(key==="uncomfortable"){
-          main="A bit uncomfy";
-          sub="Your body is telling you something doesn’t feel right. You’re allowed to listen.";
-        }else if(key==="scared"){
-          main="A little scared";
-          sub="Fear is your nervous system looking for safety, not proof you’re weak.";
-        }else if(key==="hungry"){
-          main="Body needs fuel";
-          sub="Feeding yourself is a family buff, not selfish.";
-        }else if(key==="focused"){
-          main="Dialed in";
-          sub="You’re carrying a lot of tabs in your brain. One tiny step at a time.";
-        }else if(key==="inspired"){
-          main="Inspired spark";
-          sub="That little idea is worth keeping — even if today is chaotic.";
-        }else if(key==="happy"){
-          main="Bright & warm";
-          sub="Joy is allowed even when everything isn’t perfect.";
-        }else if(key==="playful"){
-          main="Playful energy";
-          sub="It’s okay to be a little silly and let yourself enjoy things.";
-        }else if(key==="flirty"){
-          main="Soft flirty mood";
-          sub="You’re still a whole person, not just ‘mom’. That glow matters.";
-        }else if(key==="peace"){
-          main="Tiny pocket of peace";
-          sub="Even a quiet breath on the couch counts as rest.";
-        }else if(key==="ease"){
-          main="Moving with ease";
-          sub="Ease plus tiny actions is powerful.";
-        }
-
-        state.mood.labelMain = main;
-        state.mood.labelSub = sub;
-        feelingMessage.textContent = sub;
-
-        if(key==="hungry") state.needs.hunger = clamp(state.needs.hunger-5,0,100);
-        if(["stressed","overwhelmed","sad","angry","uncomfortable","scared"].includes(key)){
-          state.needs.energy = clamp(state.needs.energy-5,0,100);
-          state.needs.quiet = clamp(state.needs.quiet-5,0,100);
-        }
-        if(["happy","playful","flirty","peace","ease","inspired"].includes(key)){
-          state.needs.fun = clamp(state.needs.fun+5,0,100);
-        }
-
-        if(tone==="good") playSound("feel-good");
-        else if(tone==="low") playSound("feel-low");
-        else playSound("feel-neutral");
-
-        recomputeMood(true);
-        renderNeeds();
-        renderAchievements();
-        save();
-      });
-
-      // Needs UI
-      function renderNeeds(){
-        needRows.forEach(row=>{
+      // Needs rendering
+      function renderNeeds() {
+        needRows.forEach((row) => {
           const id = row.dataset.needId;
           const val = state.needs[id] ?? 60;
           const fill = row.querySelector("[data-need-fill]");
           const label = row.querySelector("[data-need-value]");
-          if(fill) fill.style.width = val+"%";
-          if(label) label.textContent = Math.round(val);
+          if (fill) fill.style.width = val + "%";
+          if (label) label.textContent = Math.round(val);
         });
       }
 
-      needRows.forEach(row=>{
-        row.addEventListener("click",(e)=>{
+      needRows.forEach((row) => {
+        row.addEventListener("click", (e) => {
           const btn = e.target.closest(".btn-need");
-          if(!btn) return;
-          const delta = parseInt(btn.dataset.needDelta,10);
+          if (!btn) return;
+          const delta = parseInt(btn.dataset.needDelta, 10);
           const id = row.dataset.needId;
           const current = state.needs[id] ?? 60;
-          state.needs[id] = clamp(current+delta,0,100);
+          state.needs[id] = clamp(current + delta, 0, 100);
+          awardXp("selfCare", 3, row);
           recomputeMood(true);
           renderNeeds();
           save();
         });
       });
 
-      // Skills UI
-      function renderSkills(){
+      // Feelings
+      feelingGrid.addEventListener("click", (e) => {
+        const card = e.target.closest(".feeling-card");
+        if (!card) return;
+        const key = card.dataset.feeling;
+        const tone = card.dataset.tone || "neutral";
+        state._lastFeeling = key;
+        document
+          .querySelectorAll(".feeling-card")
+          .forEach((n) => n.classList.toggle("active", n === card));
+
+        let main = "Gently okay",
+          sub = "You’re doing more than enough.";
+
+        if (key === "stressed") {
+          main = "Stressed & still standing";
+          sub = "Your brain is juggling a lot. Overload isn’t failure.";
+        } else if (key === "overwhelmed") {
+          main = "Overwhelmed, not weak";
+          sub =
+            "Too much on one person is a village problem, not a you problem.";
+        } else if (key === "sad") {
+          main = "Soft sadness";
+          sub = "Heaviness is allowed; nothing about you is broken.";
+        } else if (key === "angry") {
+          main = "Guarding your fire";
+          sub = "Anger is your boundary alarm, not proof you’re too much.";
+        } else if (key === "uncomfortable") {
+          main = "A bit uncomfy";
+          sub = "Your body is whispering that something is off.";
+        } else if (key === "scared") {
+          main = "A little scared";
+          sub = "Fear is your safety radar, not a character flaw.";
+        } else if (key === "hungry") {
+          main = "Body needs fuel";
+          sub = "Feeding yourself is a family buff, not selfish.";
+        } else if (key === "focused") {
+          main = "Dialed in";
+          sub = "You’re carrying many tabs; one tiny step at a time.";
+        } else if (key === "inspired") {
+          main = "Inspired spark";
+          sub = "That little idea is worth keeping, even on messy days.";
+        } else if (key === "happy") {
+          main = "Bright & warm";
+          sub = "Joy is allowed even when everything isn’t perfect.";
+        } else if (key === "playful") {
+          main = "Playful energy";
+          sub = "You’re allowed to have fun just because.";
+        } else if (key === "flirty") {
+          main = "Soft flirty mood";
+          sub = "You’re still a whole person with a glow of your own.";
+        } else if (key === "peace") {
+          main = "Tiny pocket of peace";
+          sub = "Even a quiet breath on the couch counts as rest.";
+        } else if (key === "ease") {
+          main = "Moving with ease";
+          sub = "Ease plus tiny actions is powerful.";
+        }
+
+        state.mood.labelMain = main;
+        state.mood.labelSub = sub;
+
+        if (key === "hungry")
+          state.needs.hunger = clamp(state.needs.hunger - 5, 0, 100);
+        if (
+          ["stressed", "overwhelmed", "sad", "angry", "uncomfortable", "scared"].includes(
+            key
+          )
+        ) {
+          state.needs.energy = clamp(state.needs.energy - 5, 0, 100);
+          state.needs.quiet = clamp(state.needs.quiet - 5, 0, 100);
+        }
+        if (
+          ["happy", "playful", "flirty", "peace", "ease", "inspired"].includes(
+            key
+          )
+        ) {
+          state.needs.fun = clamp(state.needs.fun + 5, 0, 100);
+        }
+
+        if (tone === "good") playSound("feel-good");
+        else if (tone === "low") playSound("feel-low");
+        else playSound("feel-neutral");
+
+        awardXp("mind", 5, card);
+        recomputeMood(true);
+        renderNeeds();
+        save();
+      });
+
+      // Skills display
+      function renderSkills() {
         const s = state.skills;
-        overallLevelLabel.textContent = "Lv. "+s.overallLevel;
+        overallLevelLabel.textContent = "Lv. " + s.overallLevel;
         const needOverall = xpForLevel(s.overallLevel);
-        const prevOverall = xpForLevel(s.overallLevel-1) || 0;
+        const prevOverall = xpForLevel(s.overallLevel - 1) || 0;
         const inBand = s.overallXP - prevOverall;
         const bandSize = needOverall - prevOverall || 1;
-        const frac = clamp(inBand/bandSize,0,1);
-        overallXpFill.style.width = (frac*100)+"%";
+        const frac = clamp(inBand / bandSize, 0, 1);
+        overallXpFill.style.width = frac * 100 + "%";
         overallXpMeta.textContent = `${s.overallXP} / ${needOverall} XP`;
 
-        ["nourish","bodyCare","selfCare","homestead","mind","story"].forEach(id=>{
+        ["nourish", "selfCare", "homestead", "mind", "story"].forEach((id) => {
           const skill = s.skills[id];
-          const levelSpan = document.getElementById("skillLevel-"+id);
-          const fill = document.getElementById("skillFill-"+id);
-          const meta = document.getElementById("skillMeta-"+id);
-          if(!skill || !levelSpan || !fill || !meta) return;
-          levelSpan.textContent = "Lv. "+skill.level;
+          const levelSpan = document.getElementById("skillLevel-" + id);
+          const fill = document.getElementById("skillFill-" + id);
+          const meta = document.getElementById("skillMeta-" + id);
+          if (!skill || !levelSpan || !fill || !meta) return;
+          levelSpan.textContent = "Lv. " + skill.level;
           const need = xpForLevel(skill.level);
-          const prev = xpForLevel(skill.level-1)||0;
-          const band = need-prev||1;
-          const fracSkill = clamp((skill.xp-prev)/band,0,1);
-          fill.style.width = (fracSkill*100)+"%";
+          const prev = xpForLevel(skill.level - 1) || 0;
+          const band = need - prev || 1;
+          const fracSkill = clamp((skill.xp - prev) / band, 0, 1);
+          fill.style.width = fracSkill * 100 + "%";
           meta.textContent = `${skill.xp} / ${need} XP`;
         });
       }
 
-      // Achievements
-      function renderAchievements(){
-        const nour = state.skills.skills.nourish;
-        achHydration.textContent = nour && nour.xp>=10 ? "Unlocked" : "Locked";
-        achFeelings.textContent = state.stats.feelingsCheckins>=3 ? "Unlocked" : "Locked";
-        const completed = state.today.completedTaskIds.length;
-        achQuests.textContent = completed>=2 ? "Unlocked" : "Locked";
+      // Recipes
+      function renderRecipes() {
+        const filter = (recipeFilterInput.value || "").trim().toLowerCase();
+        recipeList.innerHTML = "";
+
+        const items = state.recipes.slice().sort((a, b) => {
+          return (a.name || "").localeCompare(b.name || "");
+        });
+
+        items
+          .filter((r) =>
+            filter ? (r.category || "").toLowerCase().includes(filter) : true
+          )
+          .forEach((recipe) => {
+            const card = document.createElement("div");
+            card.className = "recipe-card";
+            card.dataset.id = recipe.id;
+            card.innerHTML = `
+              <div class="recipe-card-header">
+                <span class="recipe-card-title">${recipe.name || "Untitled recipe"}</span>
+                <span class="recipe-card-cat">${recipe.category || "Uncategorized"}</span>
+              </div>
+              <div class="recipe-card-notes">${(recipe.notes || "")
+                .replace(/\n/g, "<br>")
+                .trim() || "<em>No notes yet.</em>"}</div>
+            `;
+            card.addEventListener("click", () => {
+              document
+                .querySelectorAll(".recipe-card")
+                .forEach((c) => c.classList.toggle("active", c === card));
+            });
+            recipeList.appendChild(card);
+          });
+
+        // Baking list (recipes tagged Baking)
+        bakingList.innerHTML = "";
+        items
+          .filter(
+            (r) =>
+              (r.category || "").toLowerCase().includes("baking")
+          )
+          .forEach((recipe) => {
+            const card = document.createElement("div");
+            card.className = "recipe-card";
+            card.dataset.id = recipe.id;
+            card.innerHTML = `
+              <div class="recipe-card-header">
+                <span class="recipe-card-title">${recipe.name || "Untitled baking"}</span>
+                <span class="recipe-card-cat">${recipe.category || "Baking"}</span>
+              </div>
+              <div class="recipe-card-notes">${(recipe.notes || "")
+                .replace(/\n/g, "<br>")
+                .trim() || "<em>No notes yet.</em>"}</div>
+            `;
+            card.addEventListener("click", () => {
+              document
+                .querySelectorAll("#bakingList .recipe-card")
+                .forEach((c) => c.classList.toggle("active", c === card));
+            });
+            bakingList.appendChild(card);
+          });
       }
 
-      // Calendar
-      function renderCalendar(){
-        const now = new Date(state.todayDate+"T00:00:00");
-        const year = now.getFullYear();
-        const month = now.getMonth();
-        const first = new Date(year,month,1);
-        const firstDay = first.getDay();
-        const daysInMonth = new Date(year,month+1,0).getDate();
+      recipeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = recipeNameInput.value.trim();
+        const category = recipeCategoryInput.value.trim();
+        const notes = recipeNotesInput.value.trim();
 
-        calendarGrid.innerHTML="";
-        const label = now.toLocaleDateString(undefined,{month:"long",year:"numeric"});
-        calendarMonthLabel.textContent = label;
+        if (!name && !category && !notes) return;
 
-        for(let i=0;i<firstDay;i++){
-          const empty = document.createElement("div");
-          calendarGrid.appendChild(empty);
-        }
-
-        for(let day=1;day<=daysInMonth;day++){
-          const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-          const div = document.createElement("div");
-          div.className="calendar-day";
-          div.textContent = day;
-          const info = state.dayDetails[dateStr];
-          if(info){
-            if(info.badDay) div.classList.add("bad-day");
-            else if(info.completed>=info.total && info.total>0) div.classList.add("win-full");
-            else if(info.completed>0) div.classList.add("win-partial");
-          }else if(state.winsByDate[dateStr]){
-            div.classList.add("win-full");
-          }
-          if(dateStr===state.todayDate) div.classList.add("today");
-          calendarGrid.appendChild(div);
-        }
-      }
-
-      // Journals
-      function renderJournals(){
-        const dKey = state.todayDate;
-        const mKey = monthKey(state.todayDate);
-        const yKey = yearKey(state.todayDate);
-        journalDay.value = state.journals.day[dKey] || "";
-        journalMonth.value = state.journals.month[mKey] || "";
-        journalYear.value = state.journals.year[yKey] || "";
-        hairNotes.value = state.journals.hairNotes[dKey] || "";
-      }
-
-      journalDay.addEventListener("input",()=>{
-        state.journals.day[state.todayDate] = journalDay.value;
-        awardXp("story",5,journalDay);
+        const recipe = {
+          id: Date.now().toString(36),
+          name: name || "Untitled recipe",
+          category: category || "",
+          notes: notes || ""
+        };
+        state.recipes.push(recipe);
+        awardXp("homestead", 8, recipeForm);
+        recipeNameInput.value = "";
+        recipeCategoryInput.value = "";
+        recipeNotesInput.value = "";
         save();
-      });
-      journalMonth.addEventListener("input",()=>{
-        state.journals.month[monthKey(state.todayDate)] = journalMonth.value;
-        save();
-      });
-      journalYear.addEventListener("input",()=>{
-        state.journals.year[yearKey(state.todayDate)] = journalYear.value;
-        save();
-      });
-      hairNotes.addEventListener("input",()=>{
-        state.journals.hairNotes[state.todayDate] = hairNotes.value;
-        awardXp("selfCare",5,hairNotes);
-        save();
+        renderRecipes();
       });
 
-      // Hair steps
-      hairStepsContainer.addEventListener("change",(e)=>{
-        const cb = e.target.closest('input[type="checkbox"][data-hair-step]');
-        if(!cb) return;
-        if(cb.checked){
-          awardXp("selfCare",10,cb.closest(".hair-step")||cb);
-        }
-        save();
-      });
-
-      // Navigation
-      function showTab(id){
-        tabs.forEach(t=>t.classList.toggle("active",t.id===id));
-        if(mainEl) mainEl.scrollTop = 0;
-      }
-
-      // Back to Sim
-      document.addEventListener("click",(e)=>{
-        const back = e.target.closest("[data-go-home]");
-        if(!back) return;
-        showTab("dashboard");
-      });
-
-      hudPortrait.addEventListener("click",()=>showTab("dashboard"));
-
-      simAvatar.addEventListener("click",()=>{
-        const tier = state.mood.lastTier || "neutral";
-        if(tier==="good") playSound("feel-good");
-        else if(tier==="low") playSound("feel-low");
-        else playSound("feel-neutral");
-
-        simCenter.classList.toggle("nav-open");
-      });
-
-      simNavWheel.addEventListener("click",(e)=>{
-        const btn = e.target.closest(".sim-nav-btn");
-        if(!btn) return;
-        const id = btn.dataset.tab;
-        if(!id) return;
-        showTab(id);
-        simCenter.classList.remove("nav-open");
+      recipeFilterInput.addEventListener("input", () => {
+        renderRecipes();
       });
 
       // Initial render
       updateNeedsOverTime();
-      renderQuests();
-      renderBadDay();
       renderNeeds();
       recomputeMood(false);
       renderSkills();
-      renderAchievements();
-      renderCalendar();
-      renderJournals();
-      updateTodayLabel();
+      renderRecipes();
       fetchWeatherAndUpdateSky();
+      setInterval(updateNeedsOverTime, 60000);
+      setInterval(fetchWeatherAndUpdateSky, 15 * 60 * 1000);
 
-      setInterval(()=>{
-        updateNeedsOverTime();
-        updateTodayLabel();
-      },60000);
-      setInterval(()=>{
-        fetchWeatherAndUpdateSky();
-      },15*60*1000);
-
-      showTab("dashboard");
+      updateWeatherChip();
     })();
   </script>
 </body>
