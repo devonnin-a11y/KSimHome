@@ -42,6 +42,30 @@
       position: relative;
     }
 
+    /* Mood color themes */
+    .cas-shell.mood-good .sim-mood-tag {
+      background: rgba(77, 241, 141, 0.18);
+      box-shadow: 0 0 0 1px rgba(180, 255, 207, 0.8);
+    }
+    .cas-shell.mood-neutral .sim-mood-tag {
+      background: rgba(246, 210, 91, 0.18);
+      box-shadow: 0 0 0 1px rgba(255, 235, 180, 0.8);
+    }
+    .cas-shell.mood-low .sim-mood-tag {
+      background: rgba(255, 134, 125, 0.25);
+      box-shadow: 0 0 0 1px rgba(255, 178, 169, 0.85);
+    }
+
+    .cas-shell.mood-good .hud {
+      background: radial-gradient(circle at top, #083526 0, #081c16 40%, #040c0a 100%);
+    }
+    .cas-shell.mood-neutral .hud {
+      background: radial-gradient(circle at top, #35300a 0, #1e1b09 40%, #050504 100%);
+    }
+    .cas-shell.mood-low .hud {
+      background: radial-gradient(circle at top, #3a1111 0, #1b0507 40%, #050204 100%);
+    }
+
     .cas-topbar {
       flex-shrink: 0;
       display: flex;
@@ -76,12 +100,35 @@
       color: #dff6ff;
     }
 
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .top-weather {
       font-size: 11px;
       padding: 3px 8px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.07);
       color: var(--text-soft);
+    }
+
+    .music-toggle {
+      border-radius: 999px;
+      border: none;
+      padding: 3px 7px;
+      font-size: 13px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #eaf8ff;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+    .music-toggle.on {
+      background: radial-gradient(circle at top, #42f5c5 0, #1eb1c8 45%, #0e5d7a 100%);
+      color: #021015;
     }
 
     .cas-main {
@@ -386,8 +433,9 @@
       color: var(--text-soft);
     }
 
-    /* Recipes */
-    .recipe-form {
+    /* Recipes, Haircare, Timers forms */
+    .recipe-form,
+    .hair-form {
       display: flex;
       flex-direction: column;
       gap: 5px;
@@ -395,17 +443,21 @@
       font-size: 11px;
     }
 
-    .recipe-row {
+    .recipe-row,
+    .hair-row {
       display: flex;
       gap: 4px;
     }
 
-    .recipe-row input {
+    .recipe-row input,
+    .hair-row input {
       flex: 1;
     }
 
     .recipe-form input,
-    .recipe-form textarea {
+    .recipe-form textarea,
+    .hair-form input,
+    .hair-form textarea {
       width: 100%;
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.22);
@@ -416,7 +468,8 @@
       font-family: inherit;
     }
 
-    .recipe-form textarea {
+    .recipe-form textarea,
+    .hair-form textarea {
       min-height: 46px;
       resize: vertical;
     }
@@ -436,14 +489,16 @@
       gap: 5px;
     }
 
-    .recipe-list {
+    .recipe-list,
+    .hair-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
       font-size: 11px;
     }
 
-    .recipe-card {
+    .recipe-card,
+    .hair-card {
       border-radius: 10px;
       background: linear-gradient(135deg, rgba(15, 51, 66, 0.95), rgba(10, 31, 40, 0.95));
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -454,17 +509,20 @@
       cursor: pointer;
     }
 
-    .recipe-card-header {
+    .recipe-card-header,
+    .hair-card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .recipe-card-title {
+    .recipe-card-title,
+    .hair-card-title {
       font-weight: 600;
     }
 
-    .recipe-card-cat {
+    .recipe-card-cat,
+    .hair-card-cat {
       border-radius: 999px;
       padding: 2px 6px;
       font-size: 9px;
@@ -472,12 +530,14 @@
       color: var(--accent-soft);
     }
 
-    .recipe-card-notes {
+    .recipe-card-notes,
+    .hair-card-notes {
       font-size: 10px;
       color: var(--text-soft);
     }
 
-    .recipe-card.active {
+    .recipe-card.active,
+    .hair-card.active {
       box-shadow: 0 0 0 2px rgba(212, 255, 248, 0.9);
     }
 
@@ -545,11 +605,61 @@
       margin-top: 2px;
     }
 
-    /* Baking */
+    /* Baking info */
     .baking-note {
       font-size: 10px;
       color: var(--text-soft);
       margin-bottom: 4px;
+    }
+
+    /* Timers */
+    .timer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 11px;
+    }
+
+    .timer-row {
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(16, 53, 68, 0.95), rgba(12, 32, 42, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 7px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) auto auto;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .timer-name {
+      font-weight: 500;
+    }
+    .timer-status {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .timer-time {
+      text-align: right;
+      font-size: 11px;
+      color: #eaf8ff;
+    }
+
+    .timer-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.15);
+      color: #eaf8ff;
+    }
+
+    .timer-btn.active {
+      background: radial-gradient(circle at top, #42f5c5 0, #1eb1c8 45%, #0e5d7a 100%);
+      color: #021015;
     }
 
     .hud {
@@ -579,6 +689,13 @@
       flex-shrink: 0;
       cursor: pointer;
       overflow: hidden;
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .hud-middle {
@@ -635,7 +752,7 @@
       height: 100%;
       width: 60%;
       background: linear-gradient(90deg, #f6c15b, #3fa76a);
-      transition: width 0.3s ease;
+      transition: width 0.3s ease, background 0.25s ease;
     }
 
     .hud-right {
@@ -709,7 +826,10 @@
     <div class="cas-topbar">
       <button id="backHomeBtn" class="top-back hidden" type="button">←</button>
       <div class="top-title">KSim CAS</div>
-      <div id="weatherChip" class="top-weather">…</div>
+      <div class="top-right">
+        <button class="music-toggle" id="musicToggle" type="button">♫ Off</button>
+        <div id="weatherChip" class="top-weather">…</div>
+      </div>
     </div>
 
     <div class="cas-main">
@@ -741,6 +861,12 @@
           </button>
           <button class="cas-tab-btn" data-category="baking" type="button">
             <span class="icon">🧁</span><span>Baking</span>
+          </button>
+          <button class="cas-tab-btn" data-category="hair" type="button">
+            <span class="icon">💇</span><span>HairCare</span>
+          </button>
+          <button class="cas-tab-btn" data-category="timers" type="button">
+            <span class="icon">⏰</span><span>Timers</span>
           </button>
           <button class="cas-tab-btn" data-category="skills" type="button">
             <span class="icon">⭐</span><span>Skills</span>
@@ -820,13 +946,13 @@
                 </div>
                 <div class="feeling-card-sub">Joy is allowed here.</div>
               </div>
-              <div class="feeling-card feeling-tone-good" data-feeling="playful" data-tone="good">
+              <div class="feeling-card feeling-tone-good" data-feeling="playful" data-tone="good-playful">
                 <div class="feeling-card-header">
                   <span class="icon">🎈</span><span>Playful</span>
                 </div>
                 <div class="feeling-card-sub">A little silly is medicine.</div>
               </div>
-              <div class="feeling-card feeling-tone-good" data-feeling="flirty" data-tone="good">
+              <div class="feeling-card feeling-tone-good" data-feeling="flirty" data-tone="good-flirty">
                 <div class="feeling-card-header">
                   <span class="icon">💖</span><span>Flirty</span>
                 </div>
@@ -964,6 +1090,45 @@
             <div class="recipe-list" id="bakingList"></div>
           </div>
 
+          <!-- HairCare view -->
+          <div class="category-view" data-category-view="hair">
+            <div class="cas-section-title">
+              <span>HairCare regime</span>
+              <span class="sub">Gentle tracking for curls & crown.</span>
+            </div>
+
+            <form class="hair-form" id="hairForm">
+              <div class="hair-row">
+                <input type="text" id="hairName" placeholder="Routine name (e.g. Wash Day, Refresh)" />
+              </div>
+              <div class="hair-row">
+                <input type="text" id="hairTag" placeholder="Frequency tag (e.g. Weekly, Nightly)" />
+              </div>
+              <textarea id="hairNotes" placeholder="Steps, products, masks, oils, etc."></textarea>
+              <button class="btn-primary" type="submit">
+                <span class="icon">➕</span><span>Add HairCare</span>
+              </button>
+            </form>
+
+            <div class="filter-row">
+              <input type="text" id="hairFilter" placeholder="Filter by tag (e.g. Weekly)" />
+              <span>Tap to highlight.</span>
+            </div>
+
+            <div class="hair-list" id="hairList"></div>
+          </div>
+
+          <!-- Timers view -->
+          <div class="category-view" data-category-view="timers">
+            <div class="cas-section-title">
+              <span>Timers & nudges</span>
+              <span class="sub">Soft reminders, no judgment.</span>
+            </div>
+            <div class="timer-list" id="timerList">
+              <!-- Timers are rendered from JS -->
+            </div>
+          </div>
+
           <!-- Skills view -->
           <div class="category-view" data-category-view="skills">
             <div class="cas-section-title">
@@ -1046,7 +1211,9 @@
 
     <!-- HUD -->
     <div class="hud">
-      <div class="portrait" id="hudPortrait">K</div>
+      <div class="portrait" id="hudPortrait">
+        <img id="hudPortraitImg" src="images/kelly-fine.png" alt="Kelly headshot" />
+      </div>
       <div class="hud-middle">
         <div class="hud-top-line">
           <div class="plumbob">
@@ -1067,7 +1234,7 @@
           <div class="dot" id="dot2"></div>
           <div class="dot" id="dot3"></div>
         </div>
-        <div class="hud-hint">Tap K to recenter.</div>
+        <div class="hud-hint">Tap headshot to go home.</div>
       </div>
     </div>
 
@@ -1076,11 +1243,17 @@
     <audio data-sound="feel-good" src="sounds/feel-good.mp3" preload="auto"></audio>
     <audio data-sound="feel-neutral" src="sounds/feel-neutral.mp3" preload="auto"></audio>
     <audio data-sound="feel-low" src="sounds/feel-low.mp3" preload="auto"></audio>
+    <audio data-sound="feel-playful" src="sounds/feel-playful.mp3" preload="auto"></audio>
+    <audio data-sound="feel-flirty" src="sounds/feel-flirty.mp3" preload="auto"></audio>
+    <audio data-sound="timer-alarm" src="sounds/timer-alarm.mp3" preload="auto"></audio>
+
+    <!-- Background music -->
+    <audio id="bgMusic" src="sounds/bg-music.mp3" preload="auto" loop></audio>
   </div>
 
   <script>
     (function () {
-      const STORAGE_KEY = "ksim_cas_v1";
+      const STORAGE_KEY = "ksim_cas_v2";
 
       const needsDecayPerMinute = {
         hunger: 0.5,
@@ -1089,6 +1262,15 @@
         fun: 0.25,
         hygiene: 0.2,
         quiet: 0.2
+      };
+
+      const timersConfig = {
+        hydration: { label: "Hydration", minutes: 45, skill: "nourish" },
+        meal: { label: "Meal", minutes: 180, skill: "nourish" },
+        snack: { label: "Snack", minutes: 90, skill: "nourish" },
+        bathroom: { label: "Bathroom", minutes: 120, skill: "selfCare" },
+        shower: { label: "Shower", minutes: 30, skill: "selfCare" },
+        skincare: { label: "Skincare", minutes: 20, skill: "selfCare" }
       };
 
       // Kelly expression sprites
@@ -1116,8 +1298,13 @@
       }
 
       function freshState() {
+        const timersState = {};
+        Object.keys(timersConfig).forEach((id) => {
+          timersState[id] = { active: false, endAt: null };
+        });
+
         return {
-          version: 1,
+          version: 2,
           needs: {
             hunger: 65,
             energy: 60,
@@ -1146,6 +1333,9 @@
             }
           },
           recipes: [],
+          haircare: [],
+          timers: timersState,
+          bgMusicOn: false,
           _lastFeeling: null
         };
       }
@@ -1155,7 +1345,15 @@
         if (!raw) return freshState();
         try {
           const parsed = JSON.parse(raw);
-          return Object.assign(freshState(), parsed);
+          // merge with defaults to be safe if new fields are added
+          const base = freshState();
+          return Object.assign(base, parsed, {
+            skills: Object.assign(base.skills, parsed.skills || {}),
+            needs: Object.assign(base.needs, parsed.needs || {}),
+            timers: Object.assign(base.timers, parsed.timers || {}),
+            recipes: parsed.recipes || [],
+            haircare: parsed.haircare || []
+          });
         } catch {
           return freshState();
         }
@@ -1180,15 +1378,19 @@
       const dot2 = document.getElementById("dot2");
       const dot3 = document.getElementById("dot3");
       const plumbobShape = document.getElementById("plumbobShape");
+      const hudPortrait = document.getElementById("hudPortrait");
+      const hudPortraitImg = document.getElementById("hudPortraitImg");
 
       const casPanel = document.getElementById("casPanel");
       const casOverlay = document.getElementById("casOverlay");
       const backHomeBtn = document.getElementById("backHomeBtn");
-      const hudPortrait = document.getElementById("hudPortrait");
       const weatherChip = document.getElementById("weatherChip");
+      const musicToggle = document.getElementById("musicToggle");
+      const bgMusic = document.getElementById("bgMusic");
 
       const feelingGrid = document.getElementById("feelingGrid");
       const needRows = document.querySelectorAll(".need-row");
+
       const recipeForm = document.getElementById("recipeForm");
       const recipeNameInput = document.getElementById("recipeName");
       const recipeCategoryInput = document.getElementById("recipeCategory");
@@ -1197,6 +1399,15 @@
       const recipeFilterInput = document.getElementById("recipeFilter");
       const bakingList = document.getElementById("bakingList");
 
+      const hairForm = document.getElementById("hairForm");
+      const hairNameInput = document.getElementById("hairName");
+      const hairTagInput = document.getElementById("hairTag");
+      const hairNotesInput = document.getElementById("hairNotes");
+      const hairList = document.getElementById("hairList");
+      const hairFilterInput = document.getElementById("hairFilter");
+
+      const timerList = document.getElementById("timerList");
+
       const overallLevelLabel = document.getElementById("overallLevelLabel");
       const overallXpFill = document.getElementById("overallXpFill");
       const overallXpMeta = document.getElementById("overallXpMeta");
@@ -1204,6 +1415,8 @@
       const categoryViews = document.querySelectorAll(".category-view");
 
       let lastWeather = null;
+      let timersInterval = null;
+      let hasUserInteractedForMusic = false;
 
       function playSound(name) {
         const audio = document.querySelector(`audio[data-sound="${name}"]`);
@@ -1215,7 +1428,39 @@
       }
 
       document.addEventListener("click", (e) => {
+        if (!hasUserInteractedForMusic) {
+          hasUserInteractedForMusic = true;
+          if (state.bgMusicOn) {
+            tryPlayBgMusic();
+          }
+        }
+
         if (e.target.closest("button")) playSound("ui-click");
+      });
+
+      function tryPlayBgMusic() {
+        if (!bgMusic) return;
+        try {
+          bgMusic.play().catch(() => {});
+        } catch {}
+      }
+
+      function updateMusicToggle() {
+        if (state.bgMusicOn) {
+          musicToggle.classList.add("on");
+          musicToggle.textContent = "♫ On";
+          if (hasUserInteractedForMusic) tryPlayBgMusic();
+        } else {
+          musicToggle.classList.remove("on");
+          musicToggle.textContent = "♫ Off";
+          if (!bgMusic.paused) bgMusic.pause();
+        }
+      }
+
+      musicToggle.addEventListener("click", () => {
+        state.bgMusicOn = !state.bgMusicOn;
+        save();
+        updateMusicToggle();
       });
 
       function openPanel(initialCategory) {
@@ -1232,7 +1477,7 @@
       simAvatar.addEventListener("click", () => {
         if (casShell.classList.contains("panel-open")) return;
         openPanel("emotions");
-        // Play mood-appropriate sound when opening
+        // play mood-appropriate sound
         if (state.mood.lastTier === "good") playSound("feel-good");
         else if (state.mood.lastTier === "low") playSound("feel-low");
         else playSound("feel-neutral");
@@ -1412,7 +1657,7 @@
         weatherChip.textContent = `${icon} ${timeLabel}`;
       }
 
-      // Mood recompute + avatar
+      // Mood + theme + avatar
       function applySimExpression() {
         const tier = state.mood.lastTier || "neutral";
         const last = state._lastFeeling || "";
@@ -1434,6 +1679,7 @@
           img = moodImages.upset || moodImages.uncomfortable;
 
         const el = simAvatar;
+        const portrait = hudPortraitImg;
         if (el && img) {
           el.onerror = () => {
             el.onerror = null;
@@ -1441,6 +1687,20 @@
           };
           el.src = img;
         }
+        if (portrait && img) {
+          portrait.onerror = () => {
+            portrait.onerror = null;
+            if (moodImages.fine) portrait.src = moodImages.fine;
+          };
+          portrait.src = img;
+        }
+      }
+
+      function updateMoodTheme(tier) {
+        casShell.classList.remove("mood-good", "mood-neutral", "mood-low");
+        if (tier === "good") casShell.classList.add("mood-good");
+        else if (tier === "low") casShell.classList.add("mood-low");
+        else casShell.classList.add("mood-neutral");
       }
 
       function recomputeMood(shouldPlaySound) {
@@ -1469,7 +1729,7 @@
             "linear-gradient(90deg,#a6f57c,#3fa76a)";
         else if (tier === "low")
           moodFill.style.background =
-            "linear-gradient(90deg,#f6a15b,#f1866b)";
+            "linear-gradient(90deg,#f66f5b,#b32828)";
         else
           moodFill.style.background =
             "linear-gradient(90deg,#f6c15b,#3fa76a)";
@@ -1539,6 +1799,7 @@
         state.mood.lastTier = tier;
         state.mood.lastScore = score;
 
+        updateMoodTheme(tier);
         applySimExpression();
       }
 
@@ -1649,7 +1910,10 @@
           state.needs.fun = clamp(state.needs.fun + 5, 0, 100);
         }
 
-        if (tone === "good") playSound("feel-good");
+        // tone-specific sounds
+        if (tone === "good-playful") playSound("feel-playful");
+        else if (tone === "good-flirty") playSound("feel-flirty");
+        else if (tone === "good") playSound("feel-good");
         else if (tone === "low") playSound("feel-low");
         else playSound("feel-neutral");
 
@@ -1777,17 +2041,202 @@
         renderRecipes();
       });
 
-      // Initial render
-      updateNeedsOverTime();
-      renderNeeds();
-      recomputeMood(false);
-      renderSkills();
-      renderRecipes();
-      fetchWeatherAndUpdateSky();
-      setInterval(updateNeedsOverTime, 60000);
-      setInterval(fetchWeatherAndUpdateSky, 15 * 60 * 1000);
+      // HairCare
+      function renderHaircare() {
+        const filter = (hairFilterInput.value || "").trim().toLowerCase();
+        hairList.innerHTML = "";
 
-      updateWeatherChip();
+        const items = state.haircare.slice().sort((a, b) =>
+          (a.name || "").localeCompare(b.name || "")
+        );
+
+        items
+          .filter((h) =>
+            filter ? (h.tag || "").toLowerCase().includes(filter) : true
+          )
+          .forEach((hair) => {
+            const card = document.createElement("div");
+            card.className = "hair-card";
+            card.dataset.id = hair.id;
+            card.innerHTML = `
+              <div class="hair-card-header">
+                <span class="hair-card-title">${hair.name || "Untitled routine"}</span>
+                <span class="hair-card-cat">${hair.tag || "Un-tagged"}</span>
+              </div>
+              <div class="hair-card-notes">${(hair.notes || "")
+                .replace(/\n/g, "<br>")
+                .trim() || "<em>No notes yet.</em>"}</div>
+            `;
+            card.addEventListener("click", () => {
+              document
+                .querySelectorAll(".hair-card")
+                .forEach((c) => c.classList.toggle("active", c === card));
+            });
+            hairList.appendChild(card);
+          });
+      }
+
+      hairForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = hairNameInput.value.trim();
+        const tag = hairTagInput.value.trim();
+        const notes = hairNotesInput.value.trim();
+        if (!name && !tag && !notes) return;
+
+        const hair = {
+          id: Date.now().toString(36),
+          name: name || "Untitled routine",
+          tag: tag || "",
+          notes: notes || ""
+        };
+        state.haircare.push(hair);
+        awardXp("selfCare", 10, hairForm);
+        hairNameInput.value = "";
+        hairTagInput.value = "";
+        hairNotesInput.value = "";
+        save();
+        renderHaircare();
+      });
+
+      hairFilterInput.addEventListener("input", () => {
+        renderHaircare();
+      });
+
+      // Timers
+      function renderTimers() {
+        timerList.innerHTML = "";
+        Object.entries(timersConfig).forEach(([id, cfg]) => {
+          const timerState = state.timers[id] || { active: false, endAt: null };
+          const row = document.createElement("div");
+          row.className = "timer-row";
+          row.dataset.timerId = id;
+
+          const nameEl = document.createElement("div");
+          nameEl.innerHTML = `<div class="timer-name">${cfg.label}</div><div class="timer-status">${timerState.active ? "Counting down" : "Off"}</div>`;
+
+          const timeEl = document.createElement("div");
+          timeEl.className = "timer-time";
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "timer-btn";
+          btn.textContent = timerState.active ? "Stop" : "Start";
+          if (timerState.active) btn.classList.add("active");
+
+          row.appendChild(nameEl);
+          row.appendChild(timeEl);
+          row.appendChild(btn);
+          timerList.appendChild(row);
+
+          btn.addEventListener("click", () => {
+            toggleTimer(id, row);
+          });
+        });
+
+        updateTimersDisplay();
+      }
+
+      function toggleTimer(id, row) {
+        const cfg = timersConfig[id];
+        if (!cfg) return;
+        const t = state.timers[id];
+        if (!t) return;
+
+        const btn = row.querySelector(".timer-btn");
+        const status = row.querySelector(".timer-status");
+
+        if (t.active) {
+          t.active = false;
+          t.endAt = null;
+          btn.textContent = "Start";
+          btn.classList.remove("active");
+          status.textContent = "Off";
+        } else {
+          const now = Date.now();
+          t.active = true;
+          t.endAt = now + cfg.minutes * 60000;
+          btn.textContent = "Stop";
+          btn.classList.add("active");
+          status.textContent = "Counting down";
+          awardXp(cfg.skill, 4, row);
+        }
+        save();
+        updateTimersDisplay();
+      }
+
+      function formatRemaining(ms) {
+        if (ms <= 0) return "0:00";
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const m = minutes.toString();
+        const s = seconds.toString().padStart(2, "0");
+        return `${m}:${s}`;
+      }
+
+      function updateTimersDisplay() {
+        const now = Date.now();
+        document.querySelectorAll(".timer-row").forEach((row) => {
+          const id = row.dataset.timerId;
+          const cfg = timersConfig[id];
+          const t = state.timers[id];
+          const timeEl = row.querySelector(".timer-time");
+          const status = row.querySelector(".timer-status");
+          const btn = row.querySelector(".timer-btn");
+          if (!cfg || !t) return;
+
+          if (!t.active || !t.endAt) {
+            timeEl.textContent = "Off";
+            status.textContent = "Off";
+            btn.textContent = "Start";
+            btn.classList.remove("active");
+            return;
+          }
+
+          const remaining = t.endAt - now;
+          if (remaining <= 0) {
+            t.active = false;
+            t.endAt = null;
+            timeEl.textContent = "Time!";
+            status.textContent = "Done";
+            btn.textContent = "Start";
+            btn.classList.remove("active");
+            playSound("timer-alarm");
+            awardXp(cfg.skill, 8, row);
+            save();
+          } else {
+            timeEl.textContent = formatRemaining(remaining);
+            status.textContent = "Counting down";
+          }
+        });
+      }
+
+      function startTimersLoop() {
+        if (timersInterval) clearInterval(timersInterval);
+        timersInterval = setInterval(() => {
+          updateTimersDisplay();
+        }, 1000);
+      }
+
+      // Initial render + intervals
+      function init() {
+        updateNeedsOverTime();
+        renderNeeds();
+        recomputeMood(false);
+        renderSkills();
+        renderRecipes();
+        renderHaircare();
+        renderTimers();
+        updateTimersDisplay();
+        startTimersLoop();
+        fetchWeatherAndUpdateSky();
+        setInterval(updateNeedsOverTime, 60000);
+        setInterval(fetchWeatherAndUpdateSky, 15 * 60 * 1000);
+        updateWeatherChip();
+        updateMusicToggle();
+      }
+
+      init();
     })();
   </script>
 </body>
