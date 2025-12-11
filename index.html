@@ -1657,23 +1657,48 @@ const soundFiles = {
   audio.play().catch(() => {});
 }
 
+/* ================================
+   BACKGROUND MUSIC ENGINE
+================================ */
 
-    const bgTracks = [
-      "sounds/bg-1.mp3",
-      "sounds/bg-2.mp3",
-      "sounds/bg-3.mp3"
-    ];
-    let currentBgIndex = Math.floor(Math.random() * bgTracks.length) || 0;
+let bgTracks = ["bg-1","bg-2","bg-3"];
+let bgIndex = 0;
+let bgEnabled = true;
+let bgAudio = null;
 
-    function setBgTrack(index) {
-      if (!bgMusic) return;
-      currentBgIndex = index % bgTracks.length;
-      bgMusic.src = bgTracks[currentBgIndex];
-      bgMusic.load();
-      if (state.bgMusicOn && hasUserInteractedForMusic) {
-        tryPlayBgMusic();
-      }
-    }
+function playBackgroundMusic() {
+  if (!bgEnabled) return;
+
+  const file = soundFiles[bgTracks[bgIndex]];
+  if (!file) return;
+
+  if (bgAudio) {
+    bgAudio.pause();
+  }
+
+  bgAudio = new Audio(`./sounds/${file}`);
+  bgAudio.volume = 0.35;
+  bgAudio.loop = true;
+
+  bgAudio.play().catch(() => {});
+}
+
+function toggleBackgroundMusic() {
+  bgEnabled = !bgEnabled;
+  state.bgMusicOn = bgEnabled;
+  save();
+
+  if (!bgEnabled) {
+    if (bgAudio) bgAudio.pause();
+  } else {
+    playBackgroundMusic();
+  }
+}
+
+function skipBackgroundTrack() {
+  bgIndex = (bgIndex + 1) % bgTracks.length;
+  playBackgroundMusic();
+}
 
     if (musicSkip) {
       musicSkip.addEventListener("click", () => {
