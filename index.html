@@ -1422,6 +1422,58 @@
 
   <script>
   (function () {
+    /* ================================
+   SOUND REGISTRY
+   ================================ */
+const soundFiles = {
+  "ui-click": "ui-click.mp3",
+  "ui-open": "ui-open.mp3",
+  "ui-close": "ui-close.mp3",
+  "ui-hover": "ui-hover.mp3",
+  "feel-happy": "feel-happy.mp3",
+  "feel-neutral": "feel-neutral.mp3",
+  "feel-playful": "feel-playful.mp3",
+  "feel-flirty": "feel-flirty.mp3",
+  "feel-inspired": "feel-inspired.mp3",
+  "feel-aspired": "feel-inspired.mp3",
+  "feel-focused": "feel-focused.mp3",
+  "feel-sad": "feel-sad.mp3",
+  "feel-upset": "feel-upset.mp3",
+  "feel-embarrassed": "feel-embarrassed.mp3",
+  "feel-uncomfortable": "feel-uncomfortable.mp3",
+  "feel-scared": "feel-scared.mp3",
+  "feel-low": "feel-low.mp3",
+  "feel-angry": "feel-angry.mp3",
+  "feel-stressed": "feel-stressed.mp3",
+  "feel-overwhelmed": "feel-overwhelmed.mp3",
+  "feel-peace": "feel-peace.mp3",
+  "feel-energized": "feel-energized.mp3",
+  "need-drink": "need-drink.mp3",
+  "need-snack": "need-snack.mp3",
+  "need-meal": "need-meal.mp3",
+  "need-toilet": "need-toilet.mp3",
+  "need-shower": "need-shower.mp3",
+  "need-teeth": "need-teeth.mp3",
+  "need-haircare": "need-haircare.mp3",
+  "need-skincare": "need-skincare.mp3",
+  "need-school": "need-school.mp3",
+  "need-entertain": "need-entertain.mp3",
+  "need-clean": "need-clean.mp3",
+  "need-exercise": "need-exercise.mp3",
+  "timer-start": "timer-start.mp3",
+  "timer-stop": "timer-stop.mp3",
+  "timer-alarm": "timer-alarm.mp3",
+  "xp-gain": "xp-gain.mp3",
+  "level-up": "level-up.mp3",
+  "achievement-unlock": "achievement-unlock.mp3",
+  "log-cak": "log-cak.mp3",
+  "log-yak": "log-yak.mp3",
+  "compassion": "compassion.mp3",
+  "bg-1": "bg-1.mp3",
+  "bg-2": "bg-2.mp3",
+  "bg-3": "bg-3.mp3"
+};
+
     const STORAGE_KEY = "ksim_cas_v2";
 
     const needsDecayPerMinute = {
@@ -1596,14 +1648,15 @@
     let timersInterval = null;
     let hasUserInteractedForMusic = false;
 
-    function playSound(name) {
-      const audio = document.querySelector(`audio[data-sound="${name}"]`);
-      if (!audio) return;
-      try {
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
-      } catch {}
-    }
+    function playSound(key) {
+  const file = soundFiles[key];
+  if (!file) return;
+
+  const audio = new Audio(`./sounds/${file}`);
+  audio.volume = 0.7;
+  audio.play().catch(() => {});
+}
+
 
     const bgTracks = [
       "sounds/bg-1.mp3",
