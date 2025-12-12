@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>KSim – Kelly CAS HUD</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Main Styles -->
+  <title>KSim Hearth & Home</title>
+
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- PWA Meta -->
-  <meta name="theme-color" content="#0b1e26" />
+  <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
-  <div class="cas-shell" id="casShell">
 
-    <!-- ░░ TOP BAR ░░ -->
-    <header class="cas-topbar">
+  <!-- MAIN CAS SHELL -->
+  <div id="casShell" class="cas-shell">
+
+    <!-- TOP BAR -->
+    <div class="cas-topbar">
       <button id="backHomeBtn" class="top-back hidden" type="button">←</button>
-
-      <div class="top-title">KSim CAS</div>
+      <div class="top-title">KSim</div>
 
       <div class="top-right">
-        <button class="music-toggle" id="musicToggle">♫ Off</button>
-        <button class="music-toggle" id="musicSkip">↻</button>
+        <button id="musicToggle" class="music-toggle" type="button">♫</button>
+        <button id="musicSkip" class="music-toggle" type="button">↻</button>
         <div id="weatherChip" class="top-weather"></div>
       </div>
-    </header>
+    </div>
 
-    <!-- ░░ MAIN AREA ░░ -->
-    <main class="cas-main">
+    <!-- MAIN CAS AREA -->
+    <div id="casMain" class="cas-main">
+      <div id="simContainer" class="sim-container">
+        <img id="simImage" src="images/kelly-fine.png" class="sim-image">
+      </div>
 
-      <!-- LEFT NEED QUICK BAR -->
-      <nav class="need-bar-left" id="needBarLeft">
+      <!-- QUICK NEED BAR -->
+      <div id="needBarLeft" class="need-bar-left">
         <button class="need-dot" data-action="drink">🥤</button>
         <button class="need-dot" data-action="snack">🍫</button>
         <button class="need-dot" data-action="meal">🍽</button>
@@ -41,117 +43,63 @@
         <button class="need-dot" data-action="entertain">📺</button>
         <button class="need-dot" data-action="clean">🧽</button>
         <button class="need-dot" data-action="exercise">🏋️</button>
-      </nav>
 
-      <!-- HYGIENE MINI MENU -->
-      <div class="hygiene-menu" id="hygieneMenu">
-        <button data-hygiene="toilet">🚽 Toilet</button>
-        <button data-hygiene="shower">🚿 Shower</button>
-        <button data-hygiene="teeth">🪥 Teeth</button>
-        <button data-hygiene="haircare">💇 Hair</button>
-        <button data-hygiene="skincare">🧴 Skin</button>
+        <!-- HYGIENE SUBMENU -->
+        <div id="hygieneMenu" class="hygiene-menu">
+          <button data-hygiene="toilet">🚽 Toilet</button>
+          <button data-hygiene="shower">🚿 Shower</button>
+          <button data-hygiene="teeth">🪥 Teeth</button>
+          <button data-hygiene="haircare">💇 Hair</button>
+          <button data-hygiene="skincare">🧴 Skin</button>
+        </div>
       </div>
 
-      <!-- CHARACTER AREA -->
-      <section class="cas-character-area" id="characterArea">
-        <div class="sim-room">
-          <div class="sim-floor-shadow"></div>
-          <img id="simAvatar" class="sim-avatar" src="images/kelly-fine.png">
-        </div>
-
-        <div class="sim-meta">
-          <div class="sim-meta-main" id="simMoodTitle">Gently okay</div>
-          <div class="sim-meta-sub" id="simMoodSub">You’re doing more than enough.</div>
-
-          <div class="sim-mood-tag" id="simMoodTag">
-            <span>💚</span><span>Soft & steady</span>
-          </div>
-        </div>
-
-        <div class="sim-hint">Tap Kelly to open her Sims-style menu.</div>
-      </section>
-
-      <!-- RIGHT PANEL (SLIDES IN) -->
-      <aside class="cas-panel" id="casPanel">
-
-        <!-- TABS -->
-        <div class="cas-tabs">
-          <button class="cas-tab-btn active" data-category="emotions">💬 Emotions</button>
+      <!-- RIGHT PANEL -->
+      <div id="casPanel" class="cas-panel hidden">
+        <div id="casTabs" class="cas-tabs">
+          <button class="cas-tab-btn" data-category="emotions">💬 Emotions</button>
           <button class="cas-tab-btn" data-category="needs">💚 Needs</button>
           <button class="cas-tab-btn" data-category="recipes">📚 Recipes</button>
           <button class="cas-tab-btn" data-category="baking">🧁 Baking</button>
           <button class="cas-tab-btn" data-category="hair">💇 HairCare</button>
+          <button class="cas-tab-btn" data-category="meal">🍳 Meals</button>
           <button class="cas-tab-btn" data-category="timers">⏰ Timers</button>
           <button class="cas-tab-btn" data-category="behavior">🧭 Reactions</button>
           <button class="cas-tab-btn" data-category="skills">⭐ Skills</button>
         </div>
 
-        <!-- PANEL BODY -->
-        <div class="cas-panel-body">
-
-          <!-- VIEWS -->
-          <div class="category-view active" data-category-view="emotions"></div>
-          <div class="category-view" data-category-view="needs"></div>
-          <div class="category-view" data-category-view="recipes"></div>
-          <div class="category-view" data-category-view="baking"></div>
-          <div class="category-view" data-category-view="hair"></div>
-          <div class="category-view" data-category-view="timers"></div>
-          <div class="category-view" data-category-view="behavior"></div>
-          <div class="category-view" data-category-view="skills"></div>
-
-        </div>
-      </aside>
-
-      <div class="cas-overlay" id="casOverlay"></div>
-    </main>
-
-    <!-- ░░ HUD ░░ -->
-    <footer class="hud">
-      <div class="portrait" id="hudPortrait">
-        <img id="hudPortraitImg" src="images/kelly-fine-home.png">
+        <!-- Dynamic Content Render Target -->
+        <div id="casContent" class="cas-content"></div>
       </div>
+    </div>
 
-      <div class="hud-middle">
-        <div class="hud-top-line">
-          <div class="plumbob"><div class="plumbob-shape" id="plumbobShape"></div></div>
-
-          <div>
-            <div class="hud-mood-label-main" id="hudMoodMain">Gently okay</div>
-            <div class="hud-mood-label-sub" id="hudMoodSub">You’re doing more than enough.</div>
-          </div>
-        </div>
-
-        <div class="mood-gauge"><div class="mood-fill" id="moodFill"></div></div>
-      </div>
-
-      <div class="hud-right">
-        <div class="needs-dots">
-          <div class="dot" id="dot1"></div>
-          <div class="dot" id="dot2"></div>
-          <div class="dot" id="dot3"></div>
-        </div>
-        <div class="hud-hint">Tap headshot to go home.</div>
-      </div>
-    </footer>
-
-    <!-- AUDIO ENGINES -->
-    <audio id="bgMusic" preload="auto" loop></audio>
-
-    <!-- UI Clicks -->
-    <audio data-sound="ui-click" src="sounds/ui-click.mp3" preload="auto"></audio>
+    <!-- BOTTOM HUD -->
+    <div id="hudBar" class="hud-bar">
+      <img id="portraitImage" src="images/kelly-fine-home.png" class="hud-portrait">
+      <div id="moodletBar" class="moodlet-bar"></div>
+    </div>
 
   </div>
 
-  <!-- JS MODULES -->
+  <!-- Load Modular JS Files -->
   <script src="js/state.js"></script>
   <script src="js/music.js"></script>
   <script src="js/needs.js"></script>
-  <script src="js/behavior.js"></script>
   <script src="js/timers.js"></script>
+  <script src="js/behavior.js"></script>
   <script src="js/recipes.js"></script>
-  <script src="js/hair.js"></script>
-  <script src="js/skills.js"></script>
-  <script src="js/app.js"></script>
+
+  <!-- Initialize App -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      window.AppState.load();
+      window.Music.init();
+      window.Needs.init();
+      window.Behavior.init();
+      window.Timers.init();
+      window.Recipes.init();
+    });
+  </script>
 
 </body>
 </html>
